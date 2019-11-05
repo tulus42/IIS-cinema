@@ -4,11 +4,65 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 
-	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+	<title>Your Cinema</title>
+
+	<!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+
+    <!-- CSS files -->
+    <link rel="stylesheet" type="text/css" href='css/style.css' />
+    <link rel="stylesheet" type="text/css" href='css/1140.css' />
 </head>
 
 <body>
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
+	<div class="wrapper">
+        <div class="sidebar">
+			<div class="wrap">
+				<div class="search">
+					<input type="text" class="searchTerm" placeholder="Hľadám...">
+					<button type="submit" class="searchButton">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>    
+
+        
+            <ul>
+				<li><a href="#"><i class="fas fa-film"></i>Filmy</a></li>
+				<li><a href="#"><i class="fas fa-chair"></i>Sály</a></li>
+				<li><a href="#"><i class="fas fa-address-card"></i>O nás</a></li>
+				<li><a href="#"><i class="fas fa-address-book"></i>Kontakt</a></li>
+            </ul> 
+        </div>
+    </div>
+
+	<div class="main_content">
+            <!-- HEADER -->
+            <header class="head">
+                <div class="row">
+                    <div class="column4" id="header-logo">
+                        <a href="{{ url('/home') }}"><img src='img/final_logo.png'>
+                    </div>                
+
+                    <div class="column8">
+                        <ul>
+                            <li class="log-link link"><a href="{{ route('login') }}">Prihlásenie</a></li>
+                            <li class="reg-link link"><a href="{{ route('register') }}">Registrácia</a></li>
+                                    
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <hr class="new">
+
+            <div class="row">
+                <h1 class="cinema-title">Práve v predaji</h1>
+            </div>
+            
+            
 
 	{include content}
 
