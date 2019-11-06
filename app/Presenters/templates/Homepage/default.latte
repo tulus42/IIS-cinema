@@ -1,80 +1,25 @@
-{* This is the welcome page, you can delete it *}
-
 {block content}
 	<div class="row">
-                <div class="column4">
-                    <div class="movie-container">
-                        <p class="movie-title">Deadpool</p>
-                    
-                        <div class="movie-poster">
-                            <img src='img/deadpool.jpg'>
-                        </div>
+        <h1 class="cinema-title">Práve v predaji</h1>
+    </div>
 
-                        <div class="movie-description">
-                            <p>Deadpool (alter ego: Wade Wilson) je vymyslený antihrdina objavujúci sa v Amerických komiksových knihách od nakladateľstva Marvel Comics.Film produkovala a distribuovala společnost 20th Century Fox. Jedná se již o osmý díl z filmové série X-Men. Režie se chopil debutující Tim Miller.</p>
-                        </div>
+	{foreach $movies as $movie}
+	<div class="column4">
+		<div class="movie-container">
+			<p class="movie-title"><a href="{link Movie:show $movie->id_piece_of_work}" style="color:#3f4547">{$movie->name}</a></p>
+		
+			<div class="movie-poster">
+				<a href="{link Movie:show $movie->id_piece_of_work}"><img src={$movie->picture}></a>
+			</div>
 
-                        <div class="buy-tickets">
-                            <button class="buy-button" type="button">Objednať lístky</button>
-                        </div>
-                    </div>
-                </div>
+			<div class="movie-description">
+				<p>{$movie->description|truncate:370, '...'}</p>
+			</div>
 
-                <div class="column4">
-                    <div class="movie-container">
-                        <p class="movie-title">Harry Potter a Tajomná komnata</p>
-                    
-                        <div class="movie-poster">
-                            <img src='img/harry_potter.jpg'>
-                        </div>
-
-                        <div class="movie-description">
-                            <p>Dursleyovci boli v to leto takí odporní, že Harry Potter sa už nevedel dočkať, kedy sa vráti do čarodejníckej školy. Jedného dňa sa v jeho izbe objaví čudné, zlomyseľné stvorenie. Volá sa Dobby a tvrdí, že ak sa Harry vráti na Rokfort, hrozí mu smrteľné nebezpečenstvo.</p>
-                        </div>
-
-                        <div class="buy-tickets">
-                            <button class="buy-button" type="button">Objednať lístky</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="column4">
-                    <div class="movie-container">
-                        <p class="movie-title">Rýchlo a zbesilo</p>
-                    
-                        <div class="movie-poster">
-                            <img src='img/fast_and_furious.jpg'>
-                        </div>
-
-                        <div class="movie-description">
-                            <p>Fast & Furious Presents: Hobbs & Shaw (also known simply as Hobbs & Shaw and as Fast & Furious: Hobbs & Shaw internationally) is a 2019 American action film directed by David Leitch and written by Chris Morgan and Drew Pearce, from a story by Morgan. It is a spin-off of The Fast and the Furious franchise, and stars Dwayne Johnson and Jason Statham reprising their respective roles as Luke.</p>
-                        </div>
-
-                        <div class="buy-tickets">
-                            <button class="buy-button" type="button">Objednať lístky</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column4">
-                    <div class="movie-container">
-                        <p class="movie-title">Star Wars</p>
-                    
-                        <div class="movie-poster">
-                            <img src='img/star_wars.jpg'>
-                        </div>
-
-                        <div class="movie-description">
-                            <p>Star Wars alebo Hviezdne vojny je americká multimediálna franšíza sústredená okolo série filmov od Georga Lucasa v žánri space opera. V roku 1977 vyšiel film Star Wars. Po ňom nasledovali dve pokračovania Impérium vracia úder v roku 1980 a Návrat Jediho v roku 1983</p>
-                        </div>
-
-                        <div class="buy-tickets">
-                            <button class="buy-button" type="button">Objednať lístky</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="buy-tickets">
+				<button class="buy-button" type="button">Objednať lístky</button>
+			</div>
+		</div>
+	</div>
+	{/foreach}
 {/block}

@@ -186,7 +186,9 @@ header ul li a:hover{
   text-align: center;
   font-weight: 1000;
   padding-bottom: 15px;
+  text-decoration: none;
 }
+
 
 .movie{
   padding:40px;
@@ -198,6 +200,7 @@ header ul li a:hover{
   margin: 15px;
   float:left;
 }
+
 
 .movie-poster img{
   border-radius: 8px;

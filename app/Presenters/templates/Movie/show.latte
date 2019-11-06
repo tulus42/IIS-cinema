@@ -1,0 +1,15 @@
+{block content}
+    <div class="column8">
+        <div class="one-movie-container">
+            <div class="row">
+                <h1 class="one-movie-title">{$piece_of_work->name}</h1>
+            <div class="row">
+
+            <img class="one-movie-image" src={$piece_of_work->picture}>
+
+            <p>{$piece_of_work->description}</p>
+
+            <h2>Žáner: {$piece_of_work->genre}</h2>
+        </div>
+	</div>
+{/block}

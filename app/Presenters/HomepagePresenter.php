@@ -20,4 +20,9 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
     {
         $this->template->movies = $this->database->table('cultural_piece_of_work');
     }
+
+    public function renderDescription(string $full_description): string
+    {
+        return "ahoj";
+    }
 }

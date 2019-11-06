@@ -1,0 +1,24 @@
+.one-movie-container{
+    margin: 20px;
+    padding: 20px;
+}
+
+.one-movie-title{
+    text-align: center;
+    margin: 20px;
+}
+
+.one-movie-image{
+    width: 200px;
+    float: left;
+    border-radius: 20px;
+    margin: 25px;
+}
+
+.one-movie-container{
+    display: flex;
+    background-color: #D1D7E0;
+    border-radius: 12px;
+    border: solid #636b6f 3px;
+    position: flex;
+}
