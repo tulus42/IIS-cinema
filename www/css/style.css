@@ -217,7 +217,7 @@ header ul li a:hover{
   margin: 15px;
 }
 
-button:hover{
+#buy-tickets button:hover{
   color: #fff;
   background-color:#131313;
 }
@@ -252,3 +252,4 @@ button:hover{
 .main_content{
   padding-left: 270px;
 }
+

@@ -5,11 +5,50 @@
                 <h1 class="one-movie-title">{$piece_of_work->name}</h1>
             <div class="row">
 
-            <img class="one-movie-image" src={$piece_of_work->picture}>
+            <div class="row">
+                <div class="column3">
+                    <img class="one-movie-image" src={$piece_of_work->picture}>
+                </div>
 
-            <p>{$piece_of_work->description}</p>
+                <div class="column5">
+                    <div class="row">
+                        <h2>Žáner: {$piece_of_work->genre}</h2>
+                    </div>
 
-            <h2>Žáner: {$piece_of_work->genre}</h2>
+                    <div class="row">
+                        <h2>Dĺžka: {$piece_of_work->duration} min.</h2>
+                    </div>
+
+                    <div class="row">
+                        <h2>Typ: {$piece_of_work->type}</h2>
+                    </div>
+
+                    <div class="row">
+                        <h2>Hodnotenie: {$piece_of_work->rating}%</h2>
+                    </div>
+
+                    <div class="row">
+                        <h2>Účinkujú:</h2>
+                    </div>                    
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="one-movie-description">
+                    <h2>Popis:</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="one-movie-description">
+                    <p>{$piece_of_work->description}</p>
+                <div>
+            </div>
+            
+            <div class="row">
+                <button class="button event">
+                    Pridať<br/>predstavenie
+                </button>
+            </div>
         </div>
 	</div>
 {/block}
