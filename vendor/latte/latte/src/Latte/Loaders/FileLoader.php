@@ -52,8 +52,7 @@ class FileLoader implements Latte\ILoader
 
 	public function isExpired($file, $time): bool
 	{
-		$mtime = @filemtime($this->baseDir . $file); // @ - stat may fail
-		return !$mtime || $mtime > $time;
+		return @filemtime($this->baseDir . $file) > $time; // @ - stat may fail
 	}
 
 

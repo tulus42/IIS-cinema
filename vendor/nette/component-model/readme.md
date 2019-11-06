@@ -16,8 +16,6 @@ Nette Framework introduces several classes and interfaces for all these types of
 
 Documentation can be found on the [website](https://doc.nette.org/components).
 
-If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
-
 
 Installation
 ------------
@@ -28,4 +26,4 @@ The recommended way to install is via Composer:
 composer require nette/component-model
 ```
 
-It requires PHP version 5.6 and supports PHP up to 7.3. The dev-master version requires PHP 7.1.
+It requires PHP version 5.6 and supports PHP up to 7.2. The dev-master version requires PHP 7.1.

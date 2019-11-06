@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI;
 
 use Nette;
@@ -22,7 +20,7 @@ class DependencyChecker
 {
 	use Nette\SmartObject;
 
-	public const VERSION = 1;
+	const VERSION = 1;
 
 	/** @var array of ReflectionClass|\ReflectionFunctionAbstract|string */
 	private $dependencies = [];
@@ -41,8 +39,9 @@ class DependencyChecker
 
 	/**
 	 * Exports dependencies.
+	 * @return array
 	 */
-	public function export(): array
+	public function export()
 	{
 		$files = $phpFiles = $classes = $functions = [];
 		foreach ($this->dependencies as $dep) {
@@ -79,27 +78,28 @@ class DependencyChecker
 
 	/**
 	 * Are dependencies expired?
+	 * @return bool
 	 */
-	public static function isExpired(int $version, array $files, array &$phpFiles, array $classes, array $functions, string $hash): bool
+	public static function isExpired($version, $files, &$phpFiles, $classes, $functions, $hash)
 	{
-		try {
-			$currentFiles = @array_map('filemtime', array_combine($tmp = array_keys($files), $tmp)); // @ - files may not exist
-			$origPhpFiles = $phpFiles;
-			$phpFiles = @array_map('filemtime', array_combine($tmp = array_keys($phpFiles), $tmp)); // @ - files may not exist
-			return $version !== self::VERSION
-				|| $files !== $currentFiles
-				|| ($phpFiles !== $origPhpFiles && $hash !== self::calculateHash($classes, $functions));
-		} catch (\ReflectionException $e) {
-			return true;
-		}
+		$current = @array_map('filemtime', array_combine($tmp = array_keys($files), $tmp)); // @ - files may not exist
+		$origPhpFiles = $phpFiles;
+		$phpFiles = @array_map('filemtime', array_combine($tmp = array_keys($phpFiles), $tmp)); // @ - files may not exist
+		return $version !== self::VERSION
+			|| $files !== $current
+			|| ($phpFiles !== $origPhpFiles && $hash !== self::calculateHash($classes, $functions));
 	}
 
 
-	private static function calculateHash(array $classes, array $functions): string
+	private static function calculateHash($classes, $functions)
 	{
 		$hash = [];
 		foreach ($classes as $name) {
-			$class = new ReflectionClass($name);
+			try {
+				$class = new ReflectionClass($name);
+			} catch (\ReflectionException $e) {
+				return;
+			}
 			$hash[] = [
 				$name,
 				Reflection::getUseStatements($class),
@@ -121,8 +121,8 @@ class DependencyChecker
 						$method->getName(),
 						$method->getDocComment(),
 						self::hashParameters($method),
-						$method->hasReturnType()
-							? [$method->getReturnType()->getName(), $method->getReturnType()->allowsNull()]
+						PHP_VERSION_ID >= 70000 && $method->hasReturnType()
+							? [(string) $method->getReturnType(), $method->getReturnType()->allowsNull()]
 							: null,
 					];
 				}
@@ -131,24 +131,22 @@ class DependencyChecker
 
 		$flip = array_flip($classes);
 		foreach ($functions as $name) {
-			if (strpos($name, '::')) {
-				$method = new ReflectionMethod($name);
-				$class = $method->getDeclaringClass();
-				if (isset($flip[$class->getName()])) {
-					continue;
-				}
-				$uses = Reflection::getUseStatements($class);
-			} else {
-				$method = new \ReflectionFunction($name);
-				$uses = null;
+			try {
+				$method = strpos($name, '::') ? new ReflectionMethod($name) : new \ReflectionFunction($name);
+			} catch (\ReflectionException $e) {
+				return;
+			}
+			$class = $method instanceof ReflectionMethod ? $method->getDeclaringClass() : null;
+			if ($class && isset($flip[$class->getName()])) {
+				continue;
 			}
 			$hash[] = [
 				$name,
-				$uses,
+				$class ? Reflection::getUseStatements($method->getDeclaringClass()) : null,
 				$method->getDocComment(),
 				self::hashParameters($method),
-				$method->hasReturnType()
-					? [$method->getReturnType()->getName(), $method->getReturnType()->allowsNull()]
+				PHP_VERSION_ID >= 70000 && $method->hasReturnType()
+					? [(string) $method->getReturnType(), $method->getReturnType()->allowsNull()]
 					: null,
 			];
 		}
@@ -157,14 +155,16 @@ class DependencyChecker
 	}
 
 
-	private static function hashParameters(\ReflectionFunctionAbstract $method): array
+	private static function hashParameters(\ReflectionFunctionAbstract $method)
 	{
 		$res = [];
+		if (PHP_VERSION_ID < 70000 && $method->getNumberOfParameters() && $method->getFileName()) {
+			$res[] = file($method->getFileName())[$method->getStartLine() - 1];
+		}
 		foreach ($method->getParameters() as $param) {
 			$res[] = [
 				$param->getName(),
-				Reflection::getParameterType($param),
-				$param->allowsNull(),
+				PHP_VERSION_ID >= 70000 ? [Reflection::getParameterType($param), $param->allowsNull()] : null,
 				$param->isVariadic(),
 				$param->isDefaultValueAvailable()
 					? [Reflection::getParameterDefaultValue($param)]

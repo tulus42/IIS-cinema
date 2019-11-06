@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI\Extensions;
 
 use Nette;
@@ -15,20 +13,17 @@ use Nette;
 /**
  * PHP directives definition.
  */
-final class PhpExtension extends Nette\DI\CompilerExtension
+class PhpExtension extends Nette\DI\CompilerExtension
 {
-	public function getConfigSchema(): Nette\Schema\Schema
-	{
-		return Nette\Schema\Expect::arrayOf('scalar');
-	}
-
-
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->getMethod('initialize');
 		foreach ($this->getConfig() as $name => $value) {
 			if ($value === null) {
 				continue;
+
+			} elseif (!is_scalar($value)) {
+				throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
 
 			} elseif ($name === 'include_path') {
 				$initialize->addBody('set_include_path(?);', [str_replace(';', PATH_SEPARATOR, $value)]);
@@ -43,7 +38,7 @@ final class PhpExtension extends Nette\DI\CompilerExtension
 				$initialize->addBody('date_default_timezone_set(?);', [$value]);
 
 			} elseif (function_exists('ini_set')) {
-				$initialize->addBody('ini_set(?, ?);', [$name, $value === false ? '0' : (string) $value]);
+				$initialize->addBody('ini_set(?, ?);', [$name, $value]);
 
 			} elseif (ini_get($name) != $value) { // intentionally ==
 				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');

@@ -15,8 +15,6 @@ namespace Tracy;
  */
 class BlueScreen
 {
-	private const MAX_MESSAGE_LENGTH = 2000;
-
 	/** @var string[] */
 	public $info = [];
 
@@ -112,23 +110,17 @@ class BlueScreen
 	private function renderTemplate(\Throwable $exception, string $template, $toScreen = true): void
 	{
 		$messageHtml = preg_replace(
-			'#\'\S(?:[^\']|\\\\\')*\S\'|"\S(?:[^"]|\\\\")*\S"#',
+			'#\'\S[^\']*\S\'|"\S[^"]*\S"#U',
 			'<i>$0</i>',
-			htmlspecialchars(Dumper::encodeString((string) $exception->getMessage(), self::MAX_MESSAGE_LENGTH), ENT_SUBSTITUTE, 'UTF-8')
+			htmlspecialchars((string) $exception->getMessage(), ENT_SUBSTITUTE, 'UTF-8')
 		);
 		$info = array_filter($this->info);
 		$source = Helpers::getSource();
+		$sourceIsUrl = preg_match('#^https?://#', $source);
 		$title = $exception instanceof \ErrorException
 			? Helpers::errorTypeToString($exception->getSeverity())
 			: Helpers::getClass($exception);
 		$lastError = $exception instanceof \ErrorException || $exception instanceof \Error ? null : error_get_last();
-
-		if (function_exists('apache_request_headers')) {
-			$httpHeaders = apache_request_headers();
-		} else {
-			$httpHeaders = array_filter($_SERVER, function ($k) { return strncmp($k, 'HTTP_', 5) === 0; }, ARRAY_FILTER_USE_KEY);
-			$httpHeaders = array_combine(array_map(function ($k) { return strtolower(strtr(substr($k, 5), '_', '-')); }, array_keys($httpHeaders)), $httpHeaders);
-		}
 
 		$snapshot = &$this->snapshot;
 		$snapshot = [];
@@ -136,9 +128,6 @@ class BlueScreen
 
 		$css = array_map('file_get_contents', array_merge([
 			__DIR__ . '/assets/bluescreen.css',
-			__DIR__ . '/../Toggle/toggle.css',
-			__DIR__ . '/../TableSort/table-sort.css',
-			__DIR__ . '/../Dumper/assets/dumper.css',
 		], Debugger::$customCssFiles));
 		$css = preg_replace('#\s+#u', ' ', implode($css));
 
@@ -196,7 +185,7 @@ class BlueScreen
 			$actions[] = $ex->tracyAction;
 		}
 
-		if (preg_match('# ([\'"])(\w{3,}(?:\\\\\w{3,})+)\1#i', $ex->getMessage(), $m)) {
+		if (preg_match('# ([\'"])(\w{3,}(?:\\\\\w{3,})+)\\1#i', $ex->getMessage(), $m)) {
 			$class = $m[2];
 			if (
 				!class_exists($class) && !interface_exists($class) && !trait_exists($class)
@@ -209,7 +198,7 @@ class BlueScreen
 			}
 		}
 
-		if (preg_match('# ([\'"])((?:/|[a-z]:[/\\\\])\w[^\'"]+\.\w{2,5})\1#i', $ex->getMessage(), $m)) {
+		if (preg_match('# ([\'"])((?:/|[a-z]:[/\\\\])\w[^\'"]+\.\w{2,5})\\1#i', $ex->getMessage(), $m)) {
 			$file = $m[2];
 			$actions[] = [
 				'link' => Helpers::editorUri($file, 1, $label = is_file($file) ? 'open' : 'create'),
@@ -242,11 +231,11 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightFile(string $file, int $line, int $lines = 15, array $vars = [], array $keysToHide = []): ?string
+	public static function highlightFile(string $file, int $line, int $lines = 15, array $vars = []): ?string
 	{
 		$source = @file_get_contents($file); // @ file may not exist
 		if ($source) {
-			$source = static::highlightPhp($source, $line, $lines, $vars, $keysToHide);
+			$source = static::highlightPhp($source, $line, $lines, $vars);
 			if ($editor = Helpers::editorUri($file, $line)) {
 				$source = substr_replace($source, ' data-tracy-href="' . Helpers::escapeHtml($editor) . '"', 4, 0);
 			}
@@ -258,7 +247,7 @@ class BlueScreen
 	/**
 	 * Returns syntax highlighted source code.
 	 */
-	public static function highlightPhp(string $source, int $line, int $lines = 15, array $vars = [], array $keysToHide = []): string
+	public static function highlightPhp(string $source, int $line, int $lines = 15, array $vars = []): string
 	{
 		if (function_exists('ini_set')) {
 			ini_set('highlight.comment', '#998; font-style: italic');
@@ -275,15 +264,12 @@ class BlueScreen
 		$out .= static::highlightLine($source, $line, $lines);
 
 		if ($vars) {
-			$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', function (array $m) use ($vars, $keysToHide): string {
-				if (array_key_exists($m[1], $vars)) {
-					$dump = Dumper::toHtml($vars[$m[1]], [
-						Dumper::DEPTH => 1,
-						Dumper::KEYS_TO_HIDE => $keysToHide,
-					]);
-					return '" title="' . str_replace('"', '&quot;', trim(strip_tags($dump))) . $m[0];
-				}
-				return $m[0];
+			$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', function (array $m) use ($vars): string {
+				return array_key_exists($m[1], $vars)
+					? '" title="'
+						. str_replace('"', '&quot;', trim(strip_tags(Dumper::toHtml($vars[$m[1]], [Dumper::DEPTH => 1]))))
+						. $m[0]
+					: $m[0];
 			}, $out);
 		}
 

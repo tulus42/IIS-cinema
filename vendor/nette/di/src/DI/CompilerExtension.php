@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI;
 
 use Nette;
@@ -25,14 +23,14 @@ abstract class CompilerExtension
 	/** @var string */
 	protected $name;
 
-	/** @var array|object */
+	/** @var array */
 	protected $config = [];
 
 
 	/**
 	 * @return static
 	 */
-	public function setCompiler(Compiler $compiler, string $name)
+	public function setCompiler(Compiler $compiler, $name)
 	{
 		$this->compiler = $compiler;
 		$this->name = $name;
@@ -41,14 +39,10 @@ abstract class CompilerExtension
 
 
 	/**
-	 * @param  array|object  $config
 	 * @return static
 	 */
-	public function setConfig($config)
+	public function setConfig(array $config)
 	{
-		if (!is_array($config) && !is_object($config)) {
-			throw new Nette\InvalidArgumentException;
-		}
 		$this->config = $config;
 		return $this;
 	}
@@ -56,46 +50,41 @@ abstract class CompilerExtension
 
 	/**
 	 * Returns extension configuration.
-	 * @return array|object
+	 * @return array
 	 */
 	public function getConfig()
 	{
+		if (func_num_args()) { // deprecated
+			return Config\Helpers::merge($this->config, $this->getContainerBuilder()->expand(func_get_arg(0)));
+		}
 		return $this->config;
 	}
 
 
 	/**
-	 * Returns configuration schema.
-	 */
-	public function getConfigSchema(): Nette\Schema\Schema
-	{
-		return is_object($this->config)
-			? Nette\Schema\Expect::from($this->config)
-			: Nette\Schema\Expect::array();
-	}
-
-
-	/**
 	 * Checks whether $config contains only $expected items and returns combined array.
+	 * @return array
 	 * @throws Nette\InvalidStateException
-	 * @deprecated  use getConfigSchema()
 	 */
-	public function validateConfig(array $expected, array $config = null, string $name = null): array
+	public function validateConfig(array $expected, array $config = null, $name = null)
 	{
 		if (func_num_args() === 1) {
 			return $this->config = $this->validateConfig($expected, $this->config);
 		}
 		if ($extra = array_diff_key((array) $config, $expected)) {
-			$name = $name ? str_replace('.', ' › ', $name) : $this->name;
+			$name = $name ?: $this->name;
 			$hint = Nette\Utils\ObjectHelpers::getSuggestion(array_keys($expected), key($extra));
 			$extra = $hint ? key($extra) : implode("', '{$name} › ", array_keys($extra));
-			throw new Nette\DI\InvalidConfigurationException("Unknown configuration option '{$name} › {$extra}'" . ($hint ? ", did you mean '{$name} › {$hint}'?" : '.'));
+			throw new Nette\InvalidStateException("Unknown configuration option '{$name} › {$extra}'" . ($hint ? ", did you mean '{$name} › {$hint}'?" : '.'));
 		}
-		return Nette\Schema\Helpers::merge($config, $expected);
+		return Config\Helpers::merge($config, $expected);
 	}
 
 
-	public function getContainerBuilder(): ContainerBuilder
+	/**
+	 * @return ContainerBuilder
+	 */
+	public function getContainerBuilder()
 	{
 		return $this->compiler->getContainerBuilder();
 	}
@@ -103,10 +92,12 @@ abstract class CompilerExtension
 
 	/**
 	 * Reads configuration from file.
+	 * @param  string  file name
+	 * @return array
 	 */
-	public function loadFromFile(string $file): array
+	public function loadFromFile($file)
 	{
-		$loader = $this->createLoader();
+		$loader = new Config\Loader;
 		$res = $loader->load($file);
 		$this->compiler->addDependencies($loader->getDependencies());
 		return $res;
@@ -114,30 +105,11 @@ abstract class CompilerExtension
 
 
 	/**
-	 * Loads list of service definitions from configuration.
-	 * Prefixes its names and replaces @extension with name in definition.
-	 */
-	public function loadDefinitionsFromConfig(array $configList): void
-	{
-		$res = [];
-		foreach ($configList as $key => $config) {
-			$key = is_string($key) ? $this->name . '.' . $key : $key;
-			$res[$key] = Helpers::prefixServiceName($config, $this->name);
-		}
-		$this->compiler->loadDefinitionsFromConfig($res);
-	}
-
-
-	protected function createLoader(): Config\Loader
-	{
-		return new Config\Loader;
-	}
-
-
-	/**
 	 * Prepend extension name to identifier or service name.
+	 * @param  string
+	 * @return string
 	 */
-	public function prefix(string $id): string
+	public function prefix($id)
 	{
 		return substr_replace($id, $this->name . '.', substr($id, 0, 1) === '@' ? 1 : 0, 0);
 	}

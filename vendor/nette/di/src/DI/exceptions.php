@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI;
 
 use Nette;
@@ -25,25 +23,9 @@ class MissingServiceException extends Nette\InvalidStateException
  */
 class ServiceCreationException extends Nette\InvalidStateException
 {
-	public function setMessage(string $message): self
+	public function setMessage($message)
 	{
 		$this->message = $message;
 		return $this;
 	}
-}
-
-
-/**
- * Not allowed when container is resolving.
- */
-class NotAllowedDuringResolvingException extends Nette\InvalidStateException
-{
-}
-
-
-/**
- * Error in configuration.
- */
-class InvalidConfigurationException extends Nette\InvalidStateException
-{
 }

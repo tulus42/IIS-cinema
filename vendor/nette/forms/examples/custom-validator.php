@@ -4,8 +4,6 @@
  * Nette Forms custom validator example.
  */
 
-declare(strict_types=1);
-
 
 if (@!include __DIR__ . '/../vendor/autoload.php') {
 	die('Install packages using `composer install`');
@@ -21,7 +19,7 @@ Debugger::enable();
 // Define custom validator
 class MyValidators
 {
-	public static function divisibilityValidator($item, $arg): bool
+	public static function divisibilityValidator($item, $arg)
 	{
 		return $item->value % $arg === 0;
 	}
@@ -49,7 +47,7 @@ if ($form->isSuccess()) {
 <meta charset="utf-8">
 <title>Nette Forms custom validator example</title>
 <link rel="stylesheet" media="screen" href="assets/style.css" />
-<script src="https://nette.github.io/resources/js/3/netteForms.js"></script>
+<script src="https://nette.github.io/resources/js/netteForms.js"></script>
 
 <script>
 	Nette.validators.MyValidators_divisibilityValidator = function(elem, args, val) {

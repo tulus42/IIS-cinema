@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Forms;
 
 
@@ -18,7 +16,7 @@ interface IControl
 
 	/**
 	 * Sets control's value.
-	 * @param  mixed  $value
+	 * @param  mixed
 	 * @return static
 	 */
 	function setValue($value);
@@ -29,15 +27,20 @@ interface IControl
 	 */
 	function getValue();
 
-	function validate(): void;
+	/**
+	 * @return void
+	 */
+	function validate();
 
 	/**
 	 * Returns errors corresponding to control.
+	 * @return array
 	 */
-	function getErrors(): array;
+	function getErrors();
 
 	/**
 	 * Is control value excluded from $form->getValues() result?
+	 * @return bool
 	 */
-	function isOmitted(): bool;
+	function isOmitted();
 }

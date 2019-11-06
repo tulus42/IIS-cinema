@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Caching\Storages;
 
 
@@ -18,12 +16,14 @@ interface IJournal
 
 	/**
 	 * Writes entry information into the journal.
+	 * @param  string  $key
+	 * @return void
 	 */
-	function write(string $key, array $dependencies): void;
+	function write($key, array $dependencies);
 
 	/**
 	 * Cleans entries from journal.
 	 * @return array|null of removed items or null when performing a full cleanup
 	 */
-	function clean(array $conditions): ?array;
+	function clean(array $conditions);
 }

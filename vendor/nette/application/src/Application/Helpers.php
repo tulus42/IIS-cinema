@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette;
@@ -15,18 +13,19 @@ use Nette;
 /**
  * Application helpers.
  */
-final class Helpers
+class Helpers
 {
 	use Nette\StaticClass;
 
 	/**
 	 * Splits name into [module, presenter] or [presenter, action]
+	 * @return array
 	 */
-	public static function splitName(string $name): array
+	public static function splitName($name)
 	{
 		$pos = strrpos($name, ':');
 		return $pos === false
 			? ['', $name, '']
-			: [substr($name, 0, $pos), substr($name, $pos + 1), ':'];
+			: [substr($name, 0, $pos), (string) substr($name, $pos + 1), ':'];
 	}
 }

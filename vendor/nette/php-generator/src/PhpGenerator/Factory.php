@@ -76,7 +76,7 @@ final class Factory
 		$method->setVariadic($from->isVariadic());
 		$method->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
 		if ($from->hasReturnType()) {
-			$method->setReturnType($from->getReturnType()->getName());
+			$method->setReturnType((string) $from->getReturnType());
 			$method->setReturnNullable($from->getReturnType()->allowsNull());
 		}
 		return $method;
@@ -96,7 +96,7 @@ final class Factory
 			$function->setComment(Helpers::unformatDocComment((string) $from->getDocComment()));
 		}
 		if ($from->hasReturnType()) {
-			$function->setReturnType($from->getReturnType()->getName());
+			$function->setReturnType((string) $from->getReturnType());
 			$function->setReturnNullable($from->getReturnType()->allowsNull());
 		}
 		return $function;
@@ -107,7 +107,7 @@ final class Factory
 	{
 		$param = new Parameter($from->getName());
 		$param->setReference($from->isPassedByReference());
-		$param->setTypeHint($from->hasType() ? $from->getType()->getName() : null);
+		$param->setTypeHint($from->hasType() ? (string) $from->getType() : null);
 		$param->setNullable($from->hasType() && $from->getType()->allowsNull());
 		if ($from->isDefaultValueAvailable()) {
 			$param->setDefaultValue($from->isDefaultValueConstant()

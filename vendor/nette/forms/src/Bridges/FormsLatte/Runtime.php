@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\FormsLatte;
 
 use Nette;
@@ -24,8 +22,9 @@ class Runtime
 
 	/**
 	 * Renders form begin.
+	 * @return string
 	 */
-	public static function renderFormBegin(Form $form, array $attrs, bool $withTags = true): string
+	public static function renderFormBegin(Form $form, array $attrs, $withTags = true)
 	{
 		$form->fireRenderEvents();
 		foreach ($form->getControls() as $control) {
@@ -44,8 +43,9 @@ class Runtime
 
 	/**
 	 * Renders form end.
+	 * @return string
 	 */
-	public static function renderFormEnd(Form $form, bool $withTags = true): string
+	public static function renderFormEnd(Form $form, $withTags = true)
 	{
 		$s = '';
 		if ($form->isMethod('get')) {

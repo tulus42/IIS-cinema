@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Forms\Controls;
 
 use Nette;
@@ -19,10 +17,10 @@ use Nette;
  */
 class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 {
-	/** @var callable[]&(callable(SubmitButton): void)[]; Occurs when the button is clicked and form is successfully validated */
+	/** @var callable[]  function (SubmitButton $sender); Occurs when the button is clicked and form is successfully validated */
 	public $onClick;
 
-	/** @var callable[]&(callable(SubmitButton): void)[]; Occurs when the button is clicked and form is not validated */
+	/** @var callable[]  function (SubmitButton $sender); Occurs when the button is clicked and form is not validated */
 	public $onInvalidClick;
 
 	/** @var array|null */
@@ -30,7 +28,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 
 	/**
-	 * @param  string|object  $caption
+	 * @param  string|object
 	 */
 	public function __construct($caption = null)
 	{
@@ -42,8 +40,9 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Loads HTTP data.
+	 * @return void
 	 */
-	public function loadHttpData(): void
+	public function loadHttpData()
 	{
 		parent::loadHttpData();
 		if ($this->isFilled()) {
@@ -54,8 +53,9 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Tells if the form was submitted by this button.
+	 * @return bool
 	 */
-	public function isSubmittedBy(): bool
+	public function isSubmittedBy()
 	{
 		return $this->getForm()->isSubmitted() === $this;
 	}
@@ -65,9 +65,9 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 * Sets the validation scope. Clicking the button validates only the controls within the specified scope.
 	 * @return static
 	 */
-	public function setValidationScope(?iterable $scope)
+	public function setValidationScope(/*array*/$scope = null)
 	{
-		if ($scope === null) {
+		if ($scope === null || $scope === true) {
 			$this->validationScope = null;
 		} else {
 			$this->validationScope = [];
@@ -84,8 +84,9 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Gets the validation scope.
+	 * @return array|null
 	 */
-	public function getValidationScope(): ?array
+	public function getValidationScope()
 	{
 		return $this->validationScope;
 	}
@@ -93,8 +94,9 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Fires click event.
+	 * @return void
 	 */
-	public function click(): void
+	public function click()
 	{
 		$this->onClick($this);
 	}
@@ -102,9 +104,10 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @param  string|object  $caption
+	 * @param  string|object
+	 * @return Nette\Utils\Html
 	 */
-	public function getControl($caption = null): Nette\Utils\Html
+	public function getControl($caption = null)
 	{
 		$scope = [];
 		foreach ((array) $this->validationScope as $control) {

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application\Responses;
 
 use Nette;
@@ -15,7 +13,7 @@ use Nette;
 /**
  * File download response.
  */
-final class FileResponse implements Nette\Application\IResponse
+class FileResponse implements Nette\Application\IResponse
 {
 	use Nette\SmartObject;
 
@@ -35,14 +33,19 @@ final class FileResponse implements Nette\Application\IResponse
 	private $forceDownload;
 
 
-	public function __construct(string $file, string $name = null, string $contentType = null, bool $forceDownload = true)
+	/**
+	 * @param  string  file path
+	 * @param  string  imposed file name
+	 * @param  string  MIME content type
+	 */
+	public function __construct($file, $name = null, $contentType = null, $forceDownload = true)
 	{
 		if (!is_file($file)) {
 			throw new Nette\Application\BadRequestException("File '$file' doesn't exist.");
 		}
 
 		$this->file = $file;
-		$this->name = $name ?? basename($file);
+		$this->name = $name ?: basename($file);
 		$this->contentType = $contentType ?: 'application/octet-stream';
 		$this->forceDownload = $forceDownload;
 	}
@@ -50,8 +53,9 @@ final class FileResponse implements Nette\Application\IResponse
 
 	/**
 	 * Returns the path to a downloaded file.
+	 * @return string
 	 */
-	public function getFile(): string
+	public function getFile()
 	{
 		return $this->file;
 	}
@@ -59,8 +63,9 @@ final class FileResponse implements Nette\Application\IResponse
 
 	/**
 	 * Returns the file name.
+	 * @return string
 	 */
-	public function getName(): string
+	public function getName()
 	{
 		return $this->name;
 	}
@@ -68,8 +73,9 @@ final class FileResponse implements Nette\Application\IResponse
 
 	/**
 	 * Returns the MIME content type of a downloaded file.
+	 * @return string
 	 */
-	public function getContentType(): string
+	public function getContentType()
 	{
 		return $this->contentType;
 	}
@@ -77,8 +83,9 @@ final class FileResponse implements Nette\Application\IResponse
 
 	/**
 	 * Sends response to output.
+	 * @return void
 	 */
-	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse): void
+	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 		$httpResponse->setContentType($this->contentType);
 		$httpResponse->setHeader('Content-Disposition',
@@ -91,8 +98,8 @@ final class FileResponse implements Nette\Application\IResponse
 
 		if ($this->resuming) {
 			$httpResponse->setHeader('Accept-Ranges', 'bytes');
-			if (preg_match('#^bytes=(\d*)-(\d*)$#D', (string) $httpRequest->getHeader('Range'), $matches)) {
-				[, $start, $end] = $matches;
+			if (preg_match('#^bytes=(\d*)-(\d*)\z#', $httpRequest->getHeader('Range'), $matches)) {
+				list(, $start, $end) = $matches;
 				if ($start === '') {
 					$start = max(0, $filesize - $end);
 					$end = $filesize - 1;
@@ -108,14 +115,14 @@ final class FileResponse implements Nette\Application\IResponse
 				$httpResponse->setCode(206);
 				$httpResponse->setHeader('Content-Range', 'bytes ' . $start . '-' . $end . '/' . $filesize);
 				$length = $end - $start + 1;
-				fseek($handle, (int) $start);
+				fseek($handle, $start);
 
 			} else {
 				$httpResponse->setHeader('Content-Range', 'bytes 0-' . ($filesize - 1) . '/' . $filesize);
 			}
 		}
 
-		$httpResponse->setHeader('Content-Length', (string) $length);
+		$httpResponse->setHeader('Content-Length', $length);
 		while (!feof($handle) && $length > 0) {
 			echo $s = fread($handle, min(4000000, $length));
 			$length -= strlen($s);

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database;
 
 use Nette;
@@ -19,10 +17,7 @@ class SqlPreprocessor
 {
 	use Nette\SmartObject;
 
-	/** @var array */
-	private const MODE_LIST = ['and', 'or', 'set', 'values', 'order'];
-
-	private const ARRAY_MODES = [
+	const ARRAY_MODES = [
 		'INSERT' => 'values',
 		'REPLACE' => 'values',
 		'KEY UPDATE' => 'set',
@@ -33,7 +28,7 @@ class SqlPreprocessor
 		'GROUP BY' => 'order',
 	];
 
-	private const PARAMETRIC_COMMANDS = [
+	const PARAMETRIC_COMMANDS = [
 		'SELECT' => 1,
 		'INSERT' => 1,
 		'UPDATE' => 1,
@@ -72,9 +67,10 @@ class SqlPreprocessor
 
 
 	/**
+	 * @param  array
 	 * @return array of [sql, params]
 	 */
-	public function process(array $params, bool $useParams = false): array
+	public function process($params, $useParams = false)
 	{
 		$this->params = $params;
 		$this->counter = 0;
@@ -96,7 +92,7 @@ class SqlPreprocessor
 				$this->arrayMode = null;
 				$res[] = Nette\Utils\Strings::replace(
 					$param,
-					'~\'[^\']*+\'|"[^"]*+"|\?[a-z]*|^\s*+(?:SELECT|INSERT|UPDATE|DELETE|REPLACE|EXPLAIN)\b|\b(?:SET|WHERE|HAVING|ORDER BY|GROUP BY|KEY UPDATE)(?=\s*$|\s*\?)|/\*.*?\*/|--[^\n]*~Dsi',
+					'~\'[^\']*+\'|"[^"]*+"|\?[a-z]*|^\s*+(?:SELECT|INSERT|UPDATE|DELETE|REPLACE|EXPLAIN)\b|\b(?:SET|WHERE|HAVING|ORDER BY|GROUP BY|KEY UPDATE)(?=\s*\z|\s*\?)|/\*.*?\*/|--[^\n]*~si',
 					[$this, 'callback']
 				);
 			} else {
@@ -109,7 +105,7 @@ class SqlPreprocessor
 
 
 	/** @internal */
-	public function callback(array $m): string
+	public function callback($m)
 	{
 		$m = $m[0];
 		if ($m[0] === '?') { // placeholder
@@ -123,17 +119,19 @@ class SqlPreprocessor
 
 		} else { // command
 			$cmd = ltrim(strtoupper($m));
-			$this->arrayMode = self::ARRAY_MODES[$cmd] ?? null;
-			$this->useParams = isset(self::PARAMETRIC_COMMANDS[$cmd]) || $this->useParams;
+			$tmp = self::ARRAY_MODES;
+			$this->arrayMode = isset($tmp[$cmd]) ? $tmp[$cmd] : null;
+			$tmp = self::PARAMETRIC_COMMANDS;
+			$this->useParams = isset($tmp[$cmd]) || $this->useParams;
 			return $m;
 		}
 	}
 
 
-	private function formatValue($value, string $mode = null): string
+	private function formatValue($value, $mode = null)
 	{
 		if (!$mode || $mode === 'auto') {
-			if (is_scalar($value) || is_resource($value)) {
+			if (is_string($value) || is_resource($value)) {
 				if ($this->useParams) {
 					$this->remaining[] = $value;
 					return '?';
@@ -141,19 +139,27 @@ class SqlPreprocessor
 					if (is_resource($value)) {
 						$value = stream_get_contents($value);
 					}
-					return $this->connection->quote((string) $value);
+					return $this->connection->quote($value);
 				}
+
+			} elseif (is_int($value)) {
+				return (string) $value;
+
+			} elseif (is_float($value)) {
+				return rtrim(rtrim(number_format($value, 10, '.', ''), '0'), '.');
+
+			} elseif (is_bool($value)) {
+				return $this->driver->formatBool($value);
 
 			} elseif ($value === null) {
 				return 'NULL';
 
 			} elseif ($value instanceof Table\IRow) {
-				$this->remaining[] = $value->getPrimary();
-				return '?';
+				return $this->formatValue($value->getPrimary());
 
 			} elseif ($value instanceof SqlLiteral) {
 				$prep = clone $this;
-				[$res, $params] = $prep->process(array_merge([$value->__toString()], $value->getParameters()), $this->useParams);
+				list($res, $params) = $prep->process(array_merge([$value->__toString()], $value->getParameters()), $this->useParams);
 				$this->remaining = array_merge($this->remaining, $params);
 				return $res;
 
@@ -164,8 +170,7 @@ class SqlPreprocessor
 				return $this->driver->formatDateInterval($value);
 
 			} elseif (is_object($value) && method_exists($value, '__toString')) {
-				$this->remaining[] = (string) $value;
-				return '?';
+				return $this->formatValue((string) $value);
 			}
 
 		} elseif ($mode === 'name') {
@@ -188,9 +193,6 @@ class SqlPreprocessor
 
 			if ($mode === 'values') { // (key, key, ...) VALUES (value, value, ...)
 				if (array_key_exists(0, $value)) { // multi-insert
-					if (!is_array($value[0])) {
-						throw new Nette\InvalidArgumentException('Automaticaly detected multi-insert, but values aren\'t array. If you need try to change mode like "?[' . implode('|', self::MODE_LIST) . ']". Mode "' . $mode . '" was used.');
-					}
 					foreach ($value[0] as $k => $v) {
 						$kx[] = $this->delimite($k);
 					}
@@ -231,7 +233,7 @@ class SqlPreprocessor
 						$vx[] = $this->formatValue($v);
 						continue;
 					}
-					[$k, $operator] = explode(' ', $k . ' ');
+					list($k, $operator) = explode(' ', $k . ' ');
 					$k = $this->delimite($k);
 					if (is_array($v)) {
 						if ($v) {
@@ -242,10 +244,7 @@ class SqlPreprocessor
 						}
 					} else {
 						$v = $this->formatValue($v);
-						$operator = $v === 'NULL'
-							? ($operator === 'NOT' ? 'IS NOT' : ($operator ?: 'IS'))
-							: ($operator ?: '=');
-						$vx[] = $k . ' ' . $operator . ' ' . $v;
+						$vx[] = $k . ' ' . ($operator ?: ($v === 'NULL' ? 'IS' : '=')) . ' ' . $v;
 					}
 				}
 				return $value ? '(' . implode(') ' . strtoupper($mode) . ' (', $vx) . ')' : '1=1';
@@ -260,7 +259,7 @@ class SqlPreprocessor
 				throw new Nette\InvalidArgumentException("Unknown placeholder ?$mode.");
 			}
 
-		} elseif (in_array($mode, self::MODE_LIST, true)) {
+		} elseif (in_array($mode, ['and', 'or', 'set', 'values', 'order'], true)) {
 			$type = gettype($value);
 			throw new Nette\InvalidArgumentException("Placeholder ?$mode expects array or Traversable object, $type given.");
 
@@ -273,7 +272,7 @@ class SqlPreprocessor
 	}
 
 
-	private function delimite(string $name): string
+	private function delimite($name)
 	{
 		return implode('.', array_map([$this->driver, 'delimite'], explode('.', $name)));
 	}

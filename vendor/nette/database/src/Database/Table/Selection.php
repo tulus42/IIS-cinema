@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database\Table;
 
 use Nette;
@@ -37,7 +35,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/** @var string table name */
 	protected $name;
 
-	/** @var string|string[]|null primary key field name */
+	/** @var string|array|null primary key field name */
 	protected $primary;
 
 	/** @var string|bool primary column sequence name, false for autodetection */
@@ -82,8 +80,12 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Creates filtered table representation.
+	 * @param  Context
+	 * @param  IConventions
+	 * @param  string  table name
+	 * @param  Nette\Caching\IStorage|null
 	 */
-	public function __construct(Context $context, IConventions $conventions, string $tableName, Nette\Caching\IStorage $cacheStorage = null)
+	public function __construct(Context $context, IConventions $conventions, $tableName, Nette\Caching\IStorage $cacheStorage = null)
 	{
 		$this->context = $context;
 		$this->conventions = $conventions;
@@ -108,16 +110,20 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	public function getName(): string
+	/**
+	 * @return string
+	 */
+	public function getName()
 	{
 		return $this->name;
 	}
 
 
 	/**
-	 * @return string|string[]|null
+	 * @param  bool
+	 * @return string|array|null
 	 */
-	public function getPrimary(bool $throw = true)
+	public function getPrimary($throw = true)
 	{
 		if ($this->primary === null && $throw) {
 			throw new \LogicException("Table '{$this->name}' does not have a primary key.");
@@ -126,7 +132,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	public function getPrimarySequence(): ?string
+	/**
+	 * @return string|null
+	 */
+	public function getPrimarySequence()
 	{
 		if ($this->primarySequence === false) {
 			$this->primarySequence = $this->context->getStructure()->getPrimaryKeySequence($this->name);
@@ -137,16 +146,20 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 
 	/**
+	 * @param  string
 	 * @return static
 	 */
-	public function setPrimarySequence(string $sequence)
+	public function setPrimarySequence($sequence)
 	{
 		$this->primarySequence = $sequence;
 		return $this;
 	}
 
 
-	public function getSql(): string
+	/**
+	 * @return string
+	 */
+	public function getSql()
 	{
 		return $this->sqlBuilder->buildSelectQuery($this->getPreviousAccessedColumns());
 	}
@@ -155,7 +168,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Loads cache of previous accessed columns and returns it.
 	 * @internal
-	 * @return array|bool
+	 * @return array|false
 	 */
 	public function getPreviousAccessedColumns()
 	{
@@ -172,8 +185,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * @internal
+	 * @return SqlBuilder
 	 */
-	public function getSqlBuilder(): SqlBuilder
+	public function getSqlBuilder()
 	{
 		return $this->sqlBuilder;
 	}
@@ -184,9 +198,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns row specified by primary key.
-	 * @param  mixed  $key  primary key
+	 * @param  mixed primary key
+	 * @return ActiveRow|false if there is no such row
 	 */
-	public function get($key): ?ActiveRow
+	public function get($key)
 	{
 		$clone = clone $this;
 		return $clone->wherePrimary($key)->fetch();
@@ -195,23 +210,23 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * @inheritDoc
-	 * @return ActiveRow|null if there is no such row
+	 * @return ActiveRow|false if there is no such row
 	 */
-	public function fetch(): ?Nette\Database\IRow
+	public function fetch()
 	{
 		$this->execute();
 		$return = current($this->data);
 		next($this->data);
-		return $return === false ? null : $return;
+		return $return;
 	}
 
 
 	/**
 	 * Fetches single field.
-	 * @return mixed
-	 * @deprecated
+	 * @param  string|null
+	 * @return mixed|false
 	 */
-	public function fetchField(string $column = null)
+	public function fetchField($column = null)
 	{
 		if ($column) {
 			$this->select($column);
@@ -222,14 +237,14 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 			return $column ? $row[$column] : array_values($row->toArray())[0];
 		}
 
-		return null;
+		return false;
 	}
 
 
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchPairs($key = null, $value = null): array
+	public function fetchPairs($key = null, $value = null)
 	{
 		return Nette\Database\Helpers::toPairs($this->fetchAll(), $key, $value);
 	}
@@ -238,7 +253,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchAll(): array
+	public function fetchAll()
 	{
 		return iterator_to_array($this);
 	}
@@ -247,7 +262,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchAssoc(string $path): array
+	public function fetchAssoc($path)
 	{
 		$rows = array_map('iterator_to_array', $this->fetchAll());
 		return Nette\Utils\Arrays::associate($rows, $path);
@@ -259,7 +274,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds select clause, more calls appends to the end.
-	 * @param  string|string[]  $columns  for example "column, MD5(column) AS column_md5"
+	 * @param  string|string[] for example "column, MD5(column) AS column_md5"
 	 * @return static
 	 */
 	public function select($columns, ...$params)
@@ -272,7 +287,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds condition for primary key.
-	 * @param  mixed  $key
+	 * @param  mixed
 	 * @return static
 	 */
 	public function wherePrimary($key)
@@ -297,7 +312,8 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds where condition, more calls appends with AND.
-	 * @param  string|string[]  $condition  possibly containing ?
+	 * @param  string|string[] condition possibly containing ?
+	 * @param  mixed
 	 * @return static
 	 */
 	public function where($condition, ...$params)
@@ -309,11 +325,12 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds ON condition when joining specified table, more calls appends with AND.
-	 * @param  string  $tableChain  table chain or table alias for which you need additional left join condition
-	 * @param  string  $condition  possibly containing ?
+	 * @param  string table chain or table alias for which you need additional left join condition
+	 * @param  string condition possibly containing ?
+	 * @param  mixed
 	 * @return static
 	 */
-	public function joinWhere(string $tableChain, string $condition, ...$params)
+	public function joinWhere($tableChain, $condition, ...$params)
 	{
 		$this->condition($condition, $params, $tableChain);
 		return $this;
@@ -322,12 +339,13 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds condition, more calls appends with AND.
-	 * @param  string|string[]  $condition  possibly containing ?
+	 * @param  string|string[] condition possibly containing ?
+	 * @return void
 	 */
-	protected function condition($condition, array $params, $tableChain = null): void
+	protected function condition($condition, array $params, $tableChain = null)
 	{
 		$this->emptyResultSet();
-		if (is_array($condition) && $params === []) { // where(['column1' => 1, 'column2 > ?' => 2])
+		if (is_array($condition) && $params === []) { // where(array('column1' => 1, 'column2 > ?' => 2))
 			foreach ($condition as $key => $val) {
 				if (is_int($key)) {
 					$this->condition($val, [], $tableChain); // where('full condition')
@@ -346,7 +364,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Adds where condition using the OR operator between parameters.
 	 * More calls appends with AND.
-	 * @param  array  $parameters ['column1' => 1, 'column2 > ?' => 2, 'full condition']
+	 * @param  array ['column1' => 1, 'column2 > ?' => 2, 'full condition']
 	 * @return static
 	 * @throws \Nette\InvalidArgumentException
 	 */
@@ -379,10 +397,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Adds order clause, more calls appends to the end.
-	 * @param  string  $columns  for example 'column1, column2 DESC'
+	 * @param  string for example 'column1, column2 DESC'
 	 * @return static
 	 */
-	public function order(string $columns, ...$params)
+	public function order($columns, ...$params)
 	{
 		$this->emptyResultSet();
 		$this->sqlBuilder->addOrder($columns, ...$params);
@@ -392,9 +410,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets limit clause, more calls rewrite old values.
+	 * @param  int
+	 * @param  int
 	 * @return static
 	 */
-	public function limit(?int $limit, int $offset = null)
+	public function limit($limit, $offset = null)
 	{
 		$this->emptyResultSet();
 		$this->sqlBuilder->setLimit($limit, $offset);
@@ -404,9 +424,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets offset using page number, more calls rewrite old values.
+	 * @param  int
+	 * @param  int
 	 * @return static
 	 */
-	public function page(int $page, int $itemsPerPage, &$numOfPages = null)
+	public function page($page, $itemsPerPage, &$numOfPages = null)
 	{
 		if (func_num_args() > 2) {
 			$numOfPages = (int) ceil($this->count('*') / $itemsPerPage);
@@ -420,9 +442,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets group clause, more calls rewrite old value.
+	 * @param  string
 	 * @return static
 	 */
-	public function group(string $columns, ...$params)
+	public function group($columns, ...$params)
 	{
 		$this->emptyResultSet();
 		$this->sqlBuilder->setGroup($columns, ...$params);
@@ -432,9 +455,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Sets having clause, more calls rewrite old value.
+	 * @param  string
 	 * @return static
 	 */
-	public function having(string $having, ...$params)
+	public function having($having, ...$params)
 	{
 		$this->emptyResultSet();
 		$this->sqlBuilder->setHaving($having, ...$params);
@@ -444,9 +468,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Aliases table. Example ':book:book_tag.tag', 'tg'
+	 * @param  string
+	 * @param  string
 	 * @return static
 	 */
-	public function alias(string $tableChain, string $alias)
+	public function alias($tableChain, $alias)
 	{
 		$this->sqlBuilder->addAlias($tableChain, $alias);
 		return $this;
@@ -458,10 +484,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Executes aggregation function.
-	 * @param  string  $function  select call in "FUNCTION(column)" format
-	 * @return mixed
+	 * @param  string select call in "FUNCTION(column)" format
+	 * @return int
 	 */
-	public function aggregation(string $function)
+	public function aggregation($function)
 	{
 		$selection = $this->createSelectionInstance();
 		$selection->getSqlBuilder()->importConditions($this->getSqlBuilder());
@@ -474,9 +500,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Counts number of rows.
-	 * @param  string  $column  if it is not provided returns count of result rows, otherwise runs new sql counting query
+	 * @param  string  if it is not provided returns count of result rows, otherwise runs new sql counting query
+	 * @return int
 	 */
-	public function count(string $column = null): int
+	public function count($column = null)
 	{
 		if (!$column) {
 			$this->execute();
@@ -488,9 +515,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns minimum value from a column.
-	 * @return mixed
+	 * @param  string
+	 * @return int
 	 */
-	public function min(string $column)
+	public function min($column)
 	{
 		return $this->aggregation("MIN($column)");
 	}
@@ -498,9 +526,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns maximum value from a column.
-	 * @return mixed
+	 * @param  string
+	 * @return int
 	 */
-	public function max(string $column)
+	public function max($column)
 	{
 		return $this->aggregation("MAX($column)");
 	}
@@ -508,9 +537,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns sum of values in a column.
-	 * @return mixed
+	 * @param  string
+	 * @return int
 	 */
-	public function sum(string $column)
+	public function sum($column)
 	{
 		return $this->aggregation("SUM($column)");
 	}
@@ -519,7 +549,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/********************* internal ****************d*g**/
 
 
-	protected function execute(): void
+	protected function execute()
 	{
 		if ($this->rows !== null) {
 			return;
@@ -549,7 +579,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 		foreach ($result->getPdoStatement() as $key => $row) {
 			$row = $this->createRow($result->normalizeRow($row));
 			$primary = $row->getSignature(false);
-			$usedPrimary = $usedPrimary && $primary !== '';
+			$usedPrimary = $usedPrimary && (string) $primary !== '';
 			$this->rows[$usedPrimary ? $primary : $key] = $row;
 		}
 		$this->data = $this->rows;
@@ -562,31 +592,43 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	protected function createRow(array $row): ActiveRow
+	/**
+	 * @return ActiveRow
+	 */
+	protected function createRow(array $row)
 	{
 		return new ActiveRow($row, $this);
 	}
 
 
-	public function createSelectionInstance(string $table = null): self
+	/**
+	 * @return self
+	 */
+	public function createSelectionInstance($table = null)
 	{
 		return new self($this->context, $this->conventions, $table ?: $this->name, $this->cache ? $this->cache->getStorage() : null);
 	}
 
 
-	protected function createGroupedSelectionInstance(string $table, string $column): GroupedSelection
+	/**
+	 * @return GroupedSelection
+	 */
+	protected function createGroupedSelectionInstance($table, $column)
 	{
 		return new GroupedSelection($this->context, $this->conventions, $table, $column, $this, $this->cache ? $this->cache->getStorage() : null);
 	}
 
 
-	protected function query(string $query): Nette\Database\ResultSet
+	/**
+	 * @return Nette\Database\ResultSet
+	 */
+	protected function query($query)
 	{
 		return $this->context->queryArgs($query, $this->sqlBuilder->getParameters());
 	}
 
 
-	protected function emptyResultSet(bool $clearCache = true, bool $deleteRererencedCache = true): void
+	protected function emptyResultSet($clearCache = true, $deleteRererencedCache = true)
 	{
 		if ($this->rows !== null && $clearCache) {
 			$this->saveCacheState();
@@ -608,7 +650,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	protected function saveCacheState(): void
+	protected function saveCacheState()
 	{
 		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns !== $this->previousAccessedColumns) {
 			$previousAccessed = $this->cache->load($this->getGeneralCacheKey());
@@ -639,7 +681,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Loads refCache references
 	 */
-	protected function loadRefCache(): void
+	protected function loadRefCache()
 	{
 	}
 
@@ -647,8 +689,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Returns general cache key independent on query parameters or sql limit
 	 * Used e.g. for previously accessed columns caching
+	 * @return string
 	 */
-	protected function getGeneralCacheKey(): string
+	protected function getGeneralCacheKey()
 	{
 		if ($this->generalCacheKey) {
 			return $this->generalCacheKey;
@@ -668,8 +711,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Returns object specific cache key dependent on query parameters
 	 * Used e.g. for reference memory caching
+	 * @return string
 	 */
-	protected function getSpecificCacheKey(): string
+	protected function getSpecificCacheKey()
 	{
 		if ($this->specificCacheKey) {
 			return $this->specificCacheKey;
@@ -682,9 +726,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * @internal
 	 * @param  string|null column name or null to reload all columns
+	 * @param  bool
 	 * @return bool if selection requeried for more columns.
 	 */
-	public function accessColumn(?string $key, bool $selectColumn = true): bool
+	public function accessColumn($key, $selectColumn = true)
 	{
 		if (!$this->cache) {
 			return false;
@@ -738,8 +783,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * @internal
+	 * @param  string
 	 */
-	public function removeAccessColumn(string $key): void
+	public function removeAccessColumn($key)
 	{
 		if ($this->cache && is_array($this->accessedColumns)) {
 			$this->accessedColumns[$key] = false;
@@ -749,8 +795,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns if selection requeried for more columns.
+	 * @return bool
 	 */
-	public function getDataRefreshed(): bool
+	public function getDataRefreshed()
 	{
 		return $this->dataRefreshed;
 	}
@@ -761,15 +808,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Inserts row in a table.
-	 * @param  array|\Traversable|Selection  $data  [$column => $value]|\Traversable|Selection for INSERT ... SELECT
+	 * @param  array|\Traversable|Selection array($column => $value)|\Traversable|Selection for INSERT ... SELECT
 	 * @return ActiveRow|int|bool Returns IRow or number of affected rows for Selection or table without primary key
 	 */
-	public function insert(iterable $data)
+	public function insert($data)
 	{
-		//should be called before query for not to spoil PDO::lastInsertId
-		$primarySequenceName = $this->getPrimarySequence();
-		$primaryAutoincrementKey = $this->context->getStructure()->getPrimaryAutoincrementKey($this->name);
-
 		if ($data instanceof self) {
 			$return = $this->context->queryArgs($this->sqlBuilder->buildInsertQuery() . ' ' . $data->getSql(), $data->getSqlBuilder()->getParameters());
 
@@ -786,6 +829,9 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 			unset($this->refCache['referencing'][$this->getGeneralCacheKey()][$this->getSpecificCacheKey()]);
 			return $return->getRowCount();
 		}
+
+		$primarySequenceName = $this->getPrimarySequence();
+		$primaryAutoincrementKey = $this->context->getStructure()->getPrimaryAutoincrementKey($this->name);
 
 		$primaryKey = [];
 		foreach ((array) $this->primary as $key) {
@@ -842,9 +888,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/**
 	 * Updates all rows in result set.
 	 * Joins in UPDATE are supported only in MySQL
+	 * @param  iterable ($column => $value)
 	 * @return int number of affected rows
 	 */
-	public function update(iterable $data): int
+	public function update($data)
 	{
 		if ($data instanceof \Traversable) {
 			$data = iterator_to_array($data);
@@ -868,7 +915,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	 * Deletes all rows in result set.
 	 * @return int number of affected rows
 	 */
-	public function delete(): int
+	public function delete()
 	{
 		return $this->query($this->sqlBuilder->buildDeleteQuery())->getRowCount();
 	}
@@ -879,16 +926,19 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns referenced row.
+	 * @param  ActiveRow
+	 * @param  string|null
+	 * @param  string|null
 	 * @return ActiveRow|null|false null if the row does not exist, false if the relationship does not exist
 	 */
-	public function getReferencedTable(ActiveRow $row, ?string $table, string $column = null)
+	public function getReferencedTable(ActiveRow $row, $table, $column = null)
 	{
 		if (!$column) {
 			$belongsTo = $this->conventions->getBelongsToReference($this->name, $table);
 			if (!$belongsTo) {
 				return false;
 			}
-			[$table, $column] = $belongsTo;
+			list($table, $column) = $belongsTo;
 		}
 		if (!$row->accessColumn($column)) {
 			return false;
@@ -919,24 +969,27 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 			}
 		}
 
-		return $selection[$checkPrimaryKey] ?? null;
+		return isset($selection[$checkPrimaryKey]) ? $selection[$checkPrimaryKey] : null;
 	}
 
 
 	/**
 	 * Returns referencing rows.
-	 * @param  int|string  $active  primary key
+	 * @param  string
+	 * @param  string
+	 * @param  int primary key
+	 * @return GroupedSelection|null
 	 */
-	public function getReferencingTable(string $table, string $column = null, $active = null): ?GroupedSelection
+	public function getReferencingTable($table, $column, $active = null)
 	{
 		if (strpos($table, '.') !== false) {
-			[$table, $column] = explode('.', $table);
+			list($table, $column) = explode('.', $table);
 		} elseif (!$column) {
 			$hasMany = $this->conventions->getHasManyReference($this->name, $table);
 			if (!$hasMany) {
 				return null;
 			}
-			[$table, $column] = $hasMany;
+			list($table, $column) = $hasMany;
 		}
 
 		$prototype = &$this->refCache['referencingPrototype'][$this->getSpecificCacheKey()]["$table.$column"];
@@ -954,7 +1007,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	/********************* interface Iterator ****************d*g**/
 
 
-	public function rewind(): void
+	public function rewind()
 	{
 		$this->execute();
 		$this->keys = array_keys($this->data);
@@ -962,7 +1015,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	/** @return ActiveRow|false */
+	/** @return ActiveRow|bool */
 	public function current()
 	{
 		if (($key = current($this->keys)) !== false) {
@@ -982,7 +1035,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	public function next(): void
+	public function next()
 	{
 		do {
 			next($this->keys);
@@ -990,7 +1043,7 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 	}
 
 
-	public function valid(): bool
+	public function valid()
 	{
 		return current($this->keys) !== false;
 	}
@@ -1001,10 +1054,11 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Mimic row.
-	 * @param  string  $key
-	 * @param  IRow  $value
+	 * @param  string row ID
+	 * @param  IRow
+	 * @return void
 	 */
-	public function offsetSet($key, $value): void
+	public function offsetSet($key, $value)
 	{
 		$this->execute();
 		$this->rows[$key] = $value;
@@ -1013,9 +1067,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Returns specified row.
-	 * @param  string  $key
+	 * @param  string row ID
+	 * @return ActiveRow|null if there is no such row
 	 */
-	public function offsetGet($key): ?ActiveRow
+	public function offsetGet($key)
 	{
 		$this->execute();
 		return $this->rows[$key];
@@ -1024,9 +1079,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Tests if row exists.
-	 * @param  string  $key
+	 * @param  string row ID
+	 * @return bool
 	 */
-	public function offsetExists($key): bool
+	public function offsetExists($key)
 	{
 		$this->execute();
 		return isset($this->rows[$key]);
@@ -1035,9 +1091,10 @@ class Selection implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 
 	/**
 	 * Removes row from result set.
-	 * @param  string  $key
+	 * @param  string row ID
+	 * @return void
 	 */
-	public function offsetUnset($key): void
+	public function offsetUnset($key)
 	{
 		$this->execute();
 		unset($this->rows[$key], $this->data[$key]);

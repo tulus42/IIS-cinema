@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI;
 
 use Nette;
@@ -26,7 +24,7 @@ class ContainerLoader
 	private $tempDirectory;
 
 
-	public function __construct(string $tempDirectory, bool $autoRebuild = false)
+	public function __construct($tempDirectory, $autoRebuild = false)
 	{
 		$this->tempDirectory = $tempDirectory;
 		$this->autoRebuild = $autoRebuild;
@@ -34,11 +32,16 @@ class ContainerLoader
 
 
 	/**
-	 * @param  callable  $generator  function (Nette\DI\Compiler $compiler): string|null
-	 * @param  mixed  $key
+	 * @param  callable  function (Nette\DI\Compiler $compiler): string|null
+	 * @param  mixed
+	 * @return string
 	 */
-	public function load(callable $generator, $key = null): string
+	public function load($generator, $key = null)
 	{
+		if (!is_callable($generator)) { // back compatiblity
+			trigger_error(__METHOD__ . ': order of arguments has been swapped.', E_USER_DEPRECATED);
+			list($generator, $key) = [$key, $generator];
+		}
 		$class = $this->getClassName($key);
 		if (!class_exists($class, false)) {
 			$this->loadFile($class, $generator);
@@ -48,15 +51,18 @@ class ContainerLoader
 
 
 	/**
-	 * @param  mixed  $key
+	 * @return string
 	 */
-	public function getClassName($key): string
+	public function getClassName($key)
 	{
 		return 'Container_' . substr(md5(serialize($key)), 0, 10);
 	}
 
 
-	private function loadFile(string $class, callable $generator): void
+	/**
+	 * @return void
+	 */
+	private function loadFile($class, $generator)
 	{
 		$file = "$this->tempDirectory/$class.php";
 		if (!$this->isExpired($file) && (@include $file) !== false) { // @ file may not exist
@@ -76,7 +82,7 @@ class ContainerLoader
 			if (isset($updatedMeta)) {
 				$toWrite["$file.meta"] = $updatedMeta;
 			} else {
-				[$toWrite[$file], $toWrite["$file.meta"]] = $this->generate($class, $generator);
+				list($toWrite[$file], $toWrite["$file.meta"]) = $this->generate($class, $generator);
 			}
 
 			foreach ($toWrite as $name => $content) {
@@ -96,11 +102,11 @@ class ContainerLoader
 	}
 
 
-	private function isExpired(string $file, string &$updatedMeta = null): bool
+	private function isExpired($file, &$updatedMeta = null)
 	{
 		if ($this->autoRebuild) {
 			$meta = @unserialize((string) file_get_contents("$file.meta")); // @ - file may not exist
-			$orig = $meta[2] ?? null;
+			$orig = $meta[2];
 			return empty($meta[0])
 				|| DependencyChecker::isExpired(...$meta)
 				|| ($orig !== $meta[2] && $updatedMeta = serialize($meta));
@@ -112,11 +118,11 @@ class ContainerLoader
 	/**
 	 * @return array of (code, file[])
 	 */
-	protected function generate(string $class, callable $generator): array
+	protected function generate($class, $generator)
 	{
 		$compiler = new Compiler;
 		$compiler->setClassName($class);
-		$code = $generator(...[&$compiler]) ?: $compiler->compile();
+		$code = call_user_func_array($generator, [&$compiler]) ?: $compiler->compile();
 		return [
 			"<?php\n$code",
 			serialize($compiler->exportDependencies()),

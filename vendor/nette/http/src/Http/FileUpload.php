@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Http;
 
 use Nette;
@@ -24,16 +22,14 @@ use Nette;
  * @property-read bool $ok
  * @property-read string|null $contents
  */
-final class FileUpload
+class FileUpload
 {
 	use Nette\SmartObject;
-
-	public const IMAGE_MIME_TYPES = ['image/gif', 'image/png', 'image/jpeg', 'image/webp'];
 
 	/** @var string */
 	private $name;
 
-	/** @var string|null|false */
+	/** @var string */
 	private $type;
 
 	/** @var int */
@@ -46,7 +42,7 @@ final class FileUpload
 	private $error;
 
 
-	public function __construct(?array $value)
+	public function __construct($value)
 	{
 		foreach (['name', 'size', 'tmp_name', 'error'] as $key) {
 			if (!isset($value[$key]) || !is_scalar($value[$key])) {
@@ -63,8 +59,9 @@ final class FileUpload
 
 	/**
 	 * Returns the file name.
+	 * @return string
 	 */
-	public function getName(): string
+	public function getName()
 	{
 		return $this->name;
 	}
@@ -72,8 +69,9 @@ final class FileUpload
 
 	/**
 	 * Returns the sanitized file name.
+	 * @return string
 	 */
-	public function getSanitizedName(): string
+	public function getSanitizedName()
 	{
 		return trim(Nette\Utils\Strings::webalize($this->name, '.', false), '.-');
 	}
@@ -81,20 +79,22 @@ final class FileUpload
 
 	/**
 	 * Returns the MIME content type of an uploaded file.
+	 * @return string|null
 	 */
-	public function getContentType(): ?string
+	public function getContentType()
 	{
 		if ($this->isOk() && $this->type === null) {
 			$this->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $this->tmpName);
 		}
-		return $this->type ?: null;
+		return $this->type;
 	}
 
 
 	/**
 	 * Returns the size of an uploaded file.
+	 * @return int
 	 */
-	public function getSize(): int
+	public function getSize()
 	{
 		return $this->size;
 	}
@@ -102,8 +102,9 @@ final class FileUpload
 
 	/**
 	 * Returns the path to an uploaded file.
+	 * @return string
 	 */
-	public function getTemporaryFile(): string
+	public function getTemporaryFile()
 	{
 		return $this->tmpName;
 	}
@@ -111,17 +112,19 @@ final class FileUpload
 
 	/**
 	 * Returns the path to an uploaded file.
+	 * @return string
 	 */
-	public function __toString(): string
+	public function __toString()
 	{
-		return $this->tmpName;
+		return (string) $this->tmpName;
 	}
 
 
 	/**
 	 * Returns the error code. {@link http://php.net/manual/en/features.file-upload.errors.php}
+	 * @return int
 	 */
-	public function getError(): int
+	public function getError()
 	{
 		return $this->error;
 	}
@@ -129,14 +132,18 @@ final class FileUpload
 
 	/**
 	 * Is there any error?
+	 * @return bool
 	 */
-	public function isOk(): bool
+	public function isOk()
 	{
 		return $this->error === UPLOAD_ERR_OK;
 	}
 
 
-	public function hasFile(): bool
+	/**
+	 * @return bool
+	 */
+	public function hasFile()
 	{
 		return $this->error !== UPLOAD_ERR_NO_FILE;
 	}
@@ -144,9 +151,10 @@ final class FileUpload
 
 	/**
 	 * Move uploaded file to new location.
+	 * @param  string
 	 * @return static
 	 */
-	public function move(string $dest)
+	public function move($dest)
 	{
 		$dir = dirname($dest);
 		Nette\Utils\FileSystem::createDir($dir);
@@ -154,7 +162,7 @@ final class FileUpload
 		Nette\Utils\Callback::invokeSafe(
 			is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename',
 			[$this->tmpName, $dest],
-			function (string $message) use ($dest): void {
+			function ($message) use ($dest) {
 				throw new Nette\InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'. $message");
 			}
 		);
@@ -166,18 +174,20 @@ final class FileUpload
 
 	/**
 	 * Is uploaded file GIF, PNG or JPEG?
+	 * @return bool
 	 */
-	public function isImage(): bool
+	public function isImage()
 	{
-		return in_array($this->getContentType(), self::IMAGE_MIME_TYPES, true);
+		return in_array($this->getContentType(), ['image/gif', 'image/png', 'image/jpeg'], true);
 	}
 
 
 	/**
 	 * Returns the image.
+	 * @return Nette\Utils\Image
 	 * @throws Nette\Utils\ImageException
 	 */
-	public function toImage(): Nette\Utils\Image
+	public function toImage()
 	{
 		return Nette\Utils\Image::fromFile($this->tmpName);
 	}
@@ -185,8 +195,9 @@ final class FileUpload
 
 	/**
 	 * Returns the dimensions of an uploaded image as array.
+	 * @return array|null
 	 */
-	public function getImageSize(): ?array
+	public function getImageSize()
 	{
 		return $this->isOk() ? @getimagesize($this->tmpName) : null; // @ - files smaller than 12 bytes causes read error
 	}
@@ -194,8 +205,9 @@ final class FileUpload
 
 	/**
 	 * Get file contents.
+	 * @return string|null
 	 */
-	public function getContents(): ?string
+	public function getContents()
 	{
 		// future implementation can try to work around safe_mode and open_basedir limitations
 		return $this->isOk() ? file_get_contents($this->tmpName) : null;

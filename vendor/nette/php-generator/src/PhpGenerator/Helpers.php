@@ -43,7 +43,11 @@ final class Helpers
 			return (string) $var;
 
 		} elseif (is_float($var)) {
-			return var_export($var, true);
+			if (is_finite($var)) {
+				$var = var_export($var, true);
+				return strpos($var, '.') === false ? $var . '.0' : $var; // workaround for PHP < 7.0.2
+			}
+			return str_replace('.0', '', var_export($var, true)); // workaround for PHP 7.0.2
 
 		} elseif ($var === null) {
 			return 'null';
@@ -110,7 +114,7 @@ final class Helpers
 				throw new Nette\InvalidArgumentException('Cannot dump anonymous class.');
 
 			} elseif (in_array($class, ['DateTime', 'DateTimeImmutable'], true)) {
-				return self::format("new $class(?, new DateTimeZone(?))", $var->format('Y-m-d H:i:s.u'), $var->getTimeZone()->getName());
+				return self::formatArgs("new $class(?, new DateTimeZone(?))", [$var->format('Y-m-d H:i:s.u'), $var->getTimeZone()->getName()]);
 			}
 
 			$arr = (array) $var;

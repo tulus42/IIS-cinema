@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace NetteModule;
 
 use Nette;
@@ -18,7 +16,7 @@ use Tracy\ILogger;
 /**
  * Default Error Presenter.
  */
-final class ErrorPresenter implements Application\IPresenter
+class ErrorPresenter implements Application\IPresenter
 {
 	use Nette\SmartObject;
 
@@ -32,7 +30,10 @@ final class ErrorPresenter implements Application\IPresenter
 	}
 
 
-	public function run(Application\Request $request): Application\IResponse
+	/**
+	 * @return Application\IResponse
+	 */
+	public function run(Application\Request $request)
 	{
 		$e = $request->getParameter('exception');
 		if ($e instanceof Application\BadRequestException) {
@@ -43,8 +44,8 @@ final class ErrorPresenter implements Application\IPresenter
 				$this->logger->log($e, ILogger::EXCEPTION);
 			}
 		}
-		return new Application\Responses\CallbackResponse(function (Http\IRequest $httpRequest, Http\IResponse $httpResponse) use ($code): void {
-			if (preg_match('#^text/html(?:;|$)#', (string) $httpResponse->getHeader('Content-Type'))) {
+		return new Application\Responses\CallbackResponse(function (Http\IRequest $httpRequest, Http\IResponse $httpResponse) use ($code) {
+			if (preg_match('#^text/html(?:;|$)#', $httpResponse->getHeader('Content-Type'))) {
 				require __DIR__ . '/templates/error.phtml';
 			}
 		});

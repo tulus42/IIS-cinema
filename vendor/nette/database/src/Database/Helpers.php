@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database;
 
 use Nette;
@@ -38,8 +36,9 @@ class Helpers
 
 	/**
 	 * Displays complete result set as HTML table for debug purposes.
+	 * @return void
 	 */
-	public static function dumpResult(ResultSet $result): void
+	public static function dumpResult(ResultSet $result)
 	{
 		echo "\n<table class=\"dump\">\n<caption>" . htmlspecialchars($result->getQueryString(), ENT_IGNORE, 'UTF-8') . "</caption>\n";
 		if (!$result->getColumnCount()) {
@@ -80,8 +79,10 @@ class Helpers
 
 	/**
 	 * Returns syntax highlighted SQL command.
+	 * @param  string
+	 * @return string
 	 */
-	public static function dumpSql(string $sql, array $params = null, Connection $connection = null): string
+	public static function dumpSql($sql, array $params = null, Connection $connection = null)
 	{
 		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
 		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|[RI]?LIKE|REGEXP|TRUE|FALSE';
@@ -114,7 +115,7 @@ class Helpers
 		}, $sql);
 
 		// parameters
-		$sql = preg_replace_callback('#\?#', function () use ($params, $connection): string {
+		$sql = preg_replace_callback('#\?#', function () use ($params, $connection) {
 			static $i = 0;
 			if (!isset($params[$i])) {
 				return '?';
@@ -138,7 +139,7 @@ class Helpers
 					. '>&lt;' . htmlspecialchars($type, ENT_NOQUOTES, 'UTF-8') . ' resource&gt;</i> ';
 
 			} else {
-				return htmlspecialchars((string) $param, ENT_NOQUOTES, 'UTF-8');
+				return htmlspecialchars($param, ENT_NOQUOTES, 'UTF-8');
 			}
 		}, $sql);
 
@@ -148,8 +149,9 @@ class Helpers
 
 	/**
 	 * Common column type detection.
+	 * @return array
 	 */
-	public static function detectTypes(\PDOStatement $statement): array
+	public static function detectTypes(\PDOStatement $statement)
 	{
 		$types = [];
 		$count = $statement->columnCount(); // driver must be meta-aware, see PHP bugs #53782, #54695
@@ -165,9 +167,11 @@ class Helpers
 
 	/**
 	 * Heuristic column type detection.
+	 * @param  string
+	 * @return string
 	 * @internal
 	 */
-	public static function detectType(string $type): string
+	public static function detectType($type)
 	{
 		static $cache;
 		if (!isset($cache[$type])) {
@@ -184,10 +188,9 @@ class Helpers
 
 	/**
 	 * Import SQL dump from file - extremely fast.
-	 * @param  callable&callable(int $count, ?float $percent): void  $onProgress
 	 * @return int  count of commands
 	 */
-	public static function loadFromFile(Connection $connection, string $file, callable $onProgress = null): int
+	public static function loadFromFile(Connection $connection, $file)
 	{
 		@set_time_limit(0); // @ function may be disabled
 
@@ -196,42 +199,35 @@ class Helpers
 			throw new Nette\FileNotFoundException("Cannot open file '$file'.");
 		}
 
-		$stat = fstat($handle);
-		$count = $size = 0;
+		$count = 0;
 		$delimiter = ';';
 		$sql = '';
 		$pdo = $connection->getPdo(); // native query without logging
-		while (($s = fgets($handle)) !== false) {
-			$size += strlen($s);
+		while (!feof($handle)) {
+			$s = rtrim(fgets($handle));
 			if (!strncasecmp($s, 'DELIMITER ', 10)) {
-				$delimiter = trim(substr($s, 10));
+				$delimiter = substr($s, 10);
 
-			} elseif (substr($ts = rtrim($s), -strlen($delimiter)) === $delimiter) {
-				$sql .= substr($ts, 0, -strlen($delimiter));
+			} elseif (substr($s, -strlen($delimiter)) === $delimiter) {
+				$sql .= substr($s, 0, -strlen($delimiter));
 				$pdo->exec($sql);
 				$sql = '';
 				$count++;
-				if ($onProgress) {
-					$onProgress($count, isset($stat['size']) ? $size * 100 / $stat['size'] : null);
-				}
 
 			} else {
-				$sql .= $s;
+				$sql .= $s . "\n";
 			}
 		}
-		if (rtrim($sql) !== '') {
+		if (trim($sql) !== '') {
 			$pdo->exec($sql);
 			$count++;
-			if ($onProgress) {
-				$onProgress($count, isset($stat['size']) ? 100 : null);
-			}
 		}
 		fclose($handle);
 		return $count;
 	}
 
 
-	public static function createDebugPanel($connection, bool $explain = true, string $name = null): Nette\Bridges\DatabaseTracy\ConnectionPanel
+	public static function createDebugPanel($connection, $explain = true, $name = null)
 	{
 		$panel = new Nette\Bridges\DatabaseTracy\ConnectionPanel($connection);
 		$panel->explain = $explain;
@@ -243,8 +239,9 @@ class Helpers
 
 	/**
 	 * Reformat source to key -> value pairs.
+	 * @return array
 	 */
-	public static function toPairs(array $rows, $key = null, $value = null): array
+	public static function toPairs(array $rows, $key = null, $value = null)
 	{
 		if (!$rows) {
 			return [];
@@ -256,9 +253,9 @@ class Helpers
 
 		} elseif ($key === null && $value === null) {
 			if (count($keys) === 1) {
-				[$value] = $keys;
+				list($value) = $keys;
 			} else {
-				[$key, $value] = $keys;
+				list($key, $value) = $keys;
 			}
 		}
 
@@ -279,13 +276,15 @@ class Helpers
 
 	/**
 	 * Finds duplicate columns in select statement
+	 * @param  \PDOStatement
+	 * @return string
 	 */
-	public static function findDuplicates(\PDOStatement $statement): string
+	public static function findDuplicates(\PDOStatement $statement)
 	{
 		$cols = [];
 		for ($i = 0; $i < $statement->columnCount(); $i++) {
 			$meta = $statement->getColumnMeta($i);
-			$cols[$meta['name']][] = $meta['table'] ?? '';
+			$cols[$meta['name']][] = isset($meta['table']) ? $meta['table'] : '';
 		}
 		$duplicates = [];
 		foreach ($cols as $name => $tables) {

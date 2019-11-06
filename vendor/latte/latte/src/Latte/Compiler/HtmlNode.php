@@ -32,7 +32,7 @@ class HtmlNode
 	/** @var bool */
 	public $closing = false;
 
-	/** @var HtmlNode|null */
+	/** @var HtmlNode */
 	public $parentNode;
 
 	/** @var string */

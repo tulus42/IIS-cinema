@@ -404,12 +404,6 @@ final class ClassType
 	}
 
 
-	public function hasProperty(string $name): bool
-	{
-		return isset($this->properties[$name]);
-	}
-
-
 	/**
 	 * @param  Method[]  $methods
 	 * @return static
@@ -464,12 +458,6 @@ final class ClassType
 	{
 		unset($this->methods[$name]);
 		return $this;
-	}
-
-
-	public function hasMethod(string $name): bool
-	{
-		return isset($this->methods[$name]);
 	}
 
 

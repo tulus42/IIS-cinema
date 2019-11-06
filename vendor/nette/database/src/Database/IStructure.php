@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database;
 
 
@@ -15,7 +13,7 @@ namespace Nette\Database;
  */
 interface IStructure
 {
-	public const
+	const
 		FIELD_TEXT = 'string',
 		FIELD_BINARY = 'bin',
 		FIELD_BOOL = 'bool',
@@ -29,49 +27,65 @@ interface IStructure
 
 	/**
 	 * Returns tables list.
+	 * @return array
 	 */
-	function getTables(): array;
+	function getTables();
 
 	/**
 	 * Returns table columns list.
+	 * @param  string
+	 * @return array
 	 */
-	function getColumns(string $table): array;
+	function getColumns($table);
 
 	/**
 	 * Returns table primary key.
-	 * @return string|string[]|null
+	 * @param  string
+	 * @return string|array|null
 	 */
-	function getPrimaryKey(string $table);
+	function getPrimaryKey($table);
 
 	/**
 	 * Returns autoincrement primary key name.
+	 * @param  string
+	 * @return string|null
 	 */
-	function getPrimaryAutoincrementKey(string $table): ?string;
+	//function getPrimaryAutoincrementKey($table);
 
 	/**
 	 * Returns table primary key sequence.
+	 * @param  string
+	 * @return string|null
 	 */
-	function getPrimaryKeySequence(string $table): ?string;
+	function getPrimaryKeySequence($table);
 
 	/**
 	 * Returns hasMany reference.
 	 * If a targetTable is not provided, returns references for all tables.
+	 * @param  string
+	 * @param  string|null
+	 * @return array|null
 	 */
-	function getHasManyReference(string $table, string $targetTable = null): ?array;
+	function getHasManyReference($table, $targetTable = null);
 
 	/**
 	 * Returns belongsTo reference.
 	 * If a column is not provided, returns references for all columns.
+	 * @param  string
+	 * @param  string|null
+	 * @return array|null
 	 */
-	function getBelongsToReference(string $table, string $column = null): ?array;
+	function getBelongsToReference($table, $column = null);
 
 	/**
 	 * Rebuilds database structure cache.
+	 * @return void
 	 */
-	function rebuild(): void;
+	function rebuild();
 
 	/**
 	 * Returns true if database cached structure has been rebuilt.
+	 * @return bool
 	 */
-	function isRebuilt(): bool;
+	function isRebuilt();
 }

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Caching\Storages;
 
 use Nette;
@@ -23,30 +21,30 @@ class MemoryStorage implements Nette\Caching\IStorage
 	private $data = [];
 
 
-	public function read(string $key)
+	public function read($key)
 	{
-		return $this->data[$key] ?? null;
+		return isset($this->data[$key]) ? $this->data[$key] : null;
 	}
 
 
-	public function lock(string $key): void
+	public function lock($key)
 	{
 	}
 
 
-	public function write(string $key, $data, array $dependencies): void
+	public function write($key, $data, array $dependencies)
 	{
 		$this->data[$key] = $data;
 	}
 
 
-	public function remove(string $key): void
+	public function remove($key)
 	{
 		unset($this->data[$key]);
 	}
 
 
-	public function clean(array $conditions): void
+	public function clean(array $conditions)
 	{
 		if (!empty($conditions[Nette\Caching\Cache::ALL])) {
 			$this->data = [];

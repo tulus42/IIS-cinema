@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database\Conventions;
 
 use Nette\Database\IConventions;
@@ -28,13 +26,13 @@ class DiscoveredConventions implements IConventions
 	}
 
 
-	public function getPrimary(string $table)
+	public function getPrimary($table)
 	{
 		return $this->structure->getPrimaryKey($table);
 	}
 
 
-	public function getHasManyReference(string $nsTable, string $key): ?array
+	public function getHasManyReference($nsTable, $key)
 	{
 		$candidates = $columnCandidates = [];
 		$targets = $this->structure->getHasManyReference($nsTable);
@@ -83,7 +81,7 @@ class DiscoveredConventions implements IConventions
 	}
 
 
-	public function getBelongsToReference(string $table, string $key): ?array
+	public function getBelongsToReference($table, $key)
 	{
 		$tableColumns = $this->structure->getBelongsToReference($table);
 

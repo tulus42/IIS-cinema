@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationLatte;
 
 use Latte\Runtime\ISnippetBridge;
@@ -35,9 +33,9 @@ class SnippetBridge implements ISnippetBridge
 	}
 
 
-	public function isSnippetMode(): bool
+	public function isSnippetMode()
 	{
-		return (bool) $this->control->snippetMode;
+		return $this->control->snippetMode;
 	}
 
 
@@ -47,13 +45,13 @@ class SnippetBridge implements ISnippetBridge
 	}
 
 
-	public function needsRedraw($name): bool
+	public function needsRedraw($name)
 	{
 		return $this->control->isControlInvalid($name);
 	}
 
 
-	public function markRedrawn($name): void
+	public function markRedrawn($name)
 	{
 		if ($name !== '') {
 			$this->control->redrawControl($name, false);
@@ -61,13 +59,13 @@ class SnippetBridge implements ISnippetBridge
 	}
 
 
-	public function getHtmlId($name): string
+	public function getHtmlId($name)
 	{
 		return $this->control->getSnippetId($name);
 	}
 
 
-	public function addSnippet($name, $content): void
+	public function addSnippet($name, $content)
 	{
 		if ($this->payload === null) {
 			$this->payload = $this->control->getPresenter()->getPayload();
@@ -76,7 +74,7 @@ class SnippetBridge implements ISnippetBridge
 	}
 
 
-	public function renderChildren(): void
+	public function renderChildren()
 	{
 		$queue = [$this->control];
 		do {

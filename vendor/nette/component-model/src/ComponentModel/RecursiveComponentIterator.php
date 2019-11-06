@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\ComponentModel;
 
 
@@ -14,12 +12,13 @@ namespace Nette\ComponentModel;
  * Recursive component iterator. See Container::getComponents().
  * @internal
  */
-final class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
+class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
 {
 	/**
 	 * Has the current element has children?
+	 * @return bool
 	 */
-	public function hasChildren(): bool
+	public function hasChildren()
 	{
 		return $this->current() instanceof IContainer;
 	}
@@ -27,8 +26,9 @@ final class RecursiveComponentIterator extends \RecursiveArrayIterator implement
 
 	/**
 	 * The sub-iterator for the current element.
+	 * @return \RecursiveIterator
 	 */
-	public function getChildren(): \RecursiveIterator
+	public function getChildren()
 	{
 		return $this->current()->getComponents();
 	}
@@ -36,8 +36,9 @@ final class RecursiveComponentIterator extends \RecursiveArrayIterator implement
 
 	/**
 	 * Returns the count of elements.
+	 * @return int
 	 */
-	public function count(): int
+	public function count()
 	{
 		return iterator_count($this);
 	}

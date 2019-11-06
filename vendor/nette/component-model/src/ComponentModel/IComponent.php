@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\ComponentModel;
 
 
@@ -16,18 +14,23 @@ namespace Nette\ComponentModel;
 interface IComponent
 {
 	/** Separator for component names in path concatenation. */
-	public const NAME_SEPARATOR = '-';
+	const NAME_SEPARATOR = '-';
 
-	function getName(): ?string;
+	/**
+	 * @return string|null
+	 */
+	function getName();
 
 	/**
 	 * Returns the parent container if any.
+	 * @return IContainer|null
 	 */
-	function getParent(): ?IContainer;
+	function getParent();
 
 	/**
 	 * Sets the parent of this component.
+	 * @param  string  $name
 	 * @return static
 	 */
-	function setParent(?IContainer $parent, string $name = null);
+	function setParent(IContainer $parent = null, $name = null);
 }

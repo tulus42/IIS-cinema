@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Forms\Controls;
 
 use Nette;
@@ -60,30 +58,33 @@ abstract class TextBase extends BaseControl
 
 	/**
 	 * Sets whether getValue() returns null instead of empty string.
+	 * @param  bool
 	 * @return static
 	 */
-	public function setNullable(bool $value = true)
+	public function setNullable($value = true)
 	{
-		$this->nullable = $value;
+		$this->nullable = (bool) $value;
 		return $this;
 	}
 
 
 	/**
 	 * Sets the special value which is treated as empty string.
+	 * @param  string
 	 * @return static
 	 */
-	public function setEmptyValue(string $value)
+	public function setEmptyValue($value)
 	{
-		$this->emptyValue = $value;
+		$this->emptyValue = (string) $value;
 		return $this;
 	}
 
 
 	/**
 	 * Returns the special value which is treated as empty string.
+	 * @return string
 	 */
-	public function getEmptyValue(): string
+	public function getEmptyValue()
 	{
 		return $this->emptyValue;
 	}
@@ -91,9 +92,10 @@ abstract class TextBase extends BaseControl
 
 	/**
 	 * Sets the maximum number of allowed characters.
+	 * @param  int
 	 * @return static
 	 */
-	public function setMaxLength(int $length)
+	public function setMaxLength($length)
 	{
 		$this->control->maxlength = $length;
 		return $this;
@@ -102,16 +104,17 @@ abstract class TextBase extends BaseControl
 
 	/**
 	 * Appends input string filter callback.
+	 * @param  callable
 	 * @return static
 	 */
-	public function addFilter(callable $filter)
+	public function addFilter($filter)
 	{
 		$this->getRules()->addFilter($filter);
 		return $this;
 	}
 
 
-	public function getControl(): Nette\Utils\Html
+	public function getControl()
 	{
 		$el = parent::getControl();
 		if ($this->emptyValue !== '') {
@@ -124,7 +127,10 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	protected function getRenderedValue(): ?string
+	/**
+	 * @return string|null
+	 */
+	protected function getRenderedValue()
 	{
 		return $this->rawValue === ''
 			? ($this->emptyValue === '' ? null : $this->translate($this->emptyValue))

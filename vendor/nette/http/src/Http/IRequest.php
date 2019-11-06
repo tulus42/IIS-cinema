@@ -5,20 +5,16 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Http;
 
 
 /**
  * IHttpRequest provides access scheme for request sent via HTTP.
- * @method UrlImmutable|null getReferer() Returns referrer.
- * @method bool isSameSite() Is the request sent from the same origin?
  */
 interface IRequest
 {
 	/** HTTP request method */
-	public const
+	const
 		GET = 'GET',
 		POST = 'POST',
 		HEAD = 'HEAD',
@@ -29,92 +25,114 @@ interface IRequest
 
 	/**
 	 * Returns URL object.
+	 * @return UrlScript
 	 */
-	function getUrl(): UrlScript;
+	function getUrl();
 
 	/********************* query, post, files & cookies ****************d*g**/
 
 	/**
 	 * Returns variable provided to the script via URL query ($_GET).
 	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	function getQuery(string $key = null);
+	function getQuery($key = null, $default = null);
 
 	/**
 	 * Returns variable provided to the script via POST method ($_POST).
 	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	function getPost(string $key = null);
+	function getPost($key = null, $default = null);
 
 	/**
 	 * Returns uploaded file.
+	 * @param  string key
 	 * @return FileUpload|array|null
 	 */
-	function getFile(string $key);
+	function getFile($key);
 
 	/**
 	 * Returns uploaded files.
+	 * @return array
 	 */
-	function getFiles(): array;
+	function getFiles();
 
 	/**
 	 * Returns variable provided to the script via HTTP cookies.
+	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	function getCookie(string $key);
+	function getCookie($key, $default = null);
 
 	/**
 	 * Returns variables provided to the script via HTTP cookies.
+	 * @return array
 	 */
-	function getCookies(): array;
+	function getCookies();
 
 	/********************* method & headers ****************d*g**/
 
 	/**
 	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
+	 * @return string
 	 */
-	function getMethod(): string;
+	function getMethod();
 
 	/**
 	 * Checks HTTP request method.
+	 * @param  string
+	 * @return bool
 	 */
-	function isMethod(string $method): bool;
+	function isMethod($method);
 
 	/**
 	 * Return the value of the HTTP header. Pass the header name as the
 	 * plain, HTTP-specified header name (e.g. 'Accept-Encoding').
+	 * @param  string
+	 * @param  string|null
+	 * @return string|null
 	 */
-	function getHeader(string $header): ?string;
+	function getHeader($header, $default = null);
 
 	/**
 	 * Returns all HTTP headers.
+	 * @return array
 	 */
-	function getHeaders(): array;
+	function getHeaders();
 
 	/**
 	 * Is the request sent via secure channel (https)?
+	 * @return bool
 	 */
-	function isSecured(): bool;
+	function isSecured();
 
 	/**
 	 * Is AJAX request?
+	 * @return bool
 	 */
-	function isAjax(): bool;
+	function isAjax();
 
 	/**
 	 * Returns the IP address of the remote client.
+	 * @return string|null
 	 */
-	function getRemoteAddress(): ?string;
+	function getRemoteAddress();
 
 	/**
 	 * Returns the host of the remote client.
+	 * @return string|null
 	 */
-	function getRemoteHost(): ?string;
+	function getRemoteHost();
 
 	/**
 	 * Returns raw content of HTTP request body.
+	 * @return string|null
 	 */
-	function getRawBody(): ?string;
+	function getRawBody();
 }

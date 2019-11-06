@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette;
@@ -21,21 +19,21 @@ use Nette;
  * @property array $files
  * @property string|null $method
  */
-final class Request
+class Request
 {
 	use Nette\SmartObject;
 
 	/** method */
-	public const FORWARD = 'FORWARD';
+	const FORWARD = 'FORWARD';
 
 	/** flag */
-	public const SECURED = 'secured';
+	const SECURED = 'secured';
 
 	/** flag */
-	public const RESTORED = 'restored';
+	const RESTORED = 'restored';
 
 	/** flag */
-	public const VARYING = 'varying';
+	const VARYING = 'varying';
 
 	/** @var string|null */
 	private $method;
@@ -57,9 +55,14 @@ final class Request
 
 
 	/**
-	 * @param  string  $name  presenter name (module:module:presenter)
+	 * @param  string  fully qualified presenter name (module:module:presenter)
+	 * @param  string  method
+	 * @param  array   variables provided to the presenter usually via URL
+	 * @param  array   variables provided to the presenter via POST
+	 * @param  array   all uploaded files
+	 * @param  array   flags
 	 */
-	public function __construct(string $name, string $method = null, array $params = [], array $post = [], array $files = [], array $flags = [])
+	public function __construct($name, $method = null, array $params = [], array $post = [], array $files = [], array $flags = [])
 	{
 		$this->name = $name;
 		$this->method = $method;
@@ -72,9 +75,10 @@ final class Request
 
 	/**
 	 * Sets the presenter name.
+	 * @param  string
 	 * @return static
 	 */
-	public function setPresenterName(string $name)
+	public function setPresenterName($name)
 	{
 		$this->name = $name;
 		return $this;
@@ -83,8 +87,9 @@ final class Request
 
 	/**
 	 * Retrieve the presenter name.
+	 * @return string
 	 */
-	public function getPresenterName(): string
+	public function getPresenterName()
 	{
 		return $this->name;
 	}
@@ -103,8 +108,9 @@ final class Request
 
 	/**
 	 * Returns all variables provided to the presenter (usually via URL).
+	 * @return array
 	 */
-	public function getParameters(): array
+	public function getParameters()
 	{
 		return $this->params;
 	}
@@ -112,11 +118,12 @@ final class Request
 
 	/**
 	 * Returns a parameter provided to the presenter.
+	 * @param  string
 	 * @return mixed
 	 */
-	public function getParameter(string $key)
+	public function getParameter($key)
 	{
-		return $this->params[$key] ?? null;
+		return isset($this->params[$key]) ? $this->params[$key] : null;
 	}
 
 
@@ -134,13 +141,20 @@ final class Request
 	/**
 	 * Returns a variable provided to the presenter via POST.
 	 * If no key is passed, returns the entire array.
+	 * @param  string
 	 * @return mixed
 	 */
-	public function getPost(string $key = null)
+	public function getPost($key = null)
 	{
-		return func_num_args() === 0
-			? $this->post
-			: ($this->post[$key] ?? null);
+		if (func_num_args() === 0) {
+			return $this->post;
+
+		} elseif (isset($this->post[$key])) {
+			return $this->post[$key];
+
+		} else {
+			return null;
+		}
 	}
 
 
@@ -157,8 +171,9 @@ final class Request
 
 	/**
 	 * Returns all uploaded files.
+	 * @return array
 	 */
-	public function getFiles(): array
+	public function getFiles()
 	{
 		return $this->files;
 	}
@@ -166,9 +181,10 @@ final class Request
 
 	/**
 	 * Sets the method.
+	 * @param  string|null
 	 * @return static
 	 */
-	public function setMethod(?string $method)
+	public function setMethod($method)
 	{
 		$this->method = $method;
 		return $this;
@@ -177,8 +193,9 @@ final class Request
 
 	/**
 	 * Returns the method.
+	 * @return string|null
 	 */
-	public function getMethod(): ?string
+	public function getMethod()
 	{
 		return $this->method;
 	}
@@ -186,8 +203,10 @@ final class Request
 
 	/**
 	 * Checks if the method is the given one.
+	 * @param  string
+	 * @return bool
 	 */
-	public function isMethod(string $method): bool
+	public function isMethod($method)
 	{
 		return strcasecmp($this->method, $method) === 0;
 	}
@@ -195,28 +214,24 @@ final class Request
 
 	/**
 	 * Sets the flag.
+	 * @param  string
+	 * @param  bool
 	 * @return static
 	 */
-	public function setFlag(string $flag, bool $value = true)
+	public function setFlag($flag, $value = true)
 	{
-		$this->flags[$flag] = $value;
+		$this->flags[$flag] = (bool) $value;
 		return $this;
 	}
 
 
 	/**
 	 * Checks the flag.
+	 * @param  string
+	 * @return bool
 	 */
-	public function hasFlag(string $flag): bool
+	public function hasFlag($flag)
 	{
 		return !empty($this->flags[$flag]);
-	}
-
-
-	public function toArray(): array
-	{
-		$params = $this->params;
-		$params['presenter'] = $this->name;
-		return $params;
 	}
 }

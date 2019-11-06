@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application\Routers;
 
 use Nette;
@@ -16,26 +14,30 @@ use Nette\Application;
 /**
  * The unidirectional router for CLI. (experimental)
  */
-final class CliRouter implements Application\IRouter
+class CliRouter implements Application\IRouter
 {
 	use Nette\SmartObject;
 
-	private const PRESENTER_KEY = 'action';
+	const PRESENTER_KEY = 'action';
 
 	/** @var array */
 	private $defaults;
 
 
-	public function __construct(array $defaults = [])
+	/**
+	 * @param  array   default values
+	 */
+	public function __construct($defaults = [])
 	{
 		$this->defaults = $defaults;
 	}
 
 
 	/**
-	 * Maps command line arguments to an array.
+	 * Maps command line arguments to a Request object.
+	 * @return Nette\Application\Request|null
 	 */
-	public function match(Nette\Http\IRequest $httpRequest): ?array
+	public function match(Nette\Http\IRequest $httpRequest)
 	{
 		if (empty($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
 			return null;
@@ -77,30 +79,34 @@ final class CliRouter implements Application\IRouter
 		if (!isset($params[self::PRESENTER_KEY])) {
 			throw new Nette\InvalidStateException('Missing presenter & action in route definition.');
 		}
-		[$module, $presenter] = Nette\Application\Helpers::splitName($params[self::PRESENTER_KEY]);
+		list($module, $presenter) = Nette\Application\Helpers::splitName($params[self::PRESENTER_KEY]);
 		if ($module !== '') {
 			$params[self::PRESENTER_KEY] = $presenter;
 			$presenter = $module;
 		}
-		$params['presenter'] = $presenter;
 
-		return $params;
+		return new Application\Request(
+			$presenter,
+			'CLI',
+			$params
+		);
 	}
 
 
 	/**
 	 * This router is only unidirectional.
+	 * @return void
 	 */
-	public function constructUrl(array $params, Nette\Http\UrlScript $refUrl): ?string
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
-		return null;
 	}
 
 
 	/**
 	 * Returns default values.
+	 * @return array
 	 */
-	public function getDefaults(): array
+	public function getDefaults()
 	{
 		return $this->defaults;
 	}

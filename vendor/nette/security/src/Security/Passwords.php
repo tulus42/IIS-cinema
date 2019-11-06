@@ -5,46 +5,31 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 use Nette;
 
 
 /**
- * Password Hashing.
+ * Passwords tools.
  */
 class Passwords
 {
 	use Nette\SmartObject;
 
-	/** @var int|string  string since PHP 7.4 */
-	private $algo;
-
-	/** @var array */
-	private $options;
-
-
-	/**
-	 * See https://php.net/manual/en/password.constants.php
-	 */
-	public function __construct($algo = PASSWORD_DEFAULT, array $options = [])
-	{
-		$this->algo = $algo;
-		$this->options = $options;
-	}
+	/** @deprecated */
+	const BCRYPT_COST = 10;
 
 
 	/**
 	 * Computes salted password hash.
+	 * @param  string
+	 * @param  array with cost (4-31)
+	 * @return string  60 chars long
 	 */
-	public function hash(string $password): string
+	public static function hash($password, array $options = [])
 	{
-		$hash = isset($this)
-			? @password_hash($password, $this->algo, $this->options) // @ is escalated to exception
-			: @password_hash($password, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x
-
+		$hash = @password_hash($password, PASSWORD_BCRYPT, $options); // @ is escalated to exception
 		if (!$hash) {
 			throw new Nette\InvalidStateException('Computed hash is invalid. ' . error_get_last()['message']);
 		}
@@ -54,8 +39,9 @@ class Passwords
 
 	/**
 	 * Verifies that a password matches a hash.
+	 * @return bool
 	 */
-	public function verify(string $password, string $hash): bool
+	public static function verify($password, $hash)
 	{
 		return password_verify($password, $hash);
 	}
@@ -63,11 +49,12 @@ class Passwords
 
 	/**
 	 * Checks if the given hash matches the options.
+	 * @param  string
+	 * @param  array with cost (4-31)
+	 * @return bool
 	 */
-	public function needsRehash(string $hash): bool
+	public static function needsRehash($hash, array $options = [])
 	{
-		return isset($this)
-			? password_needs_rehash($hash, $this->algo, $this->options)
-			: password_needs_rehash($hash, PASSWORD_BCRYPT, func_get_args()[1] ?? []); // back compatibility with v2.x
+		return password_needs_rehash($hash, PASSWORD_BCRYPT, $options);
 	}
 }

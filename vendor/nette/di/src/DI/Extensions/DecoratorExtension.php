@@ -5,52 +5,43 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\DI\Extensions;
 
 use Nette;
-use Nette\DI\Definitions;
-use Nette\Schema\Expect;
+
 
 /**
  * Decorators for services.
  */
-final class DecoratorExtension extends Nette\DI\CompilerExtension
+class DecoratorExtension extends Nette\DI\CompilerExtension
 {
-	public function getConfigSchema(): Nette\Schema\Schema
-	{
-		return Expect::arrayOf(
-			Expect::structure([
-				'setup' => Expect::list(),
-				'tags' => Expect::array(),
-				'inject' => Expect::bool(),
-			])
-		);
-	}
+	public $defaults = [
+		'setup' => [],
+		'tags' => [],
+		'inject' => null,
+	];
 
 
 	public function beforeCompile()
 	{
-		foreach ($this->config as $type => $info) {
-			if ($info->inject !== null) {
-				$info->tags[InjectExtension::TAG_INJECT] = $info->inject;
+		foreach ($this->getConfig() as $type => $info) {
+			$info = $this->validateConfig($this->defaults, $info, $this->prefix($type));
+			if ($info['inject'] !== null) {
+				$info['tags'][InjectExtension::TAG_INJECT] = $info['inject'];
 			}
-			$this->addSetups($type, Nette\DI\Helpers::filterArguments($info->setup));
-			$this->addTags($type, Nette\DI\Helpers::filterArguments($info->tags));
+			$info = Nette\DI\Helpers::filterArguments($info);
+			$this->addSetups($type, (array) $info['setup']);
+			$this->addTags($type, (array) $info['tags']);
 		}
 	}
 
 
-	public function addSetups(string $type, array $setups): void
+	public function addSetups($type, array $setups)
 	{
 		foreach ($this->findByType($type) as $def) {
-			if ($def instanceof Definitions\FactoryDefinition) {
-				$def = $def->getResultDefinition();
-			}
 			foreach ($setups as $setup) {
 				if (is_array($setup)) {
-					$setup = new Definitions\Statement(key($setup), array_values($setup));
+					$setup = new Nette\DI\Statement(key($setup), array_values($setup));
 				}
 				$def->addSetup($setup);
 			}
@@ -58,7 +49,7 @@ final class DecoratorExtension extends Nette\DI\CompilerExtension
 	}
 
 
-	public function addTags(string $type, array $tags): void
+	public function addTags($type, array $tags)
 	{
 		$tags = Nette\Utils\Arrays::normalize($tags, true);
 		foreach ($this->findByType($type) as $def) {
@@ -67,11 +58,11 @@ final class DecoratorExtension extends Nette\DI\CompilerExtension
 	}
 
 
-	private function findByType(string $type): array
+	private function findByType($type)
 	{
-		return array_filter($this->getContainerBuilder()->getDefinitions(), function (Definitions\Definition $def) use ($type): bool {
-			return is_a($def->getType(), $type, true)
-				|| ($def instanceof Definitions\FactoryDefinition && is_a($def->getResultType(), $type, true));
+		return array_filter($this->getContainerBuilder()->getDefinitions(), function ($def) use ($type) {
+			return is_a($def->getImplement(), $type, true)
+				|| ($def->getImplementMode() !== $def::IMPLEMENT_MODE_GET && is_a($def->getType(), $type, true));
 		});
 	}
 }

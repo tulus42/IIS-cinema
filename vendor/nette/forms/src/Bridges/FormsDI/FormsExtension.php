@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\FormsDI;
 
 use Nette;
@@ -17,20 +15,17 @@ use Nette;
  */
 class FormsExtension extends Nette\DI\CompilerExtension
 {
-	public function __construct()
-	{
-		$this->config = new class {
-			/** @var string[] */
-			public $messages = [];
-		};
-	}
+	public $defaults = [
+		'messages' => [],
+	];
 
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->getMethod('initialize');
+		$config = $this->validateConfig($this->defaults);
 
-		foreach ($this->config->messages as $name => $text) {
+		foreach ((array) $config['messages'] as $name => $text) {
 			if (defined('Nette\Forms\Form::' . $name)) {
 				$initialize->addBody('Nette\Forms\Validator::$messages[Nette\Forms\Form::?] = ?;', [$name, $text]);
 			} elseif (defined($name)) {

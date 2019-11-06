@@ -1,0 +1,54 @@
+#
+#  _____ _______         _                      _
+# |_   _|__   __|       | |                    | |
+#   | |    | |_ __   ___| |___      _____  _ __| | __  ___ ____
+#   | |    | | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ / / __|_  /
+#  _| |_   | | | | |  __/ |_ \ V  V / (_) | |  |   < | (__ / /
+# |_____|  |_|_| |_|\___|\__| \_/\_/ \___/|_|  |_|\_(_)___/___|
+#                   ___
+#                  |  _|___ ___ ___
+#                  |  _|  _| -_| -_|  LICENCE
+#                  |_| |_| |___|___|
+#
+# IT ZPRAVODAJSTVÍ  <>  PROGRAMOVÁNÍ  <>  HW A SW  <>  KOMUNITA
+#
+# Tento zdrojový kód pochází z IT sociální sítě WWW.ITNETWORK.CZ
+#
+# Můžete ho upravovat a používat jak chcete, musíte však zmínit
+# odkaz na http://www.itnetwork.cz
+#
+
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
+
+#
+# Hlavní konfigurační soubor aplikace.
+#
+parameters:
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=cinema'
+	user: root
+	password:
+
+
+services:
+	router: App\RouterFactory::createRouter
+
+
+# Propojení s dalšími konfiguračními soubory.
+includes:
+	- ../CoreModule/config/config.neon # Načtení konfigurace z CoreModule.

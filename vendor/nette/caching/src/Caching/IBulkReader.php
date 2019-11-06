@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Caching;
 
 
@@ -20,5 +18,5 @@ interface IBulkReader
 	 * Reads from cache in bulk.
 	 * @return array key => value pairs, missing items are omitted
 	 */
-	function bulkRead(array $keys): array;
+	function bulkRead(array $keys);
 }

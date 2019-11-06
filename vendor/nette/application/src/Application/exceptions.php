@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette\Http;
@@ -46,13 +44,16 @@ class BadRequestException extends \Exception
 	protected $code = Http\IResponse::S404_NOT_FOUND;
 
 
-	public function __construct(string $message = '', int $httpCode = 0, \Throwable $previous = null)
+	public function __construct($message = '', $httpCode = 0, \Exception $previous = null)
 	{
 		parent::__construct($message, $httpCode ?: $this->code, $previous);
 	}
 
 
-	public function getHttpCode(): int
+	/**
+	 * @return int
+	 */
+	public function getHttpCode()
 	{
 		return $this->code;
 	}

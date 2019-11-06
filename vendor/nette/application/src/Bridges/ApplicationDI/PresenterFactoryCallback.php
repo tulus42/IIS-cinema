@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\ApplicationDI;
 
 use Nette;
@@ -16,7 +14,7 @@ use Nette;
  * PresenterFactory callback.
  * @internal
  */
-final class PresenterFactoryCallback
+class PresenterFactoryCallback
 {
 	/** @var Nette\DI\Container */
 	private $container;
@@ -28,7 +26,7 @@ final class PresenterFactoryCallback
 	private $touchToRefresh;
 
 
-	public function __construct(Nette\DI\Container $container, int $invalidLinkMode, ?string $touchToRefresh)
+	public function __construct(Nette\DI\Container $container, $invalidLinkMode, $touchToRefresh)
 	{
 		$this->container = $container;
 		$this->invalidLinkMode = $invalidLinkMode;
@@ -36,9 +34,12 @@ final class PresenterFactoryCallback
 	}
 
 
-	public function __invoke(string $class): Nette\Application\IPresenter
+	/**
+	 * @return Nette\Application\IPresenter
+	 */
+	public function __invoke($class)
 	{
-		$services = $this->container->findByType($class);
+		$services = array_keys($this->container->findByTag('nette.presenter'), $class, true);
 		if (count($services) > 1) {
 			throw new Nette\Application\InvalidPresenterException("Multiple services of type $class found: " . implode(', ', $services) . '.');
 
@@ -47,16 +48,8 @@ final class PresenterFactoryCallback
 				touch($this->touchToRefresh);
 			}
 
-			try {
-				$presenter = $this->container->createInstance($class);
-				$this->container->callInjects($presenter);
-			} catch (Nette\DI\MissingServiceException | Nette\DI\ServiceCreationException $e) {
-				if ($this->touchToRefresh && class_exists($class)) {
-					throw new \Exception("Refresh your browser. New presenter $class was found.", 0, $e);
-				}
-				throw $e;
-			}
-
+			$presenter = $this->container->createInstance($class);
+			$this->container->callInjects($presenter);
 			if ($presenter instanceof Nette\Application\UI\Presenter && $presenter->invalidLinkMode === null) {
 				$presenter->invalidLinkMode = $this->invalidLinkMode;
 			}

@@ -20,13 +20,10 @@
 		"ext-json": "*"
 	},
 	"require-dev": {
-		"nette/utils": "^3.0",
-		"nette/di": "^3.0",
-		"nette/tester": "^2.2",
+		"nette/utils": "^2.4 || ^3.0",
+		"nette/di": "^2.4 || ~3.0.0",
+		"nette/tester": "^2.1",
 		"psr/log": "^1.0"
-	},
-	"conflict": {
-		"nette/di": "<3.0"
 	},
 	"suggest": {
 		"https://nette.org/donate": "Please support Tracy via a donation"
@@ -38,7 +35,7 @@
 	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.7-dev"
+			"dev-master": "2.6-dev"
 		}
 	}
 }

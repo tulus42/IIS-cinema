@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Database\Drivers;
 
 use Nette;
@@ -26,14 +24,14 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	private $version;
 
 
-	public function initialize(Nette\Database\Connection $connection, array $options): void
+	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
 		$this->connection = $connection;
 		$this->version = $connection->getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
 	}
 
 
-	public function convertException(\PDOException $e): Nette\Database\DriverException
+	public function convertException(\PDOException $e)
 	{
 		return Nette\Database\DriverException::from($e);
 	}
@@ -42,27 +40,33 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	/********************* SQL ****************d*g**/
 
 
-	public function delimite(string $name): string
+	public function delimite($name)
 	{
 		/** @see https://msdn.microsoft.com/en-us/library/ms176027.aspx */
 		return '[' . str_replace(']', ']]', $name) . ']';
 	}
 
 
-	public function formatDateTime(\DateTimeInterface $value): string
+	public function formatBool($value)
+	{
+		return $value ? '1' : '0';
+	}
+
+
+	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
 		/** @see https://msdn.microsoft.com/en-us/library/ms187819.aspx */
 		return $value->format("'Y-m-d\\TH:i:s'");
 	}
 
 
-	public function formatDateInterval(\DateInterval $value): string
+	public function formatDateInterval(\DateInterval $value)
 	{
 		throw new Nette\NotSupportedException;
 	}
 
 
-	public function formatLike(string $value, int $pos): string
+	public function formatLike($value, $pos)
 	{
 		/** @see https://msdn.microsoft.com/en-us/library/ms179859.aspx */
 		$value = strtr($value, ["'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]']);
@@ -70,17 +74,17 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
-	public function applyLimit(string &$sql, ?int $limit, ?int $offset): void
+	public function applyLimit(&$sql, $limit, $offset)
 	{
 		if ($limit < 0 || $offset < 0) {
 			throw new Nette\InvalidArgumentException('Negative offset or limit.');
 
-		} elseif (version_compare($this->version, '11', '<')) { // 11 == SQL Server 2012
+		} elseif (version_compare($this->version, 11, '<')) { // 11 == SQL Server 2012
 			if ($offset) {
 				throw new Nette\NotSupportedException('Offset is not supported by this database.');
 
 			} elseif ($limit !== null) {
-				$sql = preg_replace('#^\s*(SELECT(\s+DISTINCT|\s+ALL)?|UPDATE|DELETE)#i', '$0 TOP ' . $limit, $sql, 1, $count);
+				$sql = preg_replace('#^\s*(SELECT(\s+DISTINCT|\s+ALL)?|UPDATE|DELETE)#i', '$0 TOP ' . (int) $limit, $sql, 1, $count);
 				if (!$count) {
 					throw new Nette\InvalidArgumentException('SQL query must begin with SELECT, UPDATE or DELETE command.');
 				}
@@ -94,10 +98,16 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
+	public function normalizeRow($row)
+	{
+		return $row;
+	}
+
+
 	/********************* reflection ****************d*g**/
 
 
-	public function getTables(): array
+	public function getTables()
 	{
 		$tables = [];
 		foreach ($this->connection->query("
@@ -122,7 +132,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
-	public function getColumns(string $table): array
+	public function getColumns($table)
 	{
 		$columns = [];
 		foreach ($this->connection->query("
@@ -131,6 +141,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 				o.name AS [table],
 				UPPER(t.name) AS nativetype,
 				NULL AS size,
+				0 AS unsigned,
 				c.is_nullable AS nullable,
 				OBJECT_DEFINITION(c.default_object_id) AS [default],
 				c.is_identity AS autoincrement,
@@ -150,6 +161,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 		") as $row) {
 			$row = (array) $row;
 			$row['vendor'] = $row;
+			$row['unsigned'] = (bool) $row['unsigned'];
 			$row['nullable'] = (bool) $row['nullable'];
 			$row['autoincrement'] = (bool) $row['autoincrement'];
 			$row['primary'] = (bool) $row['primary'];
@@ -161,7 +173,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
-	public function getIndexes(string $table): array
+	public function getIndexes($table)
 	{
 		$indexes = [];
 		foreach ($this->connection->query("
@@ -194,7 +206,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
-	public function getForeignKeys(string $table): array
+	public function getForeignKeys($table)
 	{
 		// Does't work with multicolumn foreign keys
 		$keys = [];
@@ -221,7 +233,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
-	public function getColumnTypes(\PDOStatement $statement): array
+	public function getColumnTypes(\PDOStatement $statement)
 	{
 		$types = [];
 		$count = $statement->columnCount();
@@ -237,7 +249,7 @@ class SqlsrvDriver implements Nette\Database\ISupplementalDriver
 	}
 
 
-	public function isSupported(string $item): bool
+	public function isSupported($item)
 	{
 		return $item === self::SUPPORT_SUBSELECT;
 	}

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 use Nette;
@@ -28,9 +26,12 @@ class User
 	use Nette\SmartObject;
 
 	/** @deprecated */
-	public const
+	const
 		MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY;
+
+	/** @deprecated */
+	const BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -38,10 +39,10 @@ class User
 	/** @var string  default role for authenticated user without own identity */
 	public $authenticatedRole = 'authenticated';
 
-	/** @var callable[]  function (User $sender): void; Occurs when the user is successfully logged in */
+	/** @var callable[]  function (User $sender); Occurs when the user is successfully logged in */
 	public $onLoggedIn;
 
-	/** @var callable[]  function (User $sender): void; Occurs when the user is logged out */
+	/** @var callable[]  function (User $sender); Occurs when the user is logged out */
 	public $onLoggedOut;
 
 	/** @var IUserStorage Session storage for current user */
@@ -62,7 +63,10 @@ class User
 	}
 
 
-	final public function getStorage(): IUserStorage
+	/**
+	 * @return IUserStorage
+	 */
+	public function getStorage()
 	{
 		return $this->storage;
 	}
@@ -73,10 +77,12 @@ class User
 
 	/**
 	 * Conducts the authentication process. Parameters are optional.
-	 * @param  string|IIdentity  $user  name or Identity
+	 * @param  string|IIdentity  username or Identity
+	 * @param  string
+	 * @return void
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($user, string $password = null): void
+	public function login($user, $password = null)
 	{
 		$this->logout(true);
 		if (!$user instanceof IIdentity) {
@@ -90,8 +96,10 @@ class User
 
 	/**
 	 * Logs out the user from the current session.
+	 * @param  bool  clear the identity from persistent storage?
+	 * @return void
 	 */
-	final public function logout(bool $clearIdentity = false): void
+	public function logout($clearIdentity = false)
 	{
 		if ($this->isLoggedIn()) {
 			$this->onLoggedOut($this);
@@ -105,8 +113,9 @@ class User
 
 	/**
 	 * Is this user authenticated?
+	 * @return bool
 	 */
-	final public function isLoggedIn(): bool
+	public function isLoggedIn()
 	{
 		return $this->storage->isAuthenticated();
 	}
@@ -114,8 +123,9 @@ class User
 
 	/**
 	 * Returns current user identity, if any.
+	 * @return IIdentity|null
 	 */
-	final public function getIdentity(): ?IIdentity
+	public function getIdentity()
 	{
 		return $this->storage->getIdentity();
 	}
@@ -145,14 +155,11 @@ class User
 
 	/**
 	 * Returns authentication handler.
+	 * @return IAuthenticator|null
 	 */
-	final public function getAuthenticator(): ?IAuthenticator
+	public function getAuthenticator($throw = true)
 	{
-		if (func_num_args()) {
-			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthenticatorIfExists()', E_USER_DEPRECATED);
-			$throw = func_get_arg(0);
-		}
-		if (($throw ?? true) && !$this->authenticator) {
+		if ($throw && !$this->authenticator) {
 			throw new Nette\InvalidStateException('Authenticator has not been set.');
 		}
 		return $this->authenticator;
@@ -160,49 +167,25 @@ class User
 
 
 	/**
-	 * Returns authentication handler.
-	 */
-	final public function getAuthenticatorIfExists(): ?IAuthenticator
-	{
-		return $this->authenticator;
-	}
-
-
-	/** @deprecated */
-	final public function hasAuthenticator(): bool
-	{
-		return (bool) $this->authenticator;
-	}
-
-
-	/**
-	 * Enables log out after inactivity (like '20 minutes'). Accepts flag IUserStorage::CLEAR_IDENTITY.
-	 * @param  string|null  $expire
-	 * @param  int  $flags
+	 * Enables log out after inactivity.
+	 * @param  string|int|\DateTimeInterface number of seconds or timestamp
+	 * @param  int|bool  flag IUserStorage::CLEAR_IDENTITY
+	 * @param  bool  clear the identity from persistent storage? (deprecated)
 	 * @return static
 	 */
-	public function setExpiration($expire, /*int*/$flags = 0)
+	public function setExpiration($time, $flags = null, $clearIdentity = false)
 	{
-		$clearIdentity = $flags === IUserStorage::CLEAR_IDENTITY;
-		if ($expire !== null && !is_string($expire)) {
-			trigger_error("Expiration should be a string like '20 minutes' etc.", E_USER_DEPRECATED);
-		}
-		if (is_bool($flags)) {
-			trigger_error(__METHOD__ . '() second parameter $whenBrowserIsClosed was removed.', E_USER_DEPRECATED);
-		}
-		if (func_num_args() > 2) {
-			$clearIdentity = $clearIdentity || func_get_arg(2);
-			trigger_error(__METHOD__ . '() third parameter is deprecated, use flag setExpiration($time, IUserStorage::CLEAR_IDENTITY)', E_USER_DEPRECATED);
-		}
-		$this->storage->setExpiration($expire, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
+		$clearIdentity = $clearIdentity || $flags === IUserStorage::CLEAR_IDENTITY;
+		$this->storage->setExpiration($time, $clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
 		return $this;
 	}
 
 
 	/**
 	 * Why was user logged out?
+	 * @return int|null
 	 */
-	final public function getLogoutReason(): ?int
+	public function getLogoutReason()
 	{
 		return $this->storage->getLogoutReason();
 	}
@@ -213,8 +196,9 @@ class User
 
 	/**
 	 * Returns a list of effective roles that a user has been granted.
+	 * @return array
 	 */
-	public function getRoles(): array
+	public function getRoles()
 	{
 		if (!$this->isLoggedIn()) {
 			return [$this->guestRole];
@@ -227,8 +211,10 @@ class User
 
 	/**
 	 * Is a user in the specified effective role?
+	 * @param  string
+	 * @return bool
 	 */
-	final public function isInRole(string $role): bool
+	public function isInRole($role)
 	{
 		return in_array($role, $this->getRoles(), true);
 	}
@@ -237,8 +223,11 @@ class User
 	/**
 	 * Has a user effective access to the Resource?
 	 * If $resource is null, then the query applies to all resources.
+	 * @param  string  resource
+	 * @param  string  privilege
+	 * @return bool
 	 */
-	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL): bool
+	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
 		foreach ($this->getRoles() as $role) {
 			if ($this->getAuthorizator()->isAllowed($role, $resource, $privilege)) {
@@ -263,32 +252,13 @@ class User
 
 	/**
 	 * Returns current authorization handler.
+	 * @return IAuthorizator|null
 	 */
-	final public function getAuthorizator(): ?IAuthorizator
+	public function getAuthorizator($throw = true)
 	{
-		if (func_num_args()) {
-			trigger_error(__METHOD__ . '() parameter $throw is deprecated, use getAuthorizatorIfExists()', E_USER_DEPRECATED);
-			$throw = func_get_arg(0);
-		}
-		if (($throw ?? true) && !$this->authorizator) {
+		if ($throw && !$this->authorizator) {
 			throw new Nette\InvalidStateException('Authorizator has not been set.');
 		}
 		return $this->authorizator;
-	}
-
-
-	/**
-	 * Returns current authorization handler.
-	 */
-	final public function getAuthorizatorIfExists(): ?IAuthorizator
-	{
-		return $this->authorizator;
-	}
-
-
-	/** @deprecated */
-	final public function hasAuthorizator(): bool
-	{
-		return (bool) $this->authorizator;
 	}
 }

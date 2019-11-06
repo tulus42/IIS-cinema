@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Bridges\HttpTracy;
 
 use Nette;
@@ -22,8 +20,9 @@ class SessionPanel implements Tracy\IBarPanel
 
 	/**
 	 * Renders tab.
+	 * @return string
 	 */
-	public function getTab(): string
+	public function getTab()
 	{
 		ob_start(function () {});
 		require __DIR__ . '/templates/SessionPanel.tab.phtml';
@@ -33,8 +32,9 @@ class SessionPanel implements Tracy\IBarPanel
 
 	/**
 	 * Renders panel.
+	 * @return string
 	 */
-	public function getPanel(): string
+	public function getPanel()
 	{
 		ob_start(function () {});
 		require __DIR__ . '/templates/SessionPanel.panel.phtml';

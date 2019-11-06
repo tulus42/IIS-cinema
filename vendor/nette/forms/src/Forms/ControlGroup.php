@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Forms;
 
 use Nette;
@@ -45,7 +43,7 @@ class ControlGroup
 				foreach ($item->getComponents() as $component) {
 					$this->add($component);
 				}
-			} elseif (is_iterable($item)) {
+			} elseif ($item instanceof \Traversable || is_array($item)) {
 				$this->add(...$item);
 
 			} else {
@@ -57,13 +55,19 @@ class ControlGroup
 	}
 
 
-	public function remove(IControl $control): void
+	/**
+	 * @return void
+	 */
+	public function remove(IControl $control)
 	{
 		$this->controls->detach($control);
 	}
 
 
-	public function removeOrphans(): void
+	/**
+	 * @return void
+	 */
+	public function removeOrphans()
 	{
 		foreach ($this->controls as $control) {
 			if (!$control->getForm(false)) {
@@ -76,7 +80,7 @@ class ControlGroup
 	/**
 	 * @return IControl[]
 	 */
-	public function getControls(): array
+	public function getControls()
 	{
 		return iterator_to_array($this->controls);
 	}
@@ -91,9 +95,11 @@ class ControlGroup
 	 * - 'description' - textual or IHtmlString object description
 	 * - 'embedNext' - describes how render next group
 	 *
+	 * @param  string
+	 * @param  mixed
 	 * @return static
 	 */
-	public function setOption(string $key, $value)
+	public function setOption($key, $value)
 	{
 		if ($value === null) {
 			unset($this->options[$key]);
@@ -107,18 +113,21 @@ class ControlGroup
 
 	/**
 	 * Returns user-specific option.
+	 * @param  string
+	 * @param  mixed
 	 * @return mixed
 	 */
-	public function getOption(string $key, $default = null)
+	public function getOption($key, $default = null)
 	{
-		return $this->options[$key] ?? $default;
+		return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
 
 
 	/**
 	 * Returns user-specific options.
+	 * @return array
 	 */
-	public function getOptions(): array
+	public function getOptions()
 	{
 		return $this->options;
 	}

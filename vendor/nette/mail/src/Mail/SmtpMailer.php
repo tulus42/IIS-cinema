@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Mail;
 
 use Nette;
@@ -15,12 +13,9 @@ use Nette;
 /**
  * Sends emails via the SMTP server.
  */
-class SmtpMailer implements Mailer
+class SmtpMailer implements IMailer
 {
 	use Nette\SmartObject;
-
-	/** @var Signer|null */
-	private $signer;
 
 	/** @var resource */
 	private $connection;
@@ -62,9 +57,9 @@ class SmtpMailer implements Mailer
 			$this->host = ini_get('SMTP');
 			$this->port = (int) ini_get('smtp_port');
 		}
-		$this->username = $options['username'] ?? '';
-		$this->password = $options['password'] ?? '';
-		$this->secure = $options['secure'] ?? '';
+		$this->username = isset($options['username']) ? $options['username'] : '';
+		$this->password = isset($options['password']) ? $options['password'] : '';
+		$this->secure = isset($options['secure']) ? $options['secure'] : '';
 		$this->timeout = isset($options['timeout']) ? (int) $options['timeout'] : 20;
 		$this->context = isset($options['context']) ? stream_context_create($options['context']) : stream_context_get_default();
 		if (!$this->port) {
@@ -82,36 +77,23 @@ class SmtpMailer implements Mailer
 
 
 	/**
-	 * @return static
-	 */
-	public function setSigner(Signer $signer): self
-	{
-		$this->signer = $signer;
-		return $this;
-	}
-
-
-	/**
 	 * Sends email.
+	 * @return void
 	 * @throws SmtpException
 	 */
-	public function send(Message $mail): void
+	public function send(Message $mail)
 	{
 		$tmp = clone $mail;
 		$tmp->setHeader('Bcc', null);
-
-		$data = $this->signer
-			? $this->signer->generateSignedMessage($tmp)
-			: $tmp->generateMessage();
+		$data = $tmp->generateMessage();
 
 		try {
 			if (!$this->connection) {
 				$this->connect();
 			}
 
-			if (
-				($from = $mail->getHeader('Return-Path'))
-				|| ($from = array_keys((array) $mail->getHeader('From'))[0])
+			if (($from = $mail->getHeader('Return-Path'))
+				|| ($from = key($mail->getHeader('From')))
 			) {
 				$this->write("MAIL FROM:<$from>", 250);
 			}
@@ -144,8 +126,9 @@ class SmtpMailer implements Mailer
 
 	/**
 	 * Connects and authenticates to SMTP server.
+	 * @return void
 	 */
-	protected function connect(): void
+	protected function connect()
 	{
 		$this->connection = @stream_socket_client(// @ is escalated to exception
 			($this->secure === 'ssl' ? 'ssl://' : '') . $this->host . ':' . $this->port,
@@ -165,11 +148,7 @@ class SmtpMailer implements Mailer
 
 		if ($this->secure === 'tls') {
 			$this->write('STARTTLS', 220);
-			if (!stream_socket_enable_crypto(
-				$this->connection,
-				true,
-				STREAM_CRYPTO_METHOD_TLS_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT | STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
-			)) {
+			if (!stream_socket_enable_crypto($this->connection, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
 				throw new SmtpException('Unable to connect via TLS.');
 			}
 			$this->write("EHLO $this->clientHost", 250);
@@ -195,8 +174,9 @@ class SmtpMailer implements Mailer
 
 	/**
 	 * Disconnects from SMTP server.
+	 * @return void
 	 */
-	protected function disconnect(): void
+	protected function disconnect()
 	{
 		fclose($this->connection);
 		$this->connection = null;
@@ -205,9 +185,12 @@ class SmtpMailer implements Mailer
 
 	/**
 	 * Writes data to server and checks response against expected code if some provided.
-	 * @param  int|int[]  $expectedCode
+	 * @param  string
+	 * @param  int|int[] response code
+	 * @param  string  error message
+	 * @return void
 	 */
-	protected function write(string $line, $expectedCode = null, string $message = null): void
+	protected function write($line, $expectedCode = null, $message = null)
 	{
 		fwrite($this->connection, $line . Message::EOL);
 		if ($expectedCode) {
@@ -221,8 +204,9 @@ class SmtpMailer implements Mailer
 
 	/**
 	 * Reads response from server.
+	 * @return string
 	 */
-	protected function read(): string
+	protected function read()
 	{
 		$s = '';
 		while (($line = fgets($this->connection, 1000)) != null) { // intentionally ==

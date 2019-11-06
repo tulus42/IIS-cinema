@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 
@@ -16,12 +14,12 @@ namespace Nette\Security;
 interface IAuthenticator
 {
 	/** Credential key */
-	public const
+	const
 		USERNAME = 0,
 		PASSWORD = 1;
 
 	/** Exception error code */
-	public const
+	const
 		IDENTITY_NOT_FOUND = 1,
 		INVALID_CREDENTIAL = 2,
 		FAILURE = 3,
@@ -30,7 +28,8 @@ interface IAuthenticator
 	/**
 	 * Performs an authentication against e.g. database.
 	 * and returns IIdentity on success or throws AuthenticationException
+	 * @return IIdentity
 	 * @throws AuthenticationException
 	 */
-	function authenticate(array $credentials): IIdentity;
+	function authenticate(array $credentials);
 }

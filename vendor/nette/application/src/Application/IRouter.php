@@ -5,16 +5,31 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Application;
 
 use Nette;
 
 
 /**
- * @deprecated use Nette\Routing\Router
+ * The bi-directional router.
  */
-interface IRouter extends Nette\Routing\Router
+interface IRouter
 {
+	/** only matching route */
+	const ONE_WAY = 0b0001;
+
+	/** @deprecated */
+	const SECURED = 0b0010;
+
+	/**
+	 * Maps HTTP request to a Request object.
+	 * @return Request|null
+	 */
+	function match(Nette\Http\IRequest $httpRequest);
+
+	/**
+	 * Constructs absolute URL from Request object.
+	 * @return string|null
+	 */
+	function constructUrl(Request $appRequest, Nette\Http\Url $refUrl);
 }

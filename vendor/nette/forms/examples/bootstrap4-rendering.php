@@ -4,8 +4,6 @@
  * Nette Forms & Bootstap v4 rendering example.
  */
 
-declare(strict_types=1);
-
 
 if (@!include __DIR__ . '/../vendor/autoload.php') {
 	die('Install packages using `composer install`');
@@ -18,7 +16,7 @@ use Tracy\Dumper;
 Debugger::enable();
 
 
-function makeBootstrap4(Form $form): void
+function makeBootstrap4(Form $form)
 {
 	$renderer = $form->getRenderer();
 	$renderer->wrappers['controls']['container'] = null;
@@ -28,7 +26,6 @@ function makeBootstrap4(Form $form): void
 	$renderer->wrappers['label']['container'] = 'div class="col-sm-3 col-form-label"';
 	$renderer->wrappers['control']['description'] = 'span class=form-text';
 	$renderer->wrappers['control']['errorcontainer'] = 'span class=form-control-feedback';
-	$renderer->wrappers['control']['.error'] = 'is-invalid';
 
 	foreach ($form->getControls() as $control) {
 		$type = $control->getOption('type');
@@ -98,7 +95,7 @@ if ($form->isSuccess()) {
 <meta charset="utf-8">
 <title>Nette Forms & Bootstrap v4 rendering example</title>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 <div class="container">
 	<h1>Nette Forms & Bootstrap v4 rendering example</h1>

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Mail;
 
 use Nette;
@@ -32,9 +30,4 @@ class FallbackMailerException extends SendException
 {
 	/** @var SendException[] */
 	public $failures;
-}
-
-
-class SignException extends SendException
-{
 }

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Http;
 
 use Nette;
@@ -61,10 +59,14 @@ class Request implements IRequest
 	private $rawBodyCallback;
 
 
-	public function __construct(UrlScript $url, array $post = null, array $files = null, array $cookies = null,
-		array $headers = null, string $method = null, string $remoteAddress = null, string $remoteHost = null, callable $rawBodyCallback = null)
+	public function __construct(UrlScript $url, $query = null, $post = null, $files = null, $cookies = null,
+		$headers = null, $method = null, $remoteAddress = null, $remoteHost = null, $rawBodyCallback = null)
 	{
 		$this->url = $url;
+		if ($query !== null) {
+			trigger_error('Nette\Http\Request::__construct(): parameter $query is deprecated.', E_USER_DEPRECATED);
+			$url->setQuery($query);
+		}
 		$this->post = (array) $post;
 		$this->files = (array) $files;
 		$this->cookies = (array) $cookies;
@@ -77,22 +79,12 @@ class Request implements IRequest
 
 
 	/**
-	 * @return static
-	 */
-	public function withUrl(UrlScript $url)
-	{
-		$dolly = clone $this;
-		$dolly->url = $url;
-		return $dolly;
-	}
-
-
-	/**
 	 * Returns URL object.
+	 * @return UrlScript
 	 */
-	public function getUrl(): UrlScript
+	public function getUrl()
 	{
-		return $this->url;
+		return clone $this->url;
 	}
 
 
@@ -102,49 +94,57 @@ class Request implements IRequest
 	/**
 	 * Returns variable provided to the script via URL query ($_GET).
 	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	public function getQuery(string $key = null)
+	public function getQuery($key = null, $default = null)
 	{
 		if (func_num_args() === 0) {
 			return $this->url->getQueryParameters();
-		} elseif (func_num_args() > 1) {
-			trigger_error(__METHOD__ . '() parameter $default is deprecated, use operator ??', E_USER_DEPRECATED);
+		} else {
+			return $this->url->getQueryParameter($key, $default);
 		}
-		return $this->url->getQueryParameter($key);
 	}
 
 
 	/**
 	 * Returns variable provided to the script via POST method ($_POST).
 	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	public function getPost(string $key = null)
+	public function getPost($key = null, $default = null)
 	{
 		if (func_num_args() === 0) {
 			return $this->post;
-		} elseif (func_num_args() > 1) {
-			trigger_error(__METHOD__ . '() parameter $default is deprecated, use operator ??', E_USER_DEPRECATED);
+
+		} elseif (isset($this->post[$key])) {
+			return $this->post[$key];
+
+		} else {
+			return $default;
 		}
-		return $this->post[$key] ?? null;
 	}
 
 
 	/**
 	 * Returns uploaded file.
+	 * @param  string key
 	 * @return FileUpload|array|null
 	 */
-	public function getFile(string $key)
+	public function getFile($key)
 	{
-		return $this->files[$key] ?? null;
+		return isset($this->files[$key]) ? $this->files[$key] : null;
 	}
 
 
 	/**
 	 * Returns uploaded files.
+	 * @return array
 	 */
-	public function getFiles(): array
+	public function getFiles()
 	{
 		return $this->files;
 	}
@@ -152,21 +152,21 @@ class Request implements IRequest
 
 	/**
 	 * Returns variable provided to the script via HTTP cookies.
+	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	public function getCookie(string $key)
+	public function getCookie($key, $default = null)
 	{
-		if (func_num_args() > 1) {
-			trigger_error(__METHOD__ . '() parameter $default is deprecated, use operator ??', E_USER_DEPRECATED);
-		}
-		return $this->cookies[$key] ?? null;
+		return isset($this->cookies[$key]) ? $this->cookies[$key] : $default;
 	}
 
 
 	/**
 	 * Returns variables provided to the script via HTTP cookies.
+	 * @return array
 	 */
-	public function getCookies(): array
+	public function getCookies()
 	{
 		return $this->cookies;
 	}
@@ -177,8 +177,9 @@ class Request implements IRequest
 
 	/**
 	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
+	 * @return string
 	 */
-	public function getMethod(): string
+	public function getMethod()
 	{
 		return $this->method;
 	}
@@ -186,31 +187,44 @@ class Request implements IRequest
 
 	/**
 	 * Checks if the request method is the given one.
+	 * @param  string
+	 * @return bool
 	 */
-	public function isMethod(string $method): bool
+	public function isMethod($method)
 	{
 		return strcasecmp($this->method, $method) === 0;
 	}
 
 
 	/**
+	 * @deprecated
+	 */
+	public function isPost()
+	{
+		trigger_error('Method isPost() is deprecated, use isMethod(\'POST\') instead.', E_USER_DEPRECATED);
+		return $this->isMethod('POST');
+	}
+
+
+	/**
 	 * Return the value of the HTTP header. Pass the header name as the
 	 * plain, HTTP-specified header name (e.g. 'Accept-Encoding').
+	 * @param  string
+	 * @param  string|null
+	 * @return string|null
 	 */
-	public function getHeader(string $header): ?string
+	public function getHeader($header, $default = null)
 	{
-		if (func_num_args() > 1) {
-			trigger_error(__METHOD__ . '() parameter $default is deprecated, use operator ??', E_USER_DEPRECATED);
-		}
 		$header = strtolower($header);
-		return $this->headers[$header] ?? null;
+		return isset($this->headers[$header]) ? $this->headers[$header] : $default;
 	}
 
 
 	/**
 	 * Returns all HTTP headers.
+	 * @return array
 	 */
-	public function getHeaders(): array
+	public function getHeaders()
 	{
 		return $this->headers;
 	}
@@ -218,19 +232,19 @@ class Request implements IRequest
 
 	/**
 	 * Returns referrer.
+	 * @return Url|null
 	 */
-	public function getReferer(): ?UrlImmutable
+	public function getReferer()
 	{
-		return isset($this->headers['referer'])
-			? new UrlImmutable($this->headers['referer'])
-			: null;
+		return isset($this->headers['referer']) ? new Url($this->headers['referer']) : null;
 	}
 
 
 	/**
 	 * Is the request sent via secure channel (https)?
+	 * @return bool
 	 */
-	public function isSecured(): bool
+	public function isSecured()
 	{
 		return $this->url->getScheme() === 'https';
 	}
@@ -238,8 +252,9 @@ class Request implements IRequest
 
 	/**
 	 * Is the request sent from the same origin?
+	 * @return bool
 	 */
-	public function isSameSite(): bool
+	public function isSameSite()
 	{
 		return isset($this->cookies['nette-samesite']);
 	}
@@ -247,8 +262,9 @@ class Request implements IRequest
 
 	/**
 	 * Is AJAX request?
+	 * @return bool
 	 */
-	public function isAjax(): bool
+	public function isAjax()
 	{
 		return $this->getHeader('X-Requested-With') === 'XMLHttpRequest';
 	}
@@ -256,8 +272,9 @@ class Request implements IRequest
 
 	/**
 	 * Returns the IP address of the remote client.
+	 * @return string|null
 	 */
-	public function getRemoteAddress(): ?string
+	public function getRemoteAddress()
 	{
 		return $this->remoteAddress;
 	}
@@ -265,8 +282,9 @@ class Request implements IRequest
 
 	/**
 	 * Returns the host of the remote client.
+	 * @return string|null
 	 */
-	public function getRemoteHost(): ?string
+	public function getRemoteHost()
 	{
 		if ($this->remoteHost === null && $this->remoteAddress !== null) {
 			$this->remoteHost = gethostbyaddr($this->remoteAddress);
@@ -277,18 +295,20 @@ class Request implements IRequest
 
 	/**
 	 * Returns raw content of HTTP request body.
+	 * @return string|null
 	 */
-	public function getRawBody(): ?string
+	public function getRawBody()
 	{
-		return $this->rawBodyCallback ? ($this->rawBodyCallback)() : null;
+		return $this->rawBodyCallback ? call_user_func($this->rawBodyCallback) : null;
 	}
 
 
 	/**
 	 * Parse Accept-Language header and returns preferred language.
-	 * @param  string[]  $langs  supported languages
+	 * @param  string[] supported languages
+	 * @return string|null
 	 */
-	public function detectLanguage(array $langs): ?string
+	public function detectLanguage(array $langs)
 	{
 		$header = $this->getHeader('Accept-Language');
 		if (!$header) {

@@ -5,8 +5,6 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
-declare(strict_types=1);
-
 namespace Nette\Security;
 
 use Nette;
@@ -37,7 +35,12 @@ class Identity implements IIdentity
 	private $data;
 
 
-	public function __construct($id, $roles = null, iterable $data = null)
+	/**
+	 * @param  mixed
+	 * @param  mixed
+	 * @param  iterable
+	 */
+	public function __construct($id, $roles = null, $data = null)
 	{
 		$this->setId($id);
 		$this->setRoles((array) $roles);
@@ -47,6 +50,7 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets the ID of user.
+	 * @param  mixed
 	 * @return static
 	 */
 	public function setId($id)
@@ -79,8 +83,9 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns a list of roles that the user is a member of.
+	 * @return array
 	 */
-	public function getRoles(): array
+	public function getRoles()
 	{
 		return $this->roles;
 	}
@@ -88,8 +93,9 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns a user data.
+	 * @return array
 	 */
-	public function getData(): array
+	public function getData()
 	{
 		return $this->data;
 	}
@@ -97,8 +103,11 @@ class Identity implements IIdentity
 
 	/**
 	 * Sets user data value.
+	 * @param  string
+	 * @param  mixed
+	 * @return void
 	 */
-	public function __set(string $key, $value): void
+	public function __set($key, $value)
 	{
 		if ($this->parentIsSet($key)) {
 			$this->parentSet($key, $value);
@@ -111,9 +120,10 @@ class Identity implements IIdentity
 
 	/**
 	 * Returns user data value.
+	 * @param  string
 	 * @return mixed
 	 */
-	public function &__get(string $key)
+	public function &__get($key)
 	{
 		if ($this->parentIsSet($key)) {
 			return $this->parentGet($key);
@@ -124,7 +134,11 @@ class Identity implements IIdentity
 	}
 
 
-	public function __isset(string $key): bool
+	/**
+	 * @param  string
+	 * @return bool
+	 */
+	public function __isset($key)
 	{
 		return isset($this->data[$key]) || $this->parentIsSet($key);
 	}

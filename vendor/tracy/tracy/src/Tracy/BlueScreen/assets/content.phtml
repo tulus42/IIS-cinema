@@ -12,8 +12,8 @@
  * @param  array $info
  * @param  string $title
  * @param  string $source
+ * @param  bool $sourceIsUrl
  * @param  array $lastError
- * @param  array $httpHeaders
  * @param  callable $dump
  * @return void
  */
@@ -27,12 +27,12 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 ?>
 <div id="tracy-bs" itemscope>
 	<a id="tracy-bs-toggle" href="#" class="tracy-toggle"></a>
-	<div class="tracy-bs-main">
+	<div>
 		<div id="tracy-bs-error" class="panel">
-			<?php if ($exception->getMessage()): ?><p><?= Helpers::escapeHtml(Dumper::encodeString($title . $code, self::MAX_MESSAGE_LENGTH)) ?></p><?php endif ?>
+			<?php if ($exception->getMessage()): ?><p><?= Helpers::escapeHtml($title . $code) ?></p><?php endif ?>
 
 
-			<h1><span><?= $messageHtml ?: Helpers::escapeHtml(Dumper::encodeString($title . $code, self::MAX_MESSAGE_LENGTH)) ?></span>
+			<h1><span><?= $messageHtml ?: Helpers::escapeHtml($title . $code) ?></span>
 			<?php foreach ($actions as $item): ?>
 			<a href="<?= Helpers::escapeHtml($item['link']) ?>"<?= empty($item['external']) ? '' : ' target="_blank" rel="noreferrer noopener"'?>><?= Helpers::escapeHtml($item['label']) ?>&#x25ba;</a>
 			<?php endforeach ?></h1>
@@ -83,7 +83,7 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 
 			<div class="<?= $collapsed ? 'tracy-collapsed ' : '' ?>inner">
 				<p><b>File:</b> <?= Helpers::editorLink($ex->getFile(), $ex->getLine()) ?></p>
-				<?php if (is_file($ex->getFile())): ?><?= self::highlightFile($ex->getFile(), $ex->getLine(), 15, $ex instanceof \ErrorException && isset($ex->context) ? $ex->context : [], $this->keysToHide) ?><?php endif ?>
+				<?php if (is_file($ex->getFile())): ?><?= self::highlightFile($ex->getFile(), $ex->getLine(), 15, $ex instanceof \ErrorException && isset($ex->context) ? $ex->context : []) ?><?php endif ?>
 			</div></div>
 
 
@@ -273,41 +273,20 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 		</div></div>
 
 
-		<?php if (PHP_SAPI === 'cli'): ?>
-		<div class="panel">
-		<h2><a data-tracy-ref="^+" class="tracy-toggle tracy-collapsed">CLI request</a></h2>
-
-		<div class="tracy-collapsed inner">
-			<h3>Process ID <?= Helpers::escapeHtml(getmypid()) ?></h3>
-			<pre>php<?= Helpers::escapeHtml(explode('):', $source, 2)[1]) ?></pre>
-
-			<h3>Arguments</h3>
-			<div class="outer">
-			<table>
-			<?php
-			foreach ($_SERVER['argv'] as $k => $v) echo '<tr><th>', Helpers::escapeHtml($k), '</th><td>', Helpers::escapeHtml($v), "</td></tr>\n";
-			?>
-			</table>
-			</div>
-		</div></div>
-
-
-		<?php else: ?>
 		<div class="panel">
 		<h2><a data-tracy-ref="^+" class="tracy-toggle tracy-collapsed">HTTP request</a></h2>
 
 		<div class="tracy-collapsed inner">
-			<h3>URL</h3>
-			<p><a href="<?= Helpers::escapeHtml($source) ?>"><?= Helpers::escapeHtml($source) ?></a></p>
-
+			<?php if (function_exists('apache_request_headers')): ?>
 			<h3>Headers</h3>
 			<div class="outer">
 			<table class="tracy-sortable">
 			<?php
-			foreach ($httpHeaders as $k => $v) echo '<tr><th>', Helpers::escapeHtml($k), '</th><td>', Helpers::escapeHtml($v), "</td></tr>\n";
+			foreach (apache_request_headers() as $k => $v) echo '<tr><th>', Helpers::escapeHtml($k), '</th><td>', Helpers::escapeHtml($v), "</td></tr>\n";
 			?>
 			</table>
 			</div>
+			<?php endif ?>
 
 
 			<?php foreach (['_GET', '_POST', '_COOKIE'] as $name): ?>
@@ -344,7 +323,6 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 			<p><i>no headers</i></p>
 			<?php endif ?>
 		</div></div>
-		<?php endif ?>
 
 
 		<?php foreach ($bottomPanels as $panel): ?>
@@ -356,14 +334,15 @@ $code = $exception->getCode() ? ' #' . $exception->getCode() : '';
 		</div></div>
 		<?php endforeach ?>
 
-		<footer>
-			<ul>
-				<li><b><a href="https://nette.org/make-donation?to=tracy" target="_blank" rel="noreferrer noopener">Please support Tracy via a donation 💙️</a></b></li>
-				<li>Report generated at <?= @date('Y/m/d H:i:s') // @ timezone may not be set ?></li>
-				<?php foreach ($info as $item): ?><li><?= Helpers::escapeHtml($item) ?></li><?php endforeach ?>
-			</ul>
-			<div class="footer-logo"><a href="https://tracy.nette.org" rel="noreferrer"></a></div>
-		</footer>
+
+		<ul>
+			<li><b><a href="https://nette.org/make-donation?to=tracy" target="_blank" rel="noreferrer noopener">Please support Tracy via a donation 💙️</a></b></li>
+			<li>Report generated at <?= @date('Y/m/d H:i:s') // @ timezone may not be set ?></li>
+			<li><?php if ($sourceIsUrl): ?><a href="<?= Helpers::escapeHtml($source) ?>"><?php endif ?><?= Helpers::escapeHtml($source) ?><?php if ($sourceIsUrl): ?></a><?php endif ?></li>
+			<?php foreach ($info as $item): ?><li><?= Helpers::escapeHtml($item) ?></li><?php endforeach ?>
+		</ul>
+
+		<div id="tracy-bs-logo"><a href="https://tracy.nette.org" rel="noreferrer"></a></div>
 	</div>
 	<meta itemprop=tracy-snapshot content=<?= Dumper::formatSnapshotAttribute($snapshot) ?>>
 </div>

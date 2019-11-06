@@ -4,8 +4,6 @@
  * Nette Forms localization example.
  */
 
-declare(strict_types=1);
-
 
 if (@!include __DIR__ . '/../vendor/autoload.php') {
 	die('Install packages using `composer install`');
@@ -33,9 +31,9 @@ class MyTranslator implements Nette\Localization\ITranslator
 	/**
 	 * Translates the given string.
 	 */
-	public function translate($message, ...$parameters): string
+	public function translate($message, $count = null)
 	{
-		return $this->table[$message] ?? $message;
+		return isset($this->table[$message]) ? $this->table[$message] : $message;
 	}
 }
 
@@ -80,7 +78,7 @@ if ($form->isSuccess()) {
 <meta charset="utf-8">
 <title>Nette Forms localization example</title>
 <link rel="stylesheet" media="screen" href="assets/style.css" />
-<script src="https://nette.github.io/resources/js/3/netteForms.js"></script>
+<script src="https://nette.github.io/resources/js/netteForms.js"></script>
 
 <h1>Nette Forms localization example</h1>
 
