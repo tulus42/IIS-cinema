@@ -1,9 +1,9 @@
 <?php
-// source: /opt/lampp/htdocs/IIS-cinema/app/CoreModule/templates/@layout.latte
+// source: /opt/lampp/htdocs/IIS-cinema/app/MovieModule/templates/@layout.latte
 
 use Latte\Runtime as LR;
 
-class Template70bbe1e683 extends Latte\Runtime\Template
+class Template10d0d4e5fa extends Latte\Runtime\Template
 {
 	public $blocks = [
 		'scripts' => 'blockScripts',
@@ -92,7 +92,6 @@ class Template70bbe1e683 extends Latte\Runtime\Template
 
             <hr class="new">
             
-
 <?php
 		$this->renderBlock('content', $this->params, 'html');
 ?>
