@@ -26,6 +26,9 @@ class Printer
 	/** @var int */
 	protected $linesBetweenMethods = 2;
 
+	/** @var bool */
+	private $resolveTypes = true;
+
 
 	public function printFunction(GlobalFunction $function, PhpNamespace $namespace = null): string
 	{
@@ -83,7 +86,7 @@ class Printer
 	public function printClass(ClassType $class, PhpNamespace $namespace = null): string
 	{
 		$class->validate();
-		$resolver = $namespace ? [$namespace, 'unresolveName'] : function ($s) { return $s; };
+		$resolver = $this->resolveTypes && $namespace ? [$namespace, 'unresolveName'] : function ($s) { return $s; };
 
 		$traits = [];
 		foreach ($class->getTraitResolutions() as $trait => $resolutions) {
@@ -95,14 +98,14 @@ class Printer
 		foreach ($class->getConstants() as $const) {
 			$consts[] = Helpers::formatDocComment((string) $const->getComment())
 				. ($const->getVisibility() ? $const->getVisibility() . ' ' : '')
-				. 'const ' . $const->getName() . ' = ' . Helpers::dump($const->getValue()) . ";\n";
+				. 'const ' . $const->getName() . ' = ' . $this->dump($const->getValue()) . ";\n";
 		}
 
 		$properties = [];
 		foreach ($class->getProperties() as $property) {
 			$properties[] = Helpers::formatDocComment((string) $property->getComment())
 				. ($property->getVisibility() ?: 'public') . ($property->isStatic() ? ' static' : '') . ' $' . $property->getName()
-				. ($property->getValue() === null ? '' : ' = ' . Helpers::dump($property->getValue()))
+				. ($property->getValue() === null ? '' : ' = ' . $this->dump($property->getValue()))
 				. ";\n";
 		}
 
@@ -136,24 +139,14 @@ class Printer
 	public function printNamespace(PhpNamespace $namespace): string
 	{
 		$name = $namespace->getName();
-
-		$uses = [];
-		foreach ($namespace->getUses() as $alias => $original) {
-			if ($original !== ($name ? $name . '\\' . $alias : $alias)) {
-				if ($alias === $original || substr($original, -(strlen($alias) + 1)) === '\\' . $alias) {
-					$uses[] = "use $original;";
-				} else {
-					$uses[] = "use $original as $alias;";
-				}
-			}
-		}
+		$uses = $this->printUses($namespace);
 
 		$classes = [];
 		foreach ($namespace->getClasses() as $class) {
 			$classes[] = $this->printClass($class, $namespace);
 		}
 
-		$body = ($uses ? implode("\n", $uses) . "\n\n" : '')
+		$body = ($uses ? $uses . "\n\n" : '')
 			. implode("\n", $classes);
 
 		if ($namespace->getBracketedSyntax()) {
@@ -185,9 +178,42 @@ class Printer
 	}
 
 
+	/**
+	 * @return static
+	 */
+	public function setTypeResolving(bool $state = true): self
+	{
+		$this->resolveTypes = $state;
+		return $this;
+	}
+
+
 	protected function indent(string $s): string
 	{
 		return Strings::indent($s, 1, $this->indentation);
+	}
+
+
+	protected function dump($var): string
+	{
+		return Helpers::dump($var);
+	}
+
+
+	protected function printUses(PhpNamespace $namespace): string
+	{
+		$name = $namespace->getName();
+		$uses = [];
+		foreach ($namespace->getUses() as $alias => $original) {
+			if ($original !== ($name ? $name . '\\' . $alias : $alias)) {
+				if ($alias === $original || substr($original, -(strlen($alias) + 1)) === '\\' . $alias) {
+					$uses[] = "use $original;";
+				} else {
+					$uses[] = "use $original as $alias;";
+				}
+			}
+		}
+		return implode("\n", $uses);
 	}
 
 
@@ -201,11 +227,11 @@ class Printer
 		foreach ($list as $param) {
 			$variadic = $function->isVariadic() && $param === end($list);
 			$hint = $param->getTypeHint();
-			$params[] = ($hint ? ($param->isNullable() ? '?' : '') . ($namespace ? $namespace->unresolveName($hint) : $hint) . ' ' : '')
+			$params[] = ($hint ? ($param->isNullable() ? '?' : '') . ($this->resolveTypes && $namespace ? $namespace->unresolveName($hint) : $hint) . ' ' : '')
 				. ($param->isReference() ? '&' : '')
 				. ($variadic ? '...' : '')
 				. '$' . $param->getName()
-				. ($param->hasDefaultValue() && !$variadic ? ' = ' . Helpers::dump($param->getDefaultValue()) : '');
+				. ($param->hasDefaultValue() && !$variadic ? ' = ' . $this->dump($param->getDefaultValue()) : '');
 		}
 
 		return strlen($tmp = implode(', ', $params)) > Helpers::WRAP_LENGTH && count($params) > 1
@@ -220,7 +246,7 @@ class Printer
 	protected function printReturnType($function, ?PhpNamespace $namespace): string
 	{
 		return $function->getReturnType()
-			? ': ' . ($function->getReturnNullable() ? '?' : '') . ($namespace ? $namespace->unresolveName($function->getReturnType()) : $function->getReturnType())
+			? ': ' . ($function->getReturnNullable() ? '?' : '') . ($this->resolveTypes && $namespace ? $namespace->unresolveName($function->getReturnType()) : $function->getReturnType())
 			: '';
 	}
 }

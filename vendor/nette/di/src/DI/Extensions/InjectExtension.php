@@ -5,39 +5,51 @@
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Nette\DI\Extensions;
 
 use Nette;
 use Nette\DI;
+use Nette\DI\Definitions;
 use Nette\Utils\Reflection;
 
 
 /**
  * Calls inject methods and fills @inject properties.
  */
-class InjectExtension extends DI\CompilerExtension
+final class InjectExtension extends DI\CompilerExtension
 {
-	const TAG_INJECT = 'inject';
+	public const TAG_INJECT = 'nette.inject';
+
+
+	public function getConfigSchema(): Nette\Schema\Schema
+	{
+		return Nette\Schema\Expect::structure([]);
+	}
 
 
 	public function beforeCompile()
 	{
 		foreach ($this->getContainerBuilder()->getDefinitions() as $def) {
-			if ($def->getTag(self::TAG_INJECT) && $def->getType()) {
-				$this->updateDefinition($def);
+			if ($def->getTag(self::TAG_INJECT)) {
+				$def = $def instanceof Definitions\FactoryDefinition ? $def->getResultDefinition() : $def;
+				if ($def instanceof Definitions\ServiceDefinition) {
+					$this->updateDefinition($def);
+				}
 			}
 		}
 	}
 
 
-	private function updateDefinition(DI\ServiceDefinition $def)
+	private function updateDefinition(Definitions\ServiceDefinition $def): void
 	{
 		$class = $def->getType();
 		$setups = $def->getSetup();
 
 		foreach (self::getInjectProperties($class) as $property => $type) {
 			$builder = $this->getContainerBuilder();
-			$inject = new DI\Statement('$' . $property, ['@\\' . ltrim($type, '\\')]);
+			$inject = new Definitions\Statement('$' . $property, [Definitions\Reference::fromType((string) $type)]);
 			foreach ($setups as $key => $setup) {
 				if ($setup->getEntity() === $inject->getEntity()) {
 					$inject = $setup;
@@ -50,7 +62,7 @@ class InjectExtension extends DI\CompilerExtension
 		}
 
 		foreach (array_reverse(self::getInjectMethods($def->getType())) as $method) {
-			$inject = new DI\Statement($method);
+			$inject = new Definitions\Statement($method);
 			foreach ($setups as $key => $setup) {
 				if ($setup->getEntity() === $inject->getEntity()) {
 					$inject = $setup;
@@ -66,10 +78,9 @@ class InjectExtension extends DI\CompilerExtension
 
 	/**
 	 * Generates list of inject methods.
-	 * @return array
 	 * @internal
 	 */
-	public static function getInjectMethods($class)
+	public static function getInjectMethods(string $class): array
 	{
 		$res = [];
 		foreach (get_class_methods($class) as $name) {
@@ -77,7 +88,7 @@ class InjectExtension extends DI\CompilerExtension
 				$res[$name] = (new \ReflectionMethod($class, $name))->getDeclaringClass()->getName();
 			}
 		}
-		uksort($res, function ($a, $b) use ($res) {
+		uksort($res, function (string $a, string $b) use ($res): int {
 			return $res[$a] === $res[$b]
 				? strcmp($a, $b)
 				: (is_a($res[$a], $res[$b], true) ? 1 : -1);
@@ -88,10 +99,9 @@ class InjectExtension extends DI\CompilerExtension
 
 	/**
 	 * Generates list of properties with annotation @inject.
-	 * @return array
 	 * @internal
 	 */
-	public static function getInjectProperties($class)
+	public static function getInjectProperties(string $class): array
 	{
 		$res = [];
 		foreach (get_class_vars($class) as $name => $foo) {
@@ -110,15 +120,15 @@ class InjectExtension extends DI\CompilerExtension
 
 	/**
 	 * Calls all methods starting with with "inject" using autowiring.
-	 * @return void
+	 * @param  object  $service
 	 */
-	public static function callInjects(DI\Container $container, $service)
+	public static function callInjects(DI\Container $container, $service): void
 	{
 		if (!is_object($service)) {
 			throw new Nette\InvalidArgumentException(sprintf('Service must be object, %s given.', gettype($service)));
 		}
 
-		foreach (self::getInjectMethods($service) as $method) {
+		foreach (self::getInjectMethods(get_class($service)) as $method) {
 			$container->callMethod([$service, $method]);
 		}
 
@@ -129,8 +139,11 @@ class InjectExtension extends DI\CompilerExtension
 	}
 
 
-	/** @internal */
-	private static function checkType($class, $name, $type, $container = null)
+	/**
+	 * @param  object|string  $class
+	 * @param  DI\Container|DI\ContainerBuilder|null  $container
+	 */
+	private static function checkType($class, string $name, ?string $type, $container): void
 	{
 		$propName = Reflection::toString(new \ReflectionProperty($class, $name));
 		if (!$type) {
@@ -138,7 +151,7 @@ class InjectExtension extends DI\CompilerExtension
 		} elseif (!class_exists($type) && !interface_exists($type)) {
 			throw new Nette\InvalidStateException("Class or interface '$type' used in @var annotation at $propName not found. Check annotation and 'use' statements.");
 		} elseif ($container && !$container->getByType($type, false)) {
-			throw new Nette\InvalidStateException("Service of type $type used in @var annotation at $propName not found. Did you register it in configuration file?");
+			throw new Nette\DI\MissingServiceException("Service of type $type used in @var annotation at $propName not found. Did you register it in configuration file?");
 		}
 	}
 }

@@ -6,6 +6,8 @@
 
 (function(){
 	let nonce, contentId, ajaxCounter = 1;
+	let baseUrl = location.href.split('#')[0];
+	baseUrl += (baseUrl.indexOf('?') < 0 ? '?' : '&');
 
 	class Panel
 	{
@@ -60,9 +62,9 @@
 
 			elem.querySelectorAll('.tracy-icons a').forEach((link) => {
 				link.addEventListener('click', (e) => {
-					if (link.rel === 'close') {
+					if (link.dataset.tracyAction === 'close') {
 						this.toPeek();
-					} else if (link.rel === 'window') {
+					} else if (link.dataset.tracyAction === 'window') {
 						this.toWindow();
 					}
 					e.preventDefault();
@@ -139,7 +141,7 @@
 
 			let doc = win.document;
 			doc.write('<!DOCTYPE html><meta charset="utf-8">'
-			+ '<script src="?_tracy_bar=js&amp;XDEBUG_SESSION_STOP=1" onload="Tracy.Dumper.init()" async></script>'
+			+ '<script src="' + (baseUrl.replace('&', '&amp;').replace('"', '&quot;')) + '_tracy_bar=js&amp;XDEBUG_SESSION_STOP=1" onload="Tracy.Dumper.init()" async></script>'
 			+ '<body id="tracy-debug">'
 			);
 			doc.body.innerHTML = '<div class="tracy-panel tracy-mode-window" id="' + this.elem.id + '">' + this.elem.innerHTML + '</div>';
@@ -256,7 +258,7 @@
 		initTabs(elem) {
 			elem.querySelectorAll('a').forEach((link) => {
 				link.addEventListener('click', (e) => {
-					if (link.rel === 'close') {
+					if (link.dataset.tracyAction === 'close') {
 						this.close();
 
 					} else if (link.rel) {
@@ -282,7 +284,7 @@
 				});
 
 				link.addEventListener('mouseenter', (e) => {
-					if (e.buttons || !link.rel || link.rel === 'close' || elem.classList.contains('tracy-dragged')) {
+					if (e.buttons || !link.rel || elem.classList.contains('tracy-dragged')) {
 						return;
 					}
 
@@ -309,7 +311,7 @@
 				link.addEventListener('mouseleave', () => {
 					clearTimeout(this.displayTimeout);
 
-					if (link.rel && link.rel !== 'close' && !elem.classList.contains('tracy-dragged')) {
+					if (link.rel && !elem.classList.contains('tracy-dragged')) {
 						Debug.panels[link.rel].blur();
 					}
 				});
@@ -471,7 +473,7 @@
 					this.setRequestHeader('X-Tracy-Ajax', reqId);
 					this.addEventListener('load', function() {
 						if (this.getAllResponseHeaders().match(/^X-Tracy-Ajax: 1/mi)) {
-							Debug.loadScript('?_tracy_bar=content-ajax.' + reqId + '&XDEBUG_SESSION_STOP=1&v=' + Math.random());
+							Debug.loadScript(baseUrl + '_tracy_bar=content-ajax.' + reqId + '&XDEBUG_SESSION_STOP=1&v=' + Math.random());
 						}
 					});
 				}
@@ -486,7 +488,7 @@
 					request.headers.set('X-Tracy-Ajax', reqId);
 					return oldFetch(request).then((response) => {
 						if (response.headers.has('X-Tracy-Ajax') && response.headers.get('X-Tracy-Ajax')[0] === '1') {
-							Debug.loadScript('?_tracy_bar=content-ajax.' + reqId + '&XDEBUG_SESSION_STOP=1&v=' + Math.random());
+							Debug.loadScript(baseUrl + '_tracy_bar=content-ajax.' + reqId + '&XDEBUG_SESSION_STOP=1&v=' + Math.random());
 						}
 
 						return response;

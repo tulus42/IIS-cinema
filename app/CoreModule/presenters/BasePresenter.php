@@ -10,5 +10,6 @@ abstract class BasePresenter
     {
         $this->getUser()->logout(true);
         $this->flashMessage('Odhlásenie prebehlo úspešne', 'success');
+        
     }
 }

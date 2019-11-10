@@ -7,7 +7,31 @@ Nette Mail: Sending E-mails
 [![Latest Stable Version](https://poser.pugx.org/nette/mail/v/stable)](https://github.com/nette/mail/releases)
 [![License](https://img.shields.io/badge/license-New%20BSD-blue.svg)](https://github.com/nette/mail/blob/master/license.md)
 
-Almost every web application needs to send e-mails, whether newsletters or order confirmations. That's why Nette Framework provides necessary tools.
+
+Introduction
+------------
+
+Almost every web application needs to send e-mails, whether newsletters or order confirmations. This library provides necessary tools.
+
+Documentation can be found on the [website](https://doc.nette.org/mailing).
+
+If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
+
+
+Installation
+------------
+
+The recommended way to install is via Composer:
+
+```
+composer require nette/mail
+```
+
+It requires PHP version 7.1 and supports PHP up to 7.3.
+
+
+Usage
+-----
 
 Example of creating an e-mail using `Nette\Mail\Message` class:
 
@@ -83,4 +107,4 @@ $mailer = new Nette\Mail\SmtpMailer([
 $mailer->send($mail);
 ```
 
-You can also create your own mailer - it's a class implementing Nette\Mail\IMailer interface.
+You can also create your own mailer - it's a class implementing Nette\Mail\Mailer interface.
