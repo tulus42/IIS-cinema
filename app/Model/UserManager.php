@@ -16,12 +16,12 @@ final class UserManager implements Nette\Security\IAuthenticator
 	use Nette\SmartObject;
 
 	private const
-		TABLE_NAME = 'users',
+		TABLE_NAME = 'user',
 		COLUMN_ID = 'id',
 		COLUMN_NAME = 'username',
 		COLUMN_PASSWORD_HASH = 'password',
-		COLUMN_EMAIL = 'email',
-		COLUMN_ROLE = 'role';
+		COLUMN_EMAIL = 'e_mail',
+		COLUMN_ROLE = 'rights';
 
 
 	/** @var Nette\Database\Context */
