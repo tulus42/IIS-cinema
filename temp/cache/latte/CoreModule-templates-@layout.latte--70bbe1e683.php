@@ -83,7 +83,7 @@ class Template70bbe1e683 extends Latte\Runtime\Template
                     <div class="column8">
                         <ul>
                             <li class="log-link link"><a href="{{ route('login') }}">Prihlásenie</a></li>
-                            <li class="reg-link link"><a href="{{ route('register') }}">Registrácia</a></li>
+                            <li class="reg-link link"><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Registration:register")) ?>">Registrácia</a></li>
                                     
                         </ul>
                     </div>
