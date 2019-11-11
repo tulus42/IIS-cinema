@@ -1,7 +1,18 @@
 {block content}
 
 <div class="main-block-register" align="center">
-Ahoj!
+    <p align="right"><a href="#">Upraviť profil</a></p>
+    <h1>Váš Profil</h1>
+    <br>
+    <h4>Používateľské meno: {$this_profile->username}</h4>
+    <h4>Krstné meno: {$this_profile->name}</h4>
+    <h4>Priezvisko: {$this_profile->surname}</h4>
+    <h4>Dátum narodenia: {$this_profile->date_of_birth|date: '%d.%m.%Y'}<h4>
+    <h4>Telefónne číslo: {$this_profile->phone_number}<h4>
+    <h4>E-mail: {$this_profile->e_mail}<h4>
+
+    <br>
+    <h4 align="left"><a href="#">Moje navštívené udalosti</a></h4>
 </div>
 
 {/block}
