@@ -21,9 +21,10 @@ final class UserManager implements Nette\Security\IAuthenticator
 		COLUMN_NAME = 'name',
 		COLUMN_SURNAME = 'surname',
 		COLUMN_DATE_OF_BIRTH = 'date_of_birth',
-		COLUMN_PASSWORD_HASH = 'password',
+		COLUMN_PHONE_NUMBER = 'phone_number',
 		COLUMN_EMAIL = 'e_mail',
-		COLUMN_ROLE = 'rights';
+		COLUMN_ROLE = 'rights',
+		COLUMN_PASSWORD_HASH = 'password';
 
 
 	/** @var Nette\Database\Context */
@@ -66,7 +67,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 
 		$arr = $row->toArray();
 		unset($arr[self::COLUMN_PASSWORD_HASH]);
-		return new Nette\Security\Identity($row[self::COLUMN_NAME], $row[self::COLUMN_ROLE], $arr);
+		return new Nette\Security\Identity($row[self::COLUMN_USERNAME], $row[self::COLUMN_ROLE], $arr);
 	}
 
 
@@ -74,14 +75,20 @@ final class UserManager implements Nette\Security\IAuthenticator
 	 * Adds new user.
 	 * @throws DuplicateNameException
 	 */
-	public function add(string $username, string $name, string $surname, string $email, DateTime $dateOdBirth, string $phone_number, string $password): void
+	public function add(string $username, string $name, string $surname, string $email, string $dateOfBirth, string $phone_number, string $password): void
 	{
 		Nette\Utils\Validators::assert($email, 'email');
+		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
 		try {
 			$this->database->table(self::TABLE_NAME)->insert([
-				self::COLUMN_NAME => $username,
-				self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
+				self::COLUMN_USERNAME => $username,
+				self::COLUMN_NAME => $name,
+				self::COLUMN_SURNAME => $surname,
+				self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
+				self::COLUMN_PHONE_NUMBER => $phone_number,
 				self::COLUMN_EMAIL => $email,
+				self::COLUMN_ROLE => "viewer",
+				self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
 			]);
 		} catch (Nette\Database\UniqueConstraintViolationException $e) {
 			throw new DuplicateNameException;
