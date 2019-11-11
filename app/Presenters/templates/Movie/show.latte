@@ -59,10 +59,11 @@
                     </button>
                 {/foreach}
 
-
+                {if $user->isLoggedIn() and $user->isInRole('admin')}
                 <button class="button event">
                     Pridať<br/>predstavenie
                 </button>
+                {/if}
             </div>
         </div>
 	</div>

@@ -24,17 +24,11 @@
 
 	<div class="wrapper">
         <div class="sidebar">
-			<div class="wrap">
-				<div class="search">
-					<input type="text" class="searchTerm" placeholder="Hľadám...">
-					<button type="submit" class="searchButton">
-						<i class="fa fa-search"></i>
-					</button>
-				</div>
-			</div>    
-
         
             <ul>
+				{if $user->isLoggedIn() and $user->isInRole('admin')}
+				<li><a href="#"><i class="fas fa-users-cog"></i>Správa webu</a></li>
+				{/if}
 				<li><a href="{link Homepage:default}"><i class="fas fa-home"></i>Domov</a></li>
 				<li><a href="{link MovieList:allMovies}"><i class="fas fa-film"></i>Filmy</a></li>
 				<li><a href="#"><i class="fas fa-chair"></i>Sály</a></li>
