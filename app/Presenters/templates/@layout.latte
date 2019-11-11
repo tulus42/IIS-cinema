@@ -54,9 +54,13 @@
 
                     <div class="column8">
                         <ul>
+							{if $user->isLoggedIn()}
+							<li class="log-link link"><a href="{link User:profile}">Môj profil</a></li>
+                            <li class="reg-link link"><a href="{link Sign:out}">Odhlásenie</a></li>
+							{else}
                             <li class="log-link link"><a href="{link Sign:in}">Prihlásenie</a></li>
                             <li class="reg-link link"><a href="{link Sign:up}">Registrácia</a></li>
-                                    
+							{/if}
                         </ul>
                     </div>
                 </div>

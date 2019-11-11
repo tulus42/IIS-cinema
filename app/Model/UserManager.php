@@ -17,7 +17,6 @@ final class UserManager implements Nette\Security\IAuthenticator
 
 	private const
 		TABLE_NAME = 'user',
-		COLUMN_ID = 'id',
 		COLUMN_NAME = 'username',
 		COLUMN_PASSWORD_HASH = 'password',
 		COLUMN_EMAIL = 'e_mail',
@@ -64,7 +63,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 
 		$arr = $row->toArray();
 		unset($arr[self::COLUMN_PASSWORD_HASH]);
-		return new Nette\Security\Identity($row[self::COLUMN_ID], $row[self::COLUMN_ROLE], $arr);
+		return new Nette\Security\Identity($row[self::COLUMN_NAME], $row[self::COLUMN_ROLE], $arr);
 	}
 
 
