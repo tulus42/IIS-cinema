@@ -29,7 +29,11 @@
                     </div>
 
                     <div class="row">
-                        <h2>Účinkujú:</h2>
+                        <h2>Účinkujú: 
+                            {foreach $starsIn as $i}
+                                {$i->performer->name} {$i->performer->surname},
+                            {/foreach}
+                        </h2>
                     </div>                    
                 </div>
             </div>

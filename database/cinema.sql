@@ -22,7 +22,7 @@ CREATE TABLE `user`(
     `surname` VARCHAR(255) NOT NULL,
     `date_of_birth` DATE NOT NULL,
     `phone_number` VARCHAR(255),
-    `e_mail` VARCHAR(255),          
+    `e_mail` VARCHAR(255) NOT NULL,          
     `rights` ENUM('admin', 'redactor', 'cashier', 'viewer') NOT NULL,
     `password` VARCHAR(255) NOT NULL -- Should be saved by trigger because of hash guess
 ) ENGINE=InnoDB CHARSET=utf8;
@@ -200,5 +200,6 @@ VALUES
 INSERT INTO `stars_in` (`performer_id`, `id_piece_of_work`)
 VALUES
     ((SELECT performer_id FROM performer WHERE name = 'Ryan' AND surname = 'Reynolds'), '1'),     -- Ryan Reynolds - DeadPool
+    ((SELECT performer_id FROM performer WHERE name = 'Stan' AND surname = 'Lee'), '1'),     
     ((SELECT performer_id FROM performer WHERE name = 'Daniel' AND surname = 'Radcliffe'), '2');
 
