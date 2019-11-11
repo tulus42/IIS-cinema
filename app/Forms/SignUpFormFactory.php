@@ -66,6 +66,7 @@ final class SignUpFormFactory
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {
+				$values->dateOfBirth = date('Y-m-d', strtotime($values->dateOfBirth));
 				$this->userManager->add($values->username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, $values->password);
 			} catch (Model\DuplicateNameException $e) {
 				$form['username']->addError('Užívateľské heslo už existuje.');

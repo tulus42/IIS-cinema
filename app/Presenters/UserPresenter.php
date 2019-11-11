@@ -16,6 +16,7 @@ class UserPresenter extends Nette\Application\UI\Presenter
 
     public function renderProfile(): void
     {
-        $this->template->this_profile = $this->database->table('user')->get($this->getUser()->id);
+        $userID = $this->getUser()->id;
+        $this->template->this_profile = $this->database->table('user')->get($userID);
     }
 }
