@@ -1,1 +1,5 @@
-/temp/
+temp/*
+app/config/common.neon
+app/config/*
+/app/config/*
+/app/config/

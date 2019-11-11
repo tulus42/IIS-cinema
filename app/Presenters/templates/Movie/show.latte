@@ -48,6 +48,13 @@
             </div>
             
             <div class="row">
+                {foreach $events as $event}
+                    <button class="button event">
+                        {$event->date|date: '%d. %m. %Y'}<br>
+                        {$event->time|date: '%H:%M'}
+                    </button>
+                {/foreach}
+
 
                 <button class="button event">
                     Pridať<br/>predstavenie
