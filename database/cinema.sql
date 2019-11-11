@@ -83,7 +83,7 @@ CREATE TABLE `seat`(
 
 -- Table for connesting stars that star in a piece of work
 CREATE TABLE `stars_in`(
-    `stars_in_id` VARCHAR(255) NOT NULL,
+    `stars_in_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `performer_id` int(8) NOT NULL,
     `id_piece_of_work` int(8) NOT NULL
 ) ENGINE=InnoDB CHARSET=utf8;
@@ -104,8 +104,6 @@ ADD PRIMARY KEY(`hall_num`);
 ALTER TABLE `seat`
 ADD PRIMARY KEY(`cultural_event_id`, `row`, `column`);
 
-ALTER TABLE `stars_in`
-ADD PRIMARY KEY(`stars_in_id`);
 
 -- Constraints for foreign keys
 ALTER TABLE `seat`
@@ -144,18 +142,6 @@ FOREIGN KEY(`id_piece_of_work`) REFERENCES `cultural_piece_of_work`(`id_piece_of
 ON DELETE CASCADE;
 
 
--- Trigger na generovanie ID
--- CREATE SEQUENCE performer_ID_seq
---   START WITH 1
---   INCREMENT BY 1;
-
--- CREATE TRIGGER performer_ID_gen
---   before INSERT ON perfomer
---   FOR EACH ROW
---   BEGIN
-
---   END;
-
 
 -- INSERT TO USER
 INSERT INTO `user` 
@@ -192,7 +178,8 @@ INSERT INTO `performer` (`name`, `surname`)
 VALUES
     ('John','Smith'),
     ('Stan','Lee'),
-    ('Ryan', 'Raynolds');
+    ('Daniel', 'Radcliffe'),
+    ('Ryan', 'Reynolds');
 
 -- INSERT TO seat
 INSERT INTO `seat`
@@ -204,6 +191,14 @@ VALUES
 -- INSERT TO user_attended
 INSERT INTO `user_attended` 
 VALUES
-    ('dolar', '1');
+    ('dolar', '1'),
+    ('Maniac42', '2');
 
+
+-- kto kde hrá
+-- INSERT TO stars_in
+INSERT INTO `stars_in` (`performer_id`, `id_piece_of_work`)
+VALUES
+    ((SELECT performer_id FROM performer WHERE name = 'Ryan' AND surname = 'Reynolds'), '1'),     -- Ryan Reynolds - DeadPool
+    ((SELECT performer_id FROM performer WHERE name = 'Daniel' AND surname = 'Radcliffe'), '2');
 
