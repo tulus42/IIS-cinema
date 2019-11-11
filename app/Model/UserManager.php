@@ -17,7 +17,10 @@ final class UserManager implements Nette\Security\IAuthenticator
 
 	private const
 		TABLE_NAME = 'user',
-		COLUMN_NAME = 'username',
+		COLUMN_USERNAME = 'username',
+		COLUMN_NAME = 'name',
+		COLUMN_SURNAME = 'surname',
+		COLUMN_DATE_OF_BIRTH = 'date_of_birth',
 		COLUMN_PASSWORD_HASH = 'password',
 		COLUMN_EMAIL = 'e_mail',
 		COLUMN_ROLE = 'rights';
@@ -46,7 +49,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 		[$username, $password] = $credentials;
 
 		$row = $this->database->table(self::TABLE_NAME)
-			->where(self::COLUMN_NAME, $username)
+			->where(self::COLUMN_USERNAME, $username)
 			->fetch();
 
 		if (!$row) {
@@ -71,7 +74,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 	 * Adds new user.
 	 * @throws DuplicateNameException
 	 */
-	public function add(string $username, string $email, string $password): void
+	public function add(string $username, string $name, string $surname, string $email, DateTime $dateOdBirth, string $phone_number, string $password): void
 	{
 		Nette\Utils\Validators::assert($email, 'email');
 		try {

@@ -16,7 +16,8 @@ class MoviePresenter extends Nette\Application\UI\Presenter
 
     public function renderShow(int $id_piece_of_work): void
     {
-        $this->template->piece_of_work = $this->database->table('cultural_piece_of_work')->get($id_piece_of_work);
-        $this->template->events = $this->template->piece_of_work->related('cultural_event');
+        $piece_of_work = $this->database->table('cultural_piece_of_work')->get($id_piece_of_work);
+        $this->template->piece_of_work = $piece_of_work;
+        $this->template->events = $piece_of_work->related('cultural_event');
     }
 }

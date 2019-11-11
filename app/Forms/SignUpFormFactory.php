@@ -48,6 +48,8 @@ final class SignUpFormFactory
 			->setType('Date')
 			->setRequired('Prosím vyberte Váš dátum narodenia');
 
+		$form->addText('phoneNumber', 'Telefónne číslo:');
+
 		$form->addPassword('password', '*Heslo:')
 			->setOption('description', sprintf('Minimálne %d znakov', self::PASSWORD_MIN_LENGTH))
 			->setRequired('Prosím vložte Vaše heslo')
@@ -57,12 +59,14 @@ final class SignUpFormFactory
 			->setRequired('Prosím vložte Vaše heslo')
 			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
 
+		
+
 
 		$form->addSubmit('send', 'Registrovať sa');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {
-				$this->userManager->add($values->username, $values->email, $values->password);
+				$this->userManager->add($values->username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, $values->password);
 			} catch (Model\DuplicateNameException $e) {
 				$form['username']->addError('Užívateľské heslo už existuje.');
 				return;
