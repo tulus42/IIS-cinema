@@ -31,7 +31,7 @@
                     <div class="row">
                         <h2>Účinkujú: 
                             {foreach $starsIn as $i}
-                                {$i->performer->name} {$i->performer->surname},
+                                {$i->performer->name} {$i->performer->surname}{if !($iterator->last)}, {/if} 
                             {/foreach}
                         </h2>
                     </div>                    

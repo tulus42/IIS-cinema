@@ -23,6 +23,5 @@ class MoviePresenter extends Nette\Application\UI\Presenter
     
 
         $this->template->starsIn = $piece_of_work->related('stars_in', 'id_piece_of_work');
-        // $this->template->performers = $this->tempstarsIn->ref('performer', 'performer_id');
     }
 }
