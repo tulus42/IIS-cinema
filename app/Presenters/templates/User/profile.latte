@@ -1,7 +1,8 @@
 {block content}
 
 <div class="main-block-register" align="center">
-    <p align="right"><a href="#">Upraviť profil</a></p>
+    <p class="pull-right"><a href="#">Upraviť profil</a></p>
+    <br>
     <h1>Váš Profil</h1>
     <br>
     <h4>Používateľské meno: {$this_profile->username}</h4>
@@ -12,7 +13,9 @@
     <h4>E-mail: {$this_profile->e_mail}<h4>
 
     <br>
-    <h4 align="left"><a href="#">Moje navštívené udalosti</a></h4>
+    <p class="pull-left"><a href="#">Moje navštívené udalosti</a></p>
+    <p class="pull-right"><a href="#">Zmazať profil</a></p>
+
 </div>
 
 {/block}

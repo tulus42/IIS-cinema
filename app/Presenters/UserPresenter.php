@@ -9,6 +9,7 @@ class UserPresenter extends Nette\Application\UI\Presenter
 {
     private $database;
 
+
     public function __construct(Nette\Database\Context $database)
     {
         $this->database = $database;
@@ -18,5 +19,16 @@ class UserPresenter extends Nette\Application\UI\Presenter
     {
         $userID = $this->getUser()->id;
         $this->template->this_profile = $this->database->table('user')->get($userID);
+    }
+
+    
+
+    public function createComponentSignUpForm()
+    {
+        $form = $this->SignUpForm->create();
+        $form->onFormSuccess[] = function() {
+            $this->redirect('Sign:registerSuccess');
+        };
+        return $form;
     }
 }

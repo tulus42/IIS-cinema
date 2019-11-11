@@ -60,14 +60,12 @@ final class SignUpFormFactory
 			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
 
 		
-
-
 		$form->addSubmit('send', 'Registrovať sa');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {
-				$values->dateOfBirth = date('Y-m-d', strtotime($values->dateOfBirth));
-				$this->userManager->add($values->username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, $values->password);
+				//$values->dateOfBirth = date('Y-m-d', strtotime($values->dateOfBirth));
+				$this->userManager->add($values->username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, "viewer", $values->password);
 			} catch (Model\DuplicateNameException $e) {
 				$form['username']->addError('Užívateľské heslo už existuje.');
 				return;
