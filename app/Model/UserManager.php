@@ -72,10 +72,10 @@ final class UserManager implements Nette\Security\IAuthenticator
 
 
 	/**
-	 * Adds new user.
+	 * Adds new user
 	 * @throws DuplicateNameException
 	 */
-	public function add(string $username, string $name, string $surname, string $email, string $dateOfBirth, string $phone_number, string $role, string $password): void
+	public function addUser(string $username, string $name, string $surname, string $email, string $dateOfBirth, string $phone_number, string $role, string $password): void
 	{
 		Nette\Utils\Validators::assert($email, 'email');
 		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
@@ -95,12 +95,28 @@ final class UserManager implements Nette\Security\IAuthenticator
 		}
 	}
 
-	public function delete(string $username)
+	/**
+	 * Edits existing user
+	 */
+	public function editUser(string $username, string $name, string $surname, string $email, string $dateOfBirth, string $phone_number): void
 	{
-		/*
-		try{
-			//$this->database->table(self::TABLE_NAME)->delete()
-		}*/
+		Nette\Utils\Validators::assert($email, 'email');
+		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
+		$this->database->table(self::TABLE_NAME)->where($username)->insert([
+			self::COLUMN_NAME => $name,
+			self::COLUMN_SURNAME => $surname,
+			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
+			self::COLUMN_PHONE_NUMBER => $phone_number,
+			self::COLUMN_EMAIL => $email
+		]);
+	}
+
+	/**
+	 * Deletes existing user
+	 */
+	public function deleteUser(string $username)
+	{
+		$this->database->table(self::TABLE_NAME)->where($username)->delete();
 		
 	}
 }
