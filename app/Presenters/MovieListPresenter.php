@@ -14,6 +14,6 @@ class MovieListPresenter extends Nette\Application\UI\Presenter
     }
     public function renderAllMovies(): void
     {
-        $this->template->movies = $this->database->table('cultural_piece_of_work');
+        $this->template->movies = $this->database->table('cultural_piece_of_work')->order('name ASC');
     }
 }

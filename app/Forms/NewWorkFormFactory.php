@@ -15,14 +15,14 @@ final class NewWorkFormFactory{
     private $factory;
     
     /** @var Model\WorkManager */
-    private $work;
+    private $workManager;
     
-    public function __construct(FormFactory $factory, Model\WorkManager $work){
+    public function __construct(FormFactory $factory, Model\WorkManager $workManager){
         $this->factory = $factory;
-        $this->work = $work;
+        $this->workManager = $workManager;
     }
 
-    public function createWorkForm(): Form
+    public function createWorkForm(callable $onSuccess): Form
     {
         $form = $this->factory->create();
 
@@ -50,9 +50,13 @@ final class NewWorkFormFactory{
         $form->addInteger('rating', 'Hodnotenie:')
             ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
 
-        
-
         $form->addSubmit('send', 'Pridať');
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+            $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);
+            $onSuccess();
+        };
+
         return $form;
     }
 }

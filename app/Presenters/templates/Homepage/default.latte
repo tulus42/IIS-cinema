@@ -1,6 +1,6 @@
 {block content}
 	{if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-	<p class="pull-right"><a href="{link Movie:add}">Pridať film</a></p>
+	<p class="pull-right"><a href="{link Movie:addWork}">Pridať film</a></p>
 	{/if}
 	<div class="row">
         <h1 class="cinema-title">Práve v predaji</h1>
