@@ -1,0 +1,23 @@
+.hall-list-container {
+    margin:40px;
+    display: flex;
+    background-color: #D1D7E0;
+    border-radius: 12px;
+    border: solid #636b6f 3px;
+    padding:30px;
+}
+
+.one-hall-name{
+    text-align: left;
+    
+  }
+
+.one-hall-capacity{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.one-hall-address{
+    text-align: right;
+}

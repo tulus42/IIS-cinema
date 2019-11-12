@@ -1,0 +1,25 @@
+{block content}
+
+
+	{foreach $halls as $hall}
+		<a href="{link HallList:oneHall $hall->hall_num}">
+			<div class="hall-list-container">
+				<div class="one-hall-name">
+					<h3>Sála {$hall->hall_num}</h3>
+				</div>
+
+				<div class="one-hall-capacity">
+					Capacity: {$hall->number_of_rows * $hall->number_of_columns}
+				</div>
+
+				<div class="one-hall-address">
+					Address: {$hall->address}
+				</div>
+	
+			</div>
+		</a>		
+	{/foreach}
+
+
+
+{/block}
