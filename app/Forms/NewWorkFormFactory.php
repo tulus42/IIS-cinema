@@ -25,6 +25,34 @@ final class NewWorkFormFactory{
     public function createWorkForm(): Form
     {
         $form = $this->factory->create();
+
+        $form->addText('name', '*Názov:')
+            ->setRequired();
+
+        $form->addText('genre', '*Žáner:')
+            ->setRequired();
+
+        $form->addSelect('type', '*Typ', [
+            'film' => 'film',
+            'prednáška' => 'prednáška',
+            'divadlo' => 'divadlo',
+            'iné' => 'iné'
+        ]);
+
+        $form->addText('picture', '*URL obrázka')
+            ->setRequired();
+
+        $form->addText('description', 'Popis:');
+
+        $form->addInteger('duration', 'Dĺžka trvania:')
+            ->addRule(Form::MIN, 'Dĺžka nesmie byť záporné číslo', 0);
+
+        $form->addInteger('rating', 'Hodnotenie:')
+            ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
+
+        
+
+        $form->addSubmit('send', 'Pridať');
         return $form;
     }
 }
