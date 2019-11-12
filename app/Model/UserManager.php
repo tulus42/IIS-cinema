@@ -94,6 +94,15 @@ final class UserManager implements Nette\Security\IAuthenticator
 			throw new DuplicateNameException;
 		}
 	}
+
+	public function delete(string $username)
+	{
+		/*
+		try{
+			//$this->database->table(self::TABLE_NAME)->delete()
+		}*/
+		
+	}
 }
 
 class DuplicateNameException extends \Exception

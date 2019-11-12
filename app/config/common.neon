@@ -16,7 +16,7 @@ session:
 
 
 database:
-	dsn: 'mysql:host=127.0.0.1:3307;dbname=cinema'
+	dsn: 'mysql:host=127.0.0.1;dbname=cinema'
 	user: root
 	password:
 	options:
@@ -29,3 +29,11 @@ services:
 	- App\Forms\SignInFormFactory
 	- App\Forms\SignUpFormFactory
 	router: App\Router\RouterFactory::createRouter
+
+
+security:
+	roles:
+		viewer:
+		redactor: [viewer]
+		cashier: [viewer]
+		admin: [redactor]

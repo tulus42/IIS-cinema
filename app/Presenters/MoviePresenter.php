@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+use App\Forms;
 
 class MoviePresenter extends Nette\Application\UI\Presenter
 {
@@ -25,3 +26,4 @@ class MoviePresenter extends Nette\Application\UI\Presenter
         $this->template->starsIn = $piece_of_work->related('stars_in', 'id_piece_of_work');
     }
 }
+

@@ -1,7 +1,11 @@
 {block content}
+	{if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+	<p class="pull-right"><a href="#">Pridať film</a></p>
+	{/if}
 	<div class="row">
         <h1 class="cinema-title">Práve v predaji</h1>
     </div>
+		
 
 	{foreach $movies as $movie}
 	<div class="column4">

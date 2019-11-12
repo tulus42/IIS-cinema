@@ -22,13 +22,4 @@ class UserPresenter extends Nette\Application\UI\Presenter
     }
 
     
-
-    public function createComponentSignUpForm()
-    {
-        $form = $this->SignUpForm->create();
-        $form->onFormSuccess[] = function() {
-            $this->redirect('Sign:registerSuccess');
-        };
-        return $form;
-    }
 }
