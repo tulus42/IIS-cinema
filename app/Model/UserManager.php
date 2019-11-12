@@ -116,7 +116,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 	 */
 	public function deleteUser(string $username)
 	{
-		$this->database->table(self::TABLE_NAME)->where($username)->delete();
+		$this->database->table(self::TABLE_NAME)->where('username', $username)->delete();
 		
 	}
 }

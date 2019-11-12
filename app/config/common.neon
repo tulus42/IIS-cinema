@@ -29,6 +29,7 @@ services:
 	- App\Model\EventManager
 	- App\Model\HallManager
 	- App\Forms\FormFactory
+	- App\Forms\DeleteFormFactory
 	- App\Forms\NewWorkFormFactory
 	- App\Forms\SignInFormFactory
 	- App\Forms\SignUpFormFactory
