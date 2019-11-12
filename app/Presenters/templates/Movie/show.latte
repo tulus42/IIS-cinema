@@ -1,6 +1,7 @@
 {block content}
     <div class="column8">
         <div class="one-movie-container">
+            
             <div class="row">
                 <h1 class="one-movie-title">{$piece_of_work->name}</h1>
                 
@@ -66,5 +67,8 @@
                 {/if}
             </div>
         </div>
+        {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+            <p class="pull-right"><a href="{link delete}">Zmazať kultérne dielo</a></p>
+        {/if}
 	</div>
 {/block}

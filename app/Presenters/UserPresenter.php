@@ -36,13 +36,14 @@ class UserPresenter extends Nette\Application\UI\Presenter
     }
     
     
-    public function createComponentDeleteForm(): Form
+    protected function createComponentDeleteForm(): Form
     {
         $form = new Form;
         $form->addSubmit('delete', 'Áno')
-			->setHtmlAttribute('class', 'default')
+            ->setHtmlAttribute('class', 'form-button')
 			->onClick[] = [$this, 'deleteFormSucceeded'];
-		$form->addSubmit('cancel', 'Nie')
+        $form->addSubmit('cancel', 'Nie')
+            ->setHtmlAttribute('class', 'form-button')
 			->onClick[] = [$this, 'formCancelled'];
 		$form->addProtection();
 		return $form;

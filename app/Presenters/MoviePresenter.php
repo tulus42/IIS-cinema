@@ -41,6 +41,35 @@ class MoviePresenter extends Nette\Application\UI\Presenter
             $this->redirect('Homepage:default');
         });
     }
+
+    public function renderDelete(): void
+    {
+        //$piece_of_work = $this->database->table('cultural_piece_of_work')->get($id_piece_of_work);
+        //$this->template->piece_of_work = $piece_of_work;
+    }
+
+    protected function createComponentDeleteForm(): Form
+    {
+        $form = new Form;
+        $form->addSubmit('delete', 'Áno')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'deleteFormSucceeded'];
+        $form->addSubmit('cancel', 'Nie')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'formCancelled'];
+		$form->addProtection();
+		return $form;
+    }
+
+    public function deleteFormSucceeded(): void
+	{
+
+    }
+    
+    public function formCancelled(): void
+	{
+		
+	}
 }
 
 

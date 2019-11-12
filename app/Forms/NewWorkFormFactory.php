@@ -50,7 +50,8 @@ final class NewWorkFormFactory{
         $form->addInteger('rating', 'Hodnotenie:')
             ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
 
-        $form->addSubmit('send', 'Pridať');
+        $form->addSubmit('send', 'Pridať')
+            ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
             $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);

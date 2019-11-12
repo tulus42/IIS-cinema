@@ -60,7 +60,8 @@ final class SignUpFormFactory
 			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
 
 		
-		$form->addSubmit('send', 'Registrovať sa');
+		$form->addSubmit('send', 'Registrovať sa')
+			->setHtmlAttribute('class', 'form-button');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {

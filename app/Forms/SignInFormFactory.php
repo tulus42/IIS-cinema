@@ -38,7 +38,8 @@ final class SignInFormFactory
 
 		$form->addCheckbox('remember', 'Zapamätaj si ma');
 
-		$form->addSubmit('send', 'Prihlásiť sa');
+		$form->addSubmit('send', 'Prihlásiť sa')
+			->setHtmlAttribute('class', 'form-button');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {

@@ -19,3 +19,22 @@
 .pull-left{
     float:left;
 }
+
+.form-button{
+    background-color:rgb(73, 73, 73);
+    color: #D1D7E0;
+    padding: 8px;
+    font-size: 0.7em;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    padding: 7px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.form-button:hover{
+    color: #fff;
+    background-color:#131313;
+}
