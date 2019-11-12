@@ -16,7 +16,7 @@ session:
 
 
 database:
-	dsn: 'mysql:host=127.0.0.1:3307;dbname=cinema'
+	dsn: 'mysql:host=127.0.0.1;dbname=cinema'
 	user: root
 	password:
 	options:
@@ -26,6 +26,8 @@ database:
 services:
 	- App\Model\WorkManager
 	- App\Model\UserManager
+	- App\Model\EventManager
+	- App\Model\HallManager
 	- App\Forms\FormFactory
 	- App\Forms\NewWorkFormFactory
 	- App\Forms\SignInFormFactory
