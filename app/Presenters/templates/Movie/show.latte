@@ -54,10 +54,12 @@
             
             <div class="row">
                 {foreach $events as $event}
-                    <button class="button event">
-                        {$event->date|date: '%d. %m. %Y'}<br>
-                        {$event->time|date: '%H:%M'}
-                    </button>
+                    <a href="{link HallList:oneHall $event->hall_num}">
+                        <button class="button event">
+                            {$event->date|date: '%d. %m. %Y'}<br>
+                            {$event->time|date: '%H:%M'}
+                        </button>
+                    </a>
                 {/foreach}
 
                 {if $user->isLoggedIn() and $user->isInRole('admin')}
