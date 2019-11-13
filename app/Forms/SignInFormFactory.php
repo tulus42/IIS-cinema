@@ -31,14 +31,17 @@ final class SignInFormFactory
 	{
 		$form = $this->factory->create();
 		$form->addText('username', '*Užívateľské meno:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vložte svoje užívateľské meno');
 
 		$form->addPassword('password', '*Heslo:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vložte svoje heslo');
 
 		$form->addCheckbox('remember', 'Zapamätaj si ma');
 
-		$form->addSubmit('send', 'Prihlásiť sa');
+		$form->addSubmit('send', 'Prihlásiť sa')
+			->setHtmlAttribute('class', 'form-button');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {

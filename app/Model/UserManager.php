@@ -102,7 +102,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 	{
 		Nette\Utils\Validators::assert($email, 'email');
 		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
-		$this->database->table(self::TABLE_NAME)->where($username)->insert([
+		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->insert([
 			self::COLUMN_NAME => $name,
 			self::COLUMN_SURNAME => $surname,
 			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
@@ -116,7 +116,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 	 */
 	public function deleteUser(string $username)
 	{
-		$this->database->table(self::TABLE_NAME)->where('username', $username)->delete();
+		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->delete();
 		
 	}
 }

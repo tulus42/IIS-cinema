@@ -27,9 +27,11 @@ final class NewWorkFormFactory{
         $form = $this->factory->create();
 
         $form->addText('name', '*Názov:')
+            ->setHtmlAttribute('class', 'form-text')
             ->setRequired();
 
         $form->addText('genre', '*Žáner:')
+            ->setHtmlAttribute('class', 'form-text')
             ->setRequired();
 
         $form->addSelect('type', '*Typ', [
@@ -37,20 +39,26 @@ final class NewWorkFormFactory{
             'prednáška' => 'prednáška',
             'divadlo' => 'divadlo',
             'iné' => 'iné'
-        ]);
+        ])
+            ->setHtmlAttribute('class', 'form-text');
 
         $form->addText('picture', '*URL obrázka')
+            ->setHtmlAttribute('class', 'form-text')
             ->setRequired();
 
-        $form->addText('description', 'Popis:');
+        $form->addText('description', 'Popis:')
+            ->setHtmlAttribute('class', 'form-text-description');
 
         $form->addInteger('duration', 'Dĺžka trvania:')
+            ->setHtmlAttribute('class', 'form-text')
             ->addRule(Form::MIN, 'Dĺžka nesmie byť záporné číslo', 0);
 
         $form->addInteger('rating', 'Hodnotenie:')
+            ->setHtmlAttribute('class', 'form-text')
             ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
 
-        $form->addSubmit('send', 'Pridať');
+        $form->addSubmit('send', 'Pridať')
+            ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
             $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);

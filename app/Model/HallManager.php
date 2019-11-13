@@ -37,7 +37,7 @@ class HallManager
                 self::COLUMN_HALL_NUM => $hall_num,
                 self::COLUMN_ROWS => $rows,
                 self::COLUMN_COLUMNS => $columns,
-                self::COLUMN_ADDRESS => $address,
+                self::COLUMN_ADDRESS => $address
             ]);
         } catch (Nette\Database\UniqueConstraintViolationException $e){
             throw new DuplicateNameException;
@@ -48,7 +48,7 @@ class HallManager
      * Edits existing hall
      */
     public function editHall(string $hall_num, int $rows, int $columns, string $address){
-        $this->database->table(self::TABLE_NAME)->where($hall_num)->update([
+        $this->database->table(self::TABLE_NAME)->where(COLUMN_HALL_NUM, $hall_num)->update([
             self::COLUMN_ROWS => $rows,
             self::COLUMN_COLUMNS => $columns,
             self::COLUMN_ADDRESS => $address,
@@ -59,6 +59,6 @@ class HallManager
      * Removes existing hall
      */
     public function deleteHall(string $hall_num){
-        $this->database->table(self::TABLE_NAME)->where($hall_num)->delete();
+        $this->database->table(self::TABLE_NAME)->where(COLUMN_HALL_NUM, $hall_num)->delete();
     }
 }
