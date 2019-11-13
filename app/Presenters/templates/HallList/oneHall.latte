@@ -1,3 +1,33 @@
 {block content}
-    Ahoj {$hall->hall_num}
+    <h1>Sála {$hall->hall_num}</h1>
+
+    <div class="hall-view">
+        <div class="center-me-pls">
+        {for $row=1; $row <=$hall->number_of_rows; $row++}
+            <div class="row">
+                <div class="column01">
+                    <div class="row2">
+                        <h3>Rad: {$row}</h3>
+                    </div>
+                </div>
+
+                {for $column=1; $column <= $hall->number_of_columns; $column++}
+                    <div class="column">
+                        <div class="seat">
+                            {$column}
+                        </div>
+                    </div>
+
+                {/for}
+
+                <div class="column02">
+                    <div class="row2">
+                        <h3>Rad: {$row}</h3>
+                    </div>
+                </div>
+            </div>
+        {/for}
+        </div>
+    </div>
+    
 {/block}

@@ -1,4 +1,4 @@
-.hall-list-container {
+.hall-list-container{
     margin:40px;
     display: flex;
     background-color: #D1D7E0;
@@ -20,4 +20,73 @@
 
 .one-hall-address{
     text-align: right;
+}
+
+.seat{
+    margin: auto;
+    height: 25px;
+    width: 40px;
+    text-align: center;
+    font-size: 20px;
+    background-color: #D1D7E0;
+    border-radius: 12px;
+    border: solid #636b6f 5px;
+
+}
+
+.column{
+    display:inline;
+    float:left;
+    margin-left:auto;
+    margin-right: auto;
+}
+
+.column01{
+    display:inline;
+    float:left;
+    margin-left:1px;
+    margin-right: auto;
+}
+
+.column02{
+    display:inline;
+    float:left;
+    margin-left:auto;
+    margin-right: 1px;
+    text-align: right;
+}
+
+.row1 {
+    margin-bottom:20px;
+}
+
+.row1::before, .row1::after{
+    content:'.';
+    display:block;
+    height:0;
+    overflow:hidden;
+    visibility:hidden;
+    width:0;
+}
+.row1::after{clear:both;}
+
+.row2{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1px;
+    width: 100px;
+}
+
+.hall-view{
+    margin: 100px;
+    align-content: center;
+    align-self: center;
+    align-items: center;
+    background-color: #D1D7E0;
+    border-radius: 12px;
+    border: solid #636b6f 3px;
+}
+
+.center-me-pls{
+    align-self: auto;
 }
