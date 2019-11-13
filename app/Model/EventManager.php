@@ -65,4 +65,13 @@ class EventManager
     {
         $this->database->table(self::TABLE_NAME)->where($id)->delete();
     }
+
+    public function findAll(): Nette\Database\Table\Selection
+    {
+        return $this->database->table(self::TABLE_NAME);
+    }
+
+    public function findById(int $id): Nette\Database\Table\ActiveRow{
+        return $this->findAll()->get($id);
+    }
 }

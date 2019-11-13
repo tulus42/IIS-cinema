@@ -68,7 +68,7 @@
             </div>
         </div>
         {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-            <p class="pull-right"><a href="{link delete}">Zmazať kultérne dielo</a></p>
+            <p class="pull-right"><a href="{link Movie:delete $piece_of_work->id_piece_of_work}">Zmazať kultérne dielo</a></p>
         {/if}
 	</div>
 {/block}

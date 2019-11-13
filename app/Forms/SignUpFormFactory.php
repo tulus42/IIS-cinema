@@ -33,29 +33,37 @@ final class SignUpFormFactory
 	{
 		$form = $this->factory->create();
 		$form->addText('username', '*Prihlasovacie meno:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vyplňte prihlasovacie meno');
 
 		$form->addText('name', '*Krstné meno:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vyplňte Vaše krstné meno');
 
 		$form->addText('surname', '*Priezvisko:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vyplňte Vaše priezvisko');
 
 		$form->addEmail('email', '*E-mail:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vložte Váš e-mail');
 
 		$form->addText('dateOfBirth', '*Dátum narodenia:')
 			->setType('Date')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vyberte Váš dátum narodenia');
 
-		$form->addText('phoneNumber', 'Telefónne číslo:');
+		$form->addText('phoneNumber', 'Telefónne číslo:')
+			->setHtmlAttribute('class', 'form-text');
 
 		$form->addPassword('password', '*Heslo:')
+			->setHtmlAttribute('class', 'form-text')
 			->setOption('description', sprintf('Minimálne %d znakov', self::PASSWORD_MIN_LENGTH))
 			->setRequired('Prosím vložte Vaše heslo')
 			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
 
 		$form->addPassword('passwordConfirm', '*Potvrdenie hesla:')
+			->setHtmlAttribute('class', 'form-text')
 			->setRequired('Prosím vložte Vaše heslo')
 			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
 

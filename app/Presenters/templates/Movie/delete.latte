@@ -1,9 +1,13 @@
 {block content}
 
 <div class="main-block-register" align="center">
-
-<p>Určite chcete zmazať kultúrne dielo?</p>
-    {control deleteForm}
+    {if $piece_of_work}
+        <p>Určite chcete zmazať kultúrne dielo s názvom {$piece_of_work->name}?</p>
+        <p>Táto akcia povedie na zmazanie všetkých udalostí a sedadiel spojených s týmto dielom.</p>
+        {control deleteForm}
+    {else}
+        <p>Kultúrne dielo sa nenašlo</p>
+    {/if}
 </div>
 
 {/block}

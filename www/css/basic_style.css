@@ -3,7 +3,6 @@ html, body {
   background-color: #fff;
   color: #3f4547;
   font-family: 'Nunito', sans-serif;
-  font-weight: 200;
   height: 100vh;
   margin: 0;
   font-weight: 550;
@@ -217,7 +216,7 @@ padding: 15px;
 margin: 15px;
 }
 
-#buy-tickets button:hover{
+.buy-tickets:hover{
 color: #fff;
 background-color:#131313;
 }

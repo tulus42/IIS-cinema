@@ -15,6 +15,7 @@ class WorkManager
 
     private const
         TABLE_NAME = 'cultural_piece_of_work',
+        COLUMN_ID = 'id_piece_of_work',
         COLUMN_NAME = 'name',
         COLUMN_GENRE = 'genre',
         COLUMN_TYPE = 'type',
@@ -69,6 +70,6 @@ class WorkManager
      * Deletes existing work
      */
     public function deleteWork(string $id){
-        $this->database->table(self::TABLE_NAME)->where($id)->delete();
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->delete();
     }
 }

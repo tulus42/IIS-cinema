@@ -37,4 +37,44 @@
 .form-button:hover{
     color: #fff;
     background-color:#131313;
+    cursor: pointer;
+}
+
+.form-text{
+    background: #fff;
+    font-family: 'Nunito', sans-serif;
+    color: black;
+    border-radius: 6px;
+    font-weight: 550;
+    padding:5px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    margin-bottom: 3px;
+    width: 165px;
+}
+
+.form-text-description{
+    background: #fff;
+    font-family: 'Nunito', sans-serif;
+    color: black;
+    border-radius: 6px;
+    font-weight: 550;;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    margin-bottom: 3px;
+    height: 150px;
+    width: 300px;
+    text-align: left;
+    padding: 0.4em 0.4em 0.4em 0;
+    line-height: 1em;
+
+}
+
+table{
+    padding: 15px;
+}
+
+table tbody tr th{
+    float:right;
+    margin-right: 8px;
 }
