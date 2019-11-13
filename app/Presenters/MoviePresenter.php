@@ -9,8 +9,6 @@ use App\Model;
 
 class MoviePresenter extends Nette\Application\UI\Presenter
 {
-    public $movieDeletion;
-
     /** @var Nette\Database\Context */
 	private $database;
 
@@ -42,7 +40,6 @@ class MoviePresenter extends Nette\Application\UI\Presenter
     {
         $piece_of_work = $this->database->table('cultural_piece_of_work')->get($id_piece_of_work);
         $this->template->piece_of_work = $piece_of_work;
-        $this->movieDeletion = $id_piece_of_work;
     }
 
     /**
@@ -55,8 +52,6 @@ class MoviePresenter extends Nette\Application\UI\Presenter
             $this->redirect('Homepage:default');
         });
     }
-
-    
 
     protected function createComponentDeleteForm(): Form
     {
@@ -73,13 +68,15 @@ class MoviePresenter extends Nette\Application\UI\Presenter
 
     public function deleteFormSucceeded(): void
 	{
-        //$this->database->table('cultural_piece_of_work')->findById((int) $this->getParameter('cultural_piece_of_work'));
+        $workId = (int) $this->getParameter('id_piece_of_work');
+        $this->workManager->deleteWork($workId);
+        $this->redirect('Homepage:default');
     }
     
     public function formCancelled(): void
 	{
-        //$workId = (int) $this->getParameter('cultural_piece_of_work');
-		//$this->redirect("link Movie:show $workId");
+        $workId = (int) $this->getParameter('id_piece_of_work');
+		$this->redirect("Movie:show", $workId);
 	}
 }
 

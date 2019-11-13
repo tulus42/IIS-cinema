@@ -48,7 +48,7 @@ class HallManager
      * Edits existing hall
      */
     public function editHall(string $hall_num, int $rows, int $columns, string $address){
-        $this->database->table(self::TABLE_NAME)->where(COLUMN_HALL_NUM, $hall_num)->update([
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL_NUM, $hall_num)->update([
             self::COLUMN_ROWS => $rows,
             self::COLUMN_COLUMNS => $columns,
             self::COLUMN_ADDRESS => $address,
@@ -59,6 +59,13 @@ class HallManager
      * Removes existing hall
      */
     public function deleteHall(string $hall_num){
-        $this->database->table(self::TABLE_NAME)->where(COLUMN_HALL_NUM, $hall_num)->delete();
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL_NUM, $hall_num)->delete();
+    }
+
+    /**
+     * Gets names of all halls
+     */
+    public function getAllHalls(): array{
+        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL_NUM)->fetchAll();
     }
 }
