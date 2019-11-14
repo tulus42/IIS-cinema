@@ -5,6 +5,14 @@
     border-radius: 12px;
     border: solid #636b6f 3px;
     padding:30px;
+    text-decoration: none;
+    color: #3f4547;
+}
+
+.hall-list-container:hover{
+    background-color: #205ed1;
+    color:#D1D7E0;
+    border: solid #3f4547 3px;
 }
 
 .one-hall-name{
@@ -74,4 +82,8 @@
 
 .center-me-pls{
     align-self: auto;
+}
+
+.hall-button{
+    text-decoration: none;
 }
