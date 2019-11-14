@@ -66,6 +66,6 @@ class HallManager
      * Gets names of all halls
      */
     public function getAllHalls(): array{
-        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL_NUM)->fetchAll();
+        return $this->database->table(self::TABLE_NAME)->fetchAll(`hall_num`);
     }
 }

@@ -54,23 +54,21 @@
             
             <div class="row">
                 {foreach $events as $event}
-                    <a href="{link HallList:oneHall $event->hall_num}">
-                        <button class="button event">
+                    <a class="event" href="{link HallList:oneHall $event->hall_num}">
                             {$event->date|date: '%d. %m. %Y'}<br>
                             {$event->time|date: '%H:%M'}
-                        </button>
                     </a>
                 {/foreach}
 
                 {if $user->isLoggedIn() and $user->isInRole('admin')}
-                <a class="button event" href="{link Event:addEvent}">
+                <a class="event" href="{link Event:addEvent}">
                     Pridať<br/>predstavenie
                 </a>
                 {/if}
             </div>
         </div>
         {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-            <p class="pull-right"><a href="{link Movie:delete $piece_of_work->id_piece_of_work}">Zmazať kultérne dielo</a></p>
+            <a class="pull-right event" href="{link Movie:delete $piece_of_work->id_piece_of_work}">Zmazať kultúrne dielo</a>
         {/if}
 	</div>
 {/block}

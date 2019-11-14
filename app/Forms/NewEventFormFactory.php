@@ -49,9 +49,10 @@ class NewEventFormFactory
 
         $allHalls = $this->hallManager->getAllHalls();
 
-        $form->addSelect('hall', '*Hala:', $allHalls)
+        
+        $form->addSelect('hall', '*Hala:')
             ->setHtmlAttribute('class', 'form-text')
-            ->setPrompt('Zvolte halu');
+            ->setItems($allHalls, false);
 
         $form->addSubmit('send', 'Pridať')
             ->setHtmlAttribute('class', 'form-button');
