@@ -75,11 +75,10 @@ final class SignUpFormFactory
 			try {
 				//$values->dateOfBirth = date('Y-m-d', strtotime($values->dateOfBirth));
 				$this->userManager->addUser($values->username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, "viewer", $values->password);
+				$onSuccess();
 			} catch (Model\DuplicateNameException $e) {
-				$form['username']->addError('Užívateľské heslo už existuje.');
-				return;
-			}
-			$onSuccess();
+				$form['username']->addError('Užívateľské meno už existuje.');
+			}	
 		};
 
 		return $form;

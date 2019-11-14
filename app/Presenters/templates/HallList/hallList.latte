@@ -1,5 +1,8 @@
 {block content}
 
+	{if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+	<p class="pull-right"><a href="{link HallList:add}">Pridať sálu</a></p>
+	{/if}
 
 	{foreach $halls as $hall}
 		<a href="{link HallList:oneHall $hall->hall_num}">
