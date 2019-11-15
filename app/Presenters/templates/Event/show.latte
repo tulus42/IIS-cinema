@@ -1,3 +1,9 @@
 {block content}
-
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+        <a class="pull-right" href="{link Event:delete $event->id_cultural_event}">Zmazať predstavenie</a>
+    {/if}
+    <div class="main-block-register" align="center">
+    
+    Ahoj!
+    </div>
 {/block}
