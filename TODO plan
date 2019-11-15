@@ -10,6 +10,7 @@ Ofašovať pridávanie do tabuľky a kontrolu s primárnym kľúčom
 Prerobiť tlačítka pre sály
 V cultural_event zmeniť primary key z id_cultural_event na (date, time, hall_num);
 Kontrola dátumu eventu
+Zredukovanie ťahania z databáze v presentery - spraviť na to funkciu v modeloch
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu

@@ -52,9 +52,9 @@ class SeatManager
 
     }
 
-    public function deleteSeat(string $cultural_event, int $row, int $column)
+    public function deleteSeat(int $cultural_event, int $row, int $column)
     {
-
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_CULTURAL_EVENT, $cultural_event)->where(self::COLUMN_ROW, $row)->where(self::COLUMN_COLUMN, $column)->delete();
     }
 
     public function findAll(): Nette\Database\Table\Selection
@@ -73,6 +73,17 @@ class SeatManager
         for($one_row = 1; $one_row <= $rows; $one_row++){
             for($one_column = 1; $one_column <= $columns; $one_column++){
                 $this->addSeat($id_event, $one_row, $one_column, "available");
+            }
+        }
+    }
+
+    public function deleteSeatsToEvent(string $hall_num,  int $id_event)
+    {
+        $rows = $this->hallManager->getRows($hall_num);
+        $columns = $this->hallManager->getColumns($hall_num);
+        for($one_row = 1; $one_row <= $rows; $one_row++){
+            for($one_column = 1; $one_column <= $columns; $one_column++){
+                $this->deleteSeat($id_event, $one_row, $one_column);
             }
         }
     }

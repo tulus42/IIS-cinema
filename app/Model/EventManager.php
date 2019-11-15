@@ -7,6 +7,8 @@ namespace App\Model;
 use Nette;
 use Tracy\Debugger;
 
+use App\Model;
+
 Debugger::enable();
 
 /**
@@ -29,9 +31,13 @@ class EventManager
     /** @var Nette\Database\Context */
     private $database;
 
-    public function __construct(Nette\Database\Context $database)
+    /** @var Model\seatManager */
+    private $seatManager;
+
+    public function __construct(Nette\Database\Context $database, Model\SeatManager $seatManager)
 	{
-		$this->database = $database;
+        $this->database = $database;
+        $this->seatManager = $seatManager;
     }
 
     /**
@@ -48,6 +54,8 @@ class EventManager
             self::COLUMN_WORK => $piece_of_work,
             self::COLUMN_HALL => $hall_num,
         ]);
+        $id_event = $this->findEventId($date, $time, $hall_num);
+        $this->seatManager->addSeatsToEvent($hall_num, $id_event);
     }
 
     /**
@@ -69,9 +77,11 @@ class EventManager
     /**
      * Deletes existing event
      */
-    public function deleteEvent(string $id)
+    public function deleteEvent(int $id)
     {
-        $this->database->table(self::TABLE_NAME)->where($id)->delete();
+        $hall = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $id)->fetch();
+        $this->seatManager->deleteSeatsToEvent($hall->hall_num,$id);
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $id)->delete();
     }
 
     public function findAll(): Nette\Database\Table\Selection

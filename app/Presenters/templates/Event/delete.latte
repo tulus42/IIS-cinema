@@ -1,4 +1,11 @@
 {block content}
-Mažeme
-{$cultural_event->id_cultural_event}
+<div class="main-block-register" align="center">
+    {if $cultural_event}
+        <p>Určite chcete zmazať túto kultúrnu udalosť ktorá sa koná {$cultural_event->date|date: '%d. %m. %Y'} o {$cultural_event->time|date: '%H:%M'} pre kultúrne dielo {$cultural_piece_of_work->name}?<p>
+        <p>Zmazanie udalosti povedie na zmazanie všetkých sedadiel, aj tých, čo už boli rezervované.<p>
+        {control deleteForm}
+    {else}
+        <p>Kultúrna udalosť sa nenašla</p>
+    {/if}
+</div>
 {/block}

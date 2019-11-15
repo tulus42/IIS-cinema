@@ -64,10 +64,7 @@ class NewEventFormFactory
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($workId, $onSuccess): void {
             try{
                 $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, (int) $values->price, $workId, $values->hall);
-                $id_event = $this->eventManager->findEventId($values->dateOfEvent, $values->timeOfEvent, $values->hall);
-                dump($id_event);
-                $this->seatManager->addSeatsToEvent($values->hall, $id_event);
-                //$onSuccess();
+                $onSuccess();
             } catch(Model\DuplicateNameException $e) {
                 // TODO DUPLICATE ERROR
                 //$form['hall_num']->addError('Sála s týmto názvom už existuje');
