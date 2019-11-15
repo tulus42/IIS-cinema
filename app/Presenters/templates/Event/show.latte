@@ -2,8 +2,58 @@
     {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
         <a class="pull-right" href="{link Event:delete $event->id_cultural_event}">Zmazať predstavenie</a>
     {/if}
-    <div class="main-block-register" align="center">
+
+
+    <h1>
+        {$piece_of_work->name},
+        Sála {$event->hall_num},
+        {$event->date|date: '%d. %m. %Y'},
+        {$event->time|date: '%H:%M'}
     
-    Ahoj!
+    </h1>
+
+    {foreach $seat as $blabla}
+        {$blabla->row}
+    {/foreach}
+
+
+    <div class="hall-view">
+        <div class="screen">
+            Plátno
+        </div>
+
+
+        {for $row=1; $row <=$hall->number_of_rows; $row++}
+            <div class="row">
+                <div class="column">
+                    <div class="row2">
+                        <h3>Rad: {$row}</h3>
+                    </div>
+                </div>
+
+                {for $column=1; $column <= $hall->number_of_columns; $column++}
+                    {var $seatID = $column + $row * $hall->number_of_columns}
+                    <div class="column">
+                        <button class="seat" id={$seatID}>
+                            {$column}
+                        </button>
+                    </div>
+
+                    <script>
+                        document.getElementById({$seatID}).style.color = 'red';
+                    </script>
+
+                {/for}
+
+                <div class="column">
+                    <div class="row2">
+                        <h3>Rad: {$row}</h3>
+                    </div>
+                </div>
+            </div>
+        {/for}
     </div>
+
+    
+    
 {/block}

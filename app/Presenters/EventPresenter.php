@@ -51,7 +51,15 @@ class EventPresenter extends Nette\Application\UI\Presenter
         $event = $this->database->table('cultural_event')->get($event_id);
         $this->template->event = $event;
 
-      
+        $hall = $this->database->table('hall')->get($event->hall_num);
+        $this->template->hall = $hall;
+
+        $piece_of_work = $this->database->table('cultural_piece_of_work')->get($event->id_piece_of_work);
+        $this->template->piece_of_work = $piece_of_work;
+
+        $seat = $event->related('seat');
+        $this->template->seat = $seat;
+
     }
 
     public function renderDelete(int $id_cultural_event): void
