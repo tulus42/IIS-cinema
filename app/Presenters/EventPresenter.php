@@ -42,4 +42,15 @@ class EventPresenter extends Nette\Application\UI\Presenter
     {
         ;
     }
+
+    public function renderShowEvent($event_id): void
+    {
+        // $hall = $this->database->table('hall')->get($hall_num);
+        // $this->template->hall = $hall;
+
+        $event = $this->database->table('cultural_event')->get($event_id);
+        $this->template->event = $event;
+
+      
+    }
 }

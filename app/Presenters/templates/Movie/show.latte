@@ -54,7 +54,7 @@
             
             <div class="row">
                 {foreach $events as $event}
-                    <a class="event" href="{link HallList:oneHall $event->hall_num}">
+                    <a class="event" href="{link Event:showEvent $event->id_cultural_event}">
                             {$event->date|date: '%d. %m. %Y'}<br>
                             {$event->time|date: '%H:%M'}
                     </a>
