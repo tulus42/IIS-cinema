@@ -77,4 +77,14 @@ class HallManager
     public function findById(string $id){
         return $this->findAll()->get($id);
     }
+
+    public function getRows(string $hall_num): int{
+        $this_obj = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL_NUM, $hall_num)->select(self::COLUMN_ROWS)->fetch();
+        return (int) $this_obj->number_of_rows;
+    }
+
+    public function getColumns(string $hall_num): int{
+        $this_obj = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL_NUM, $hall_num)->select(self::COLUMN_COLUMNS)->fetch();
+        return (int) $this_obj->number_of_columns;
+    }
 }

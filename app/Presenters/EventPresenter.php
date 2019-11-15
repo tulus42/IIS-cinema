@@ -19,6 +19,8 @@ class EventPresenter extends Nette\Application\UI\Presenter
     /** @var Model\EventManager */
     private $eventManager;
 
+    
+
     public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager)
     {
         $this->database = $database;
@@ -29,6 +31,15 @@ class EventPresenter extends Nette\Application\UI\Presenter
 
     public function createComponentNewEventForm(): Form
     {
-        return $this->newEventFactory->createEventForm();
+        $work_id = (int) $this->getParameter('id_piece_of_work');
+        return $this->newEventFactory->createEventForm($work_id, function (): void{
+            $this->redirect('Movie:show', (int) $this->getParameter('id_piece_of_work'));
+        });
+
+    }
+
+    public function renderAdd(string $id_piece_of_work)
+    {
+        ;
     }
 }

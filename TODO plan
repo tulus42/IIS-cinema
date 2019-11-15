@@ -8,6 +8,8 @@ Po pridaní filmu to admina presmeruje na view page toho filmu aby mohol rovno a
 Zmeniť pridávanie obrázkov z URL na výber obrázku z počítača
 Ofašovať pridávanie do tabuľky a kontrolu s primárnym kľúčom
 Prerobiť tlačítka pre sály
+V cultural_event zmeniť primary key z id_cultural_event na (date, time, hall_num);
+Kontrola dátumu eventu
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu

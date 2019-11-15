@@ -7,6 +7,7 @@ namespace App\Forms;
 use App\Model;
 use Nette;
 use Nette\Application\UI\Form;
+use App\Presenters;
 
 class NewEventFormFactory
 {
@@ -21,13 +22,17 @@ class NewEventFormFactory
     /** @var Model\HallManager */
     private $hallManager;
 
-    public function __construct(FormFactory $factory, Model\EventManager $eventManager, Model\HallManager $hallManager){
+    /** @var Model\SeatManager */
+    private $seatManager;
+    
+    public function __construct(FormFactory $factory, Model\EventManager $eventManager, Model\HallManager $hallManager, Model\SeatManager $seatManager){
         $this->factory = $factory;
         $this->eventManager = $eventManager;
         $this->hallManager = $hallManager;
+        $this->seatManager = $seatManager;
     }
 
-    public function createEventForm(): Form
+    public function createEventForm(int $workId, callable $onSuccess): Form
     {
         $form = $this->factory->create();
 
@@ -49,13 +54,28 @@ class NewEventFormFactory
 
         $allHalls = $this->hallManager->getAllHalls();
 
-        
         $form->addSelect('hall', '*Hala:')
             ->setHtmlAttribute('class', 'form-text')
-            ->setItems($allHalls, false);
+            ->setItems($allHalls, true);
 
         $form->addSubmit('send', 'Pridať')
             ->setHtmlAttribute('class', 'form-button');
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($workId, $onSuccess): void {
+            try{
+                $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, (int) $values->price, $workId, $values->hall);
+                $id_event = $this->eventManager->findEventId($values->dateOfEvent, $values->timeOfEvent, $values->hall);
+                dump($id_event);
+                $this->seatManager->addSeatsToEvent($values->hall, $id_event);
+                //$onSuccess();
+            } catch(Model\DuplicateNameException $e) {
+                // TODO DUPLICATE ERROR
+                //$form['hall_num']->addError('Sála s týmto názvom už existuje');
+            }
+        };
+
         return $form;
     }
+
+
 }

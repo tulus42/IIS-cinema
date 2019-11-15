@@ -61,7 +61,7 @@
                 {/foreach}
 
                 {if $user->isLoggedIn() and $user->isInRole('admin')}
-                <a class="event" href="{link Event:addEvent}">
+                <a class="event" href="{link Event:add $piece_of_work->id_piece_of_work}">
                     Pridať<br/>predstavenie
                 </a>
                 {/if}

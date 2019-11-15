@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Nette;
+use Tracy\Debugger;
+
+Debugger::enable();
 
 /**
  * Event management.
@@ -15,6 +18,7 @@ class EventManager
 
     private const
         TABLE_NAME = 'cultural_event',
+        COLUMN_EVENT_ID = 'id_cultural_event',
         COLUMN_DATE = 'date',
         COLUMN_TIME = 'time',
         COLUMN_PRICE = 'price',
@@ -33,8 +37,10 @@ class EventManager
     /**
      * Adds new event
      */
-    public function addEvent(string $date, string $time, int $price, string $piece_of_work, string $hall_num)
+    public function addEvent(string $date, string $time, int $price, int $piece_of_work, string $hall_num)
     {
+        $date = date('Y-m-d', strtotime($date));
+        //$time = date('H:M', strtotime($time));
         $this->database->table(self::TABLE_NAME)->insert([
             self::COLUMN_DATE => $date,
             self::COLUMN_TIME => $time,
@@ -47,8 +53,10 @@ class EventManager
     /**
      * Edits existing event
      */
-    public function editEvent(string $id, string $date, string $time, int $price, string $piece_of_work, string $hall_num)
+    public function editEvent(string $date, string $time, int $price, string $piece_of_work, string $hall_num)
     {
+        $date = date('Y-m-d', strtotime($date));
+        $time = date('H:M', strtotime($time));
         $this->database->table(self::TABLE_NAME)->where($id)->update([
             self::COLUMN_DATE => $date,
             self::COLUMN_TIME => $time,
@@ -73,5 +81,11 @@ class EventManager
 
     public function findById(int $id): Nette\Database\Table\ActiveRow{
         return $this->findAll()->get($id);
+    }
+
+    public function findEventId(string $date, string $time, string $hall_num): int
+    {
+        $current_obj = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL, $hall_num)->where(self::COLUMN_DATE, $date)->where(self::COLUMN_TIME, $time)->select(self::COLUMN_EVENT_ID)->fetch();
+        return (int) $current_obj->id_cultural_event;
     }
 }
