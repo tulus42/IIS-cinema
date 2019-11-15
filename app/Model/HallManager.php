@@ -68,4 +68,13 @@ class HallManager
     public function getAllHalls(): array{
         return $this->database->table(self::TABLE_NAME)->fetchAll(`hall_num`);
     }
+
+    public function findAll(): Nette\Database\Table\Selection
+    {
+        return $this->database->table(self::TABLE_NAME);
+    }
+
+    public function findById(string $id){
+        return $this->findAll()->get($id);
+    }
 }

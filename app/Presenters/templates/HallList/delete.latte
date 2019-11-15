@@ -1,0 +1,13 @@
+{block content}
+
+<div class="main-block-register" align="center">
+    {if $hall}
+        <p>Určite chcete zmazať sálu s názvom {$hall->hall_num}?</p>
+        <p>Táto akcia povedie na zmazanie všetkých udalostí a sedadiel spojených s touto sálou.</p>
+        {control deleteForm}
+    {else}
+        <p>Kultúrne dielo sa nenašlo</p>
+    {/if}
+</div>
+
+{/block}

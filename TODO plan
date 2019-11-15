@@ -1,0 +1,14 @@
+Search bar autocomplete pre vyhľadávanie userov (admin)
+Poprípade to recyklovať aj na databázu filmov
+Vygenerovanie sedadiel pri pridaní eventu
+Cyklické mazanie
+V homepage zobrazovať iba tie filmy, čo majú aj event
+Zoznamov filmov ako je na zozname sál
+Po pridaní filmu to admina presmeruje na view page toho filmu aby mohol rovno aj predstavenie pridať
+Zmeniť pridávanie obrázkov z URL na výber obrázku z počítača
+Ofašovať pridávanie do tabuľky a kontrolu s primárnym kľúčom
+Prerobiť tlačítka pre sály
+
+EXTRA IDEAS:
+Pri pridaní filmu sa opýtať rovno aj na pridanie eventu
+Vraj má redaktor nahrávať obrázky, takže viac obrázkov? bola by na to treba ale nová tabuľka
