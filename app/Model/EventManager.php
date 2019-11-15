@@ -84,6 +84,11 @@ class EventManager
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $id)->delete();
     }
 
+    public function getAllEvents(string $id): array
+    {
+        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_WORK, $id)->fetchAll();
+    }
+
     public function findAll(): Nette\Database\Table\Selection
     {
         return $this->database->table(self::TABLE_NAME);
