@@ -58,5 +58,37 @@ class EventPresenter extends Nette\Application\UI\Presenter
     {
         $cultural_event = $this->database->table('cultural_event')->get($id_cultural_event);
         $this->template->cultural_event = $cultural_event;
+
+        $cultural_piece_of_work = $this->database->table('cultural_piece_of_work')->where('id_piece_of_work = ?', $cultural_event->id_piece_of_work)->fetch();
+        $this->template->cultural_piece_of_work = $cultural_piece_of_work;
     }
+
+    protected function createComponentDeleteForm(): Form
+    {
+        $form = new Form;
+        $form->addSubmit('delete', 'Áno')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'deleteFormSucceeded'];
+        $form->addSubmit('cancel', 'Nie')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'formCancelled'];
+		$form->addProtection();
+		return $form;
+    }
+
+    public function deleteFormSucceeded(): void
+	{
+        // get the id for the final redirect first
+        $eventId = (int) $this->getParameter('id_cultural_event');
+        $cultural_event = $this->database->table('cultural_event')->get($eventId);
+        $cultural_piece_of_work = $this->database->table('cultural_piece_of_work')->where('id_piece_of_work = ?', $cultural_event->id_piece_of_work)->fetch();
+        $this->eventManager->deleteEvent($eventId);
+        $this->redirect('Movie:show', $cultural_piece_of_work->id_piece_of_work);
+    }
+    
+    public function formCancelled(): void
+	{
+        $eventId = (int) $this->getParameter('id_cultural_event');
+		$this->redirect("Event:show", $eventId);
+	}
 }
