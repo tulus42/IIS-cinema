@@ -1,0 +1,58 @@
+.role-button{
+    text-decoration: none;
+    color:  #D1D7E0;
+    padding:10px;
+    background-color:#205ed1;
+    border-radius:12px;
+}
+
+.role-par{
+    padding: 15px;
+    margin:auto;
+}
+
+.role-button:hover{
+    background-color: #091a6a;
+}
+
+.user-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse:collapse;
+    padding:5px;
+}
+.user-table th {
+    padding:5px;
+}
+.user-table td {
+    width: 33%;
+    padding:5px;
+}
+
+.other-columns{
+    text-align: center;
+}
+
+.username{
+    text-decoration: none;
+    color:#3f4547;
+}
+
+.username:hover{
+    padding: 8px;
+    border-radius: 12px;
+    background: #205ed1;
+    color: #D1D7E0;
+}
+
+.delete-user-button{
+    text-decoration: none;
+    background: #205ed1;
+    color:  #D1D7E0;
+    margin: 5px;
+    border-radius: 50%;
+}
+
+.delete-user-button:hover{
+    background-color: #091a6a;
+}
