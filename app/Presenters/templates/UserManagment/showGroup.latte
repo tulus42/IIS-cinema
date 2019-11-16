@@ -1,6 +1,6 @@
 {block content}
 {if $user->isLoggedIn() and $user->isInRole('admin')}
-    <a class="pull-right" href="#">
+    <a class="pull-right" href="{link UserManagment:add}">
         Pridať užívateľa
     </a>
 {/if}
@@ -21,7 +21,7 @@
             <tr>
                 <td><a href="#" class="username">{$one_user->username}</a></td>
                 <td class="other-columns">{$one_user->rights}</td>
-                <td class="other-columns"><a href="#" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
+                <td class="other-columns"><a href="{link UserManagment:delete $role,$one_user->username}" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
             </tr>
             {/foreach}
         {/if}

@@ -131,6 +131,11 @@ final class UserManager implements Nette\Security\IAuthenticator
 			return $this->database->table(self::TABLE_NAME)->order(self::COLUMN_USERNAME . ' ASC')->where(self::COLUMN_ROLE, $role)->select('*')->fetchAll();
 		}
 	}
+
+	public function getUser(string $username)
+	{
+		return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->select('*')->fetch();
+	}
 }
 
 class DuplicateNameException extends \Exception

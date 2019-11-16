@@ -50,6 +50,42 @@ class UserManagmentPresenter extends Nette\Application\UI\Presenter
             $this->template->title = "Error";
             return;
         }
+        $this->template->role = $role;
         $this->template->all_users = $this->userManager->getUsers($role);
     }
+
+    public function renderDelete(string $role, string $username)
+    {
+        $this->template->one_user = $this->userManager->getUser($username);
+    }
+
+    protected function createComponentDeleteForm(): Form
+    {
+        $form = new Form;
+        $form->addSubmit('delete', 'Áno')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'deleteFormSucceeded'];
+        $form->addSubmit('cancel', 'Nie')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'formCancelled'];
+		$form->addProtection();
+		return $form;
+    }
+
+    public function deleteFormSucceeded(): void
+	{
+        $userID = $this->getParameter('username');
+        $role_list = $this->getParameter('role');
+        $this->redirect('UserManagment:showGroup', $role_list);
+        /*
+        $this->userManager->deleteUser($userID);
+        */
+    }
+    
+    public function formCancelled(): void
+	{
+        $role_list = $this->getParameter('role');
+        $this->redirect('UserManagment:showGroup', $role_list);
+	}
+
 }

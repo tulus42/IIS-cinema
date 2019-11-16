@@ -1,4 +1,10 @@
 {block content}
+{if $user->isLoggedIn() and $user->isInRole('admin')}
+    <a class="pull-right" href="{link UserManagment:add}">
+        Pridať užívateľa
+    </a>
+{/if}
+
 <div class="main-block-register">
     <h1 align="center">Správa užívateľov</h2>
 

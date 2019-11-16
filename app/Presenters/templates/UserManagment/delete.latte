@@ -1,0 +1,13 @@
+{block content}
+
+<div class="main-block-register" align="center">
+    {if $one_user}
+        <p>Určite chcete zmazať účet používateľa {$one_user->username}?</p>
+        {control deleteForm}
+    {else}
+        <p>Užívateľ nenájdený</p>
+    {/if}
+</div>
+
+
+{/block}
