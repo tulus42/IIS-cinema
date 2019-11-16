@@ -11,8 +11,6 @@ use Nette\Application\UI\Form;
 final class NewPerformerFormFactory
 {
 
-    public function allPerformers()
-    {
-        
-    }
+
+    
 }
