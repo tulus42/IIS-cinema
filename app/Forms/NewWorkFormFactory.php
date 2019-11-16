@@ -51,6 +51,7 @@ final class NewWorkFormFactory{
 
         $form->addInteger('duration', 'Dĺžka trvania:')
             ->setHtmlAttribute('class', 'form-text')
+            ->setRequired()
             ->addRule(Form::MIN, 'Dĺžka nesmie byť záporné číslo', 0);
 
         $form->addInteger('rating', 'Hodnotenie:')
