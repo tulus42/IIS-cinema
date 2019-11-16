@@ -30,11 +30,14 @@
                     </div>
 
                     <div class="row">
-                        <h2>Účinkujú: 
+                        <h3>Účinkujú: 
                             {foreach $starsIn as $i}
-                                {$i->performer->name} {$i->performer->surname}{if !($iterator->last)}, {/if} 
+                                <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
                             {/foreach}
-                        </h2>
+                            {if $user->isLoggedIn() and $user->isInRole('admin')}
+                            <a href="#" class="work-performer">&nbsp;+&nbsp;</a>
+                            {/if}
+                        </h3>
                     </div>                    
                 </div>
             </div>
