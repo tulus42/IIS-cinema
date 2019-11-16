@@ -29,9 +29,9 @@ class PerformerPresenter extends Nette\Application\UI\Presenter
     public function renderProfile(int $id)
     {
         $this->template->one_performer = $this->performerManager->getOnePerformer($id);
-        $stars_in = $this->database->table('stars_in')->where('performer_id', $id)->select('id_piece_of_work')->fetch();
-        //$stars_in_work = $stars_in->related('id_piece_of_work');
-        //$this->template->starsIn = $piece_of_work->related('stars_in', 'id_piece_of_work');
-        //$stars_in_work = 
+        
+        $this->template->performer_movies = $this->database->query('SELECT cultural_piece_of_work.id_piece_of_work, cultural_piece_of_work.name
+        FROM cultural_piece_of_work
+        JOIN stars_in ON cultural_piece_of_work.id_piece_of_work=stars_in.id_piece_of_work where stars_in.performer_id=' . $id .';');
     }
 }

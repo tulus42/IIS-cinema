@@ -5,7 +5,13 @@
         <h2>Meno: {$one_performer->name}</h2>
         <h2>Priezvisko: {$one_performer->surname}</h2>
         <br>
-        <p>Účinkuje v:</p>
+        <p>Účinkuje v:
+        {if $performer_movies}
+            {foreach $performer_movies as $one_movie}
+                <a href="{link Movie:show $one_movie->id_piece_of_work}" class="work-performer">{$one_movie->name}</a>
+            {/foreach}
+        {/if}
+        </p>
     {/if}
 </div>
 {/block}
