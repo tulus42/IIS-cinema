@@ -29,8 +29,9 @@ services:
 	- App\Model\EventManager
 	- App\Model\HallManager
 	- App\Model\SeatManager
+	- App\Model\PerformerManager
 	- App\Forms\FormFactory
-	- App\Presenters\EventPresenter
+	- App\Forms\NewPerformerFormFactory
 	- App\Forms\NewEventFormFactory
 	- App\Forms\NewHallFormFactory
 	- App\Forms\DeleteFormFactory

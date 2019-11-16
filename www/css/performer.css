@@ -1,0 +1,12 @@
+.performer{
+    text-decoration: none;
+    color:  #D1D7E0;
+    padding:10px;
+    background-color:#205ed1;
+    border-radius:12px;
+    margin: 15px;
+}
+
+.performer:hover{
+    background-color: #091a6a;
+}

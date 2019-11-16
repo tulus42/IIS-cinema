@@ -1,0 +1,13 @@
+{block content}
+<div class="main-block-register">
+    <h1 align="center">Herci/Účinkujúci</h1>
+
+    {if $performers}
+        {foreach $performers as $performer}
+            <p class="role-par"><a href="{link Performer:profile $performer->performer_id}" class="performer">{$performer->surname} {$performer->name}</a></p>
+        {/foreach}
+    {else}
+        <p>Momentálne nie sú dostupný žiadni herci/Účinkujúci</p>
+    {/if}
+</div>
+{/block}
