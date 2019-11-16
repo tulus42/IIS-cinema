@@ -103,4 +103,14 @@ class EventManager
         $current_obj = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL, $hall_num)->where(self::COLUMN_DATE, $date)->where(self::COLUMN_TIME, $time)->select(self::COLUMN_EVENT_ID)->fetch();
         return (int) $current_obj->id_cultural_event;
     }
+
+    public function deleteEventsInHall(string $hall_num)
+    {
+        $events = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_HALL, $hall_num)->fetchAll();
+        if($events){
+            foreach($events as $one_event){
+                $this->deleteEvent($one_event->id_cultural_event);
+            }
+        }
+    }
 }

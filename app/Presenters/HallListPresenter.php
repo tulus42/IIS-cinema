@@ -18,11 +18,15 @@ class HallListPresenter extends Nette\Application\UI\Presenter
     /** @var Model\HallManager */
     private $hallManager;
 
-    public function __construct(Nette\Database\Context $database, Forms\NewHallFormFactory $newHallFactory, Model\HallManager $hallManager)
+    /** @var Model\EventManager */
+    private $eventManager;
+
+    public function __construct(Nette\Database\Context $database, Forms\NewHallFormFactory $newHallFactory, Model\HallManager $hallManager, Model\EventManager $eventManager)
     {
         $this->database = $database;
         $this->newHallFactory = $newHallFactory;
         $this->hallManager = $hallManager;
+        $this->eventManager = $eventManager;
     }
 
     public function renderHallList(): void
@@ -66,6 +70,7 @@ class HallListPresenter extends Nette\Application\UI\Presenter
     public function deleteFormSucceeded(): void
 	{
         $hall_number = $this->getParameter('hall_num');
+        $this->eventManager->deleteEventsInHall($hall_number);
         $this->hallManager->deleteHall($hall_number);
         $this->redirect('HallList:hallList');
     }
