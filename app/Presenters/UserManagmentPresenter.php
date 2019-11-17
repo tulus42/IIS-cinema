@@ -11,15 +11,16 @@ class UserManagmentPresenter extends Nette\Application\UI\Presenter
 {
     private $database;
 
-    /** @var Forms\DeleteFormFactory */
-    private $deleteFormFactory;
+    /** @var Forms\NewUserFormFactory */
+    private $newUserFormFactory;
     
     /** @var Model\UserManager */
     private $userManager;
 
-    public function __construct(Nette\Database\Context $database, Model\UserManager $userManager)
+    public function __construct(Nette\Database\Context $database, Model\UserManager $userManager, Forms\NewUserFormFactory $newUserFormFactory)
     {
         $this->database = $database;
+        $this->newUserFormFactory = $newUserFormFactory;
         $this->userManager = $userManager;
     }
 
@@ -76,10 +77,8 @@ class UserManagmentPresenter extends Nette\Application\UI\Presenter
 	{
         $userID = $this->getParameter('username');
         $role_list = $this->getParameter('role');
-        $this->redirect('UserManagment:showGroup', $role_list);
-        /*
         $this->userManager->deleteUser($userID);
-        */
+        $this->redirect('UserManagment:showGroup', $role_list);
     }
     
     public function formCancelled(): void
@@ -88,4 +87,15 @@ class UserManagmentPresenter extends Nette\Application\UI\Presenter
         $this->redirect('UserManagment:showGroup', $role_list);
 	}
 
+    public function createComponentAddForm(): Form
+    {
+        return $this->newUserFormFactory->createUser(function (): void {
+			$this->redirect('UserManagment:showGroup', 'all');
+		});
+    }
+
+    public function renderProfile(string $username)
+    {
+        $this->template->this_profile = $this->database->table('user')->get($username);
+    }
 }

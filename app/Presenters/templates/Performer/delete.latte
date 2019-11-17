@@ -1,0 +1,12 @@
+{block content}
+
+<div class="main-block-register" align="center">
+    {if $performer}
+        <p>Určite chcete zmazať účinkujúceho s menom {$performer->name} {$performer->surname}?</p>
+        {control deleteForm}
+    {else}
+        <p>Kultúrne dielo sa nenašlo</p>
+    {/if}
+</div>
+
+{block}

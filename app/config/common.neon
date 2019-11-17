@@ -30,7 +30,9 @@ services:
 	- App\Model\HallManager
 	- App\Model\SeatManager
 	- App\Model\PerformerManager
+	- App\Model\StarsInManager
 	- App\Forms\FormFactory
+	- App\Forms\NewUserFormFactory
 	- App\Forms\NewPerformerFormFactory
 	- App\Forms\NewEventFormFactory
 	- App\Forms\NewHallFormFactory

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Nette;
+use App\Model;
 
 /**
  * Performer management.
@@ -22,12 +23,16 @@ class PerformerManager
     /** @var Nette\Database\Context */
     private $database;
 
-    public function __construct(Nette\Database\Context $database)
+    /** @var Model\StarsInManager*/
+    private $starsInManager;
+
+    public function __construct(Nette\Database\Context $database, Model\StarsInManager $starsInManager)
 	{
         $this->database = $database;
+        $this->starsInManager = $starsInManager;
     }
 
-    public function addPerformer($name, $surname)
+    public function addPerformer(string $name, string $surname)
     {
         $this->database->table(self::TABLE_NAME)->insert([
             self::COLUMN_NAME => $name,
@@ -43,5 +48,11 @@ class PerformerManager
     public function getOnePerformer(int $id)
     {
         return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->select('*')->fetch();
+    }
+
+    public function deletePerformer(int $performer_id)
+    {
+        $this->starsInManager->deletePerformer($performer_id);
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $performer_id)->delete();
     }
 }
