@@ -33,6 +33,7 @@ services:
 	- App\Model\StarsInManager
 	- App\Forms\FormFactory
 	- App\Forms\EditWorkFormFactory
+	- App\Forms\EditUserProfileFormFactory
 	- App\Forms\EditOwnProfileFormFactory
 	- App\Forms\NewUserFormFactory
 	- App\Forms\NewPerformerFormFactory

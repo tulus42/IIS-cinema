@@ -108,6 +108,24 @@ final class UserManager implements Nette\Security\IAuthenticator
 			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
 			self::COLUMN_PHONE_NUMBER => $phone_number,
 			self::COLUMN_EMAIL => $email
+			
+		]);
+	}
+
+	/**
+	 * Edits existing user
+	 */
+	public function editUserAdmin(string $username, string $name, string $surname, string $email, string $dateOfBirth, string $phone_number, string $role): void
+	{
+		Nette\Utils\Validators::assert($email, 'email');
+		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
+		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->update([
+			self::COLUMN_NAME => $name,
+			self::COLUMN_SURNAME => $surname,
+			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
+			self::COLUMN_PHONE_NUMBER => $phone_number,
+			self::COLUMN_EMAIL => $email,
+			self::COLUMN_ROLE => $role
 		]);
 	}
 

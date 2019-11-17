@@ -13,15 +13,19 @@ class UserManagmentPresenter extends BasePresenter
 
     /** @var Forms\NewUserFormFactory */
     private $newUserFormFactory;
+
+    /** @var Forms\editUserProfileFormFactory */
+    private $editUserProfileFormFactory;
     
     /** @var Model\UserManager */
     private $userManager;
 
-    public function __construct(Nette\Database\Context $database, Model\UserManager $userManager, Forms\NewUserFormFactory $newUserFormFactory)
+    public function __construct(Nette\Database\Context $database, Model\UserManager $userManager, Forms\NewUserFormFactory $newUserFormFactory, Forms\editUserProfileFormFactory $editUserProfileFormFactory)
     {
         $this->database = $database;
         $this->newUserFormFactory = $newUserFormFactory;
         $this->userManager = $userManager;
+        $this->editUserProfileFormFactory = $editUserProfileFormFactory;
     }
 
 
@@ -68,6 +72,20 @@ class UserManagmentPresenter extends BasePresenter
     public function renderDelete(string $role, string $username)
     {
         $this->template->one_user = $this->userManager->getUser($username);
+    }
+
+    public function renderEdit(string $username)
+    {
+        ;
+    }
+
+    protected function createComponentEditForm(): Form
+    {
+        $username = $this->getParameter('username');
+        return $this->editUserProfileFormFactory->createEditUser($username, function (): void {
+            $username = $this->getParameter('username');
+			$this->redirect('UserManagment:profile', $username);
+		});
     }
 
     protected function createComponentDeleteForm(): Form
