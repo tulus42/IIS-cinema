@@ -1,0 +1,12 @@
+{block content}
+<div class="main-block-register" align="center">
+    <h2>Účinkujúci herci</h2>
+    {if $already_stars_in}
+        {foreach $already_stars_in as $stars_in}
+            <p>{$stars_in->name} {$stars_in->surname}</p>
+        {/foreach}
+    {/if}
+    <br>
+    <h2>Herci v databáze<h2>
+</div>
+{/block}

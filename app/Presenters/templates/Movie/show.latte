@@ -35,7 +35,7 @@
                                 <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
                             {/foreach}
                             {if $user->isLoggedIn() and $user->isInRole('admin')}
-                            <a href="#" class="work-performer">&nbsp;+&nbsp;</a>
+                            <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
                             {/if}
                         </h3>
                     </div>                    
