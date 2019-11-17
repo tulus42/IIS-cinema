@@ -8,7 +8,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class EventPresenter extends Nette\Application\UI\Presenter
+class EventPresenter extends BasePresenter
 {
     /** @var Nette\Database\Context */
     private $database;

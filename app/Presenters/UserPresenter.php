@@ -7,20 +7,24 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class UserPresenter extends Nette\Application\UI\Presenter
+class UserPresenter extends BasePresenter
 {
     private $database;
 
     /** @var Forms\DeleteFormFactory */
     private $deleteFormFactory;
+
+    /** @var Forms\EditOwnProfileFormFactory */
+    private $editOwnProfileFormFactory;
     
     /** @var Model\UserManager */
     private $userManager;
 
-    public function __construct(Nette\Database\Context $database, Model\UserManager $userManager)
+    public function __construct(Nette\Database\Context $database, Model\UserManager $userManager, Forms\EditOwnProfileFormFactory $editOwnProfileFormFactory)
     {
         $this->database = $database;
         $this->userManager = $userManager;
+        $this->editOwnProfileFormFactory = $editOwnProfileFormFactory;
     }
 
     public function renderProfile(): void
@@ -61,6 +65,14 @@ class UserPresenter extends Nette\Application\UI\Presenter
     public function formCancelled(): void
 	{
 		$this->redirect('profile');
-	}
+    }
+    
+    public function createComponentEditProfile(): Form
+    {
+        $userID = $this->getUser()->id;
+        return $this->editOwnProfileFormFactory->createEdit($userID, function (): void {
+			$this->redirect('User:profile');
+		});
+    }
     
 }

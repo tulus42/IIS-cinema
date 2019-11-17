@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class UserManagmentPresenter extends Nette\Application\UI\Presenter
+class UserManagmentPresenter extends BasePresenter
 {
     private $database;
 

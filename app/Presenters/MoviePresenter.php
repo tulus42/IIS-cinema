@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class MoviePresenter extends Nette\Application\UI\Presenter
+class MoviePresenter extends BasePresenter
 {
     /** @var Nette\Database\Context */
 	private $database;

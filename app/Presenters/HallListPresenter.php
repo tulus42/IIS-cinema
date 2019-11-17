@@ -8,7 +8,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class HallListPresenter extends Nette\Application\UI\Presenter
+class HallListPresenter extends BasePresenter
 {
     private $database;
 

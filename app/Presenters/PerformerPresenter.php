@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class PerformerPresenter extends Nette\Application\UI\Presenter
+class PerformerPresenter extends BasePresenter
 {
     /** @var Model\PerformerManager */
     private $performerManager;

@@ -5,7 +5,7 @@ namespace App\Presenters;
 
 use Nette;
 
-class MovieListPresenter extends Nette\Application\UI\Presenter
+class MovieListPresenter extends BasePresenter
 {
     private $database;
     public function __construct(Nette\Database\Context $database)

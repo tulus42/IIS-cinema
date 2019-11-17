@@ -102,7 +102,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 	{
 		Nette\Utils\Validators::assert($email, 'email');
 		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
-		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->insert([
+		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->update([
 			self::COLUMN_NAME => $name,
 			self::COLUMN_SURNAME => $surname,
 			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
@@ -136,6 +136,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 	{
 		return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->select('*')->fetch();
 	}
+
 }
 
 class DuplicateNameException extends \Exception

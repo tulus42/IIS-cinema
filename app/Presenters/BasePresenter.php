@@ -12,4 +12,15 @@ use Nette;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
+    public function startup(): void
+    {
+        parent::startup();
+
+
+        if($this->getUser()->isLoggedIn()){
+            if($this->getUser()->getLogoutReason() === Nette\Security\IUserStorage::INACTIVITY){
+                
+            }
+        }
+    }
 }
