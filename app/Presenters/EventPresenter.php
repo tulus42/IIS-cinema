@@ -28,6 +28,11 @@ class EventPresenter extends BasePresenter
         $this->eventManager = $eventManager;
     }
 
+    public function renderEdit(int $event_id)
+    {
+
+    }
+
 
     public function createComponentNewEventForm(): Form
     {
@@ -43,7 +48,7 @@ class EventPresenter extends BasePresenter
         ;
     }
 
-    public function renderShow($event_id): void
+    public function renderShow(int $event_id): void
     {
         // $hall = $this->database->table('hall')->get($hall_num);
         // $this->template->hall = $hall;

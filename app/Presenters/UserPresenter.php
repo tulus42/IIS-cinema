@@ -29,16 +29,32 @@ class UserPresenter extends BasePresenter
 
     public function renderProfile(): void
     {
-        $userID = $this->getUser()->id;
-        $this->template->this_profile = $this->database->table('user')->get($userID);
+        if ($this->user->isLoggedIn()){
+            $userID = $this->getUser()->id;
+            $this->template->this_profile = $this->database->table('user')->get($userID);
+        }
+        else{
+            throw new \Nette\Application\BadRequestException(403);
+        }
     }
 
     public function renderDelete(): void
     {
+        if ($this->user->isLoggedIn()){
         $userID = $this->getUser()->id;
         $this->template->current_user = $this->database->table('user')->get($userID);
+        }
+        else{
+            throw new \Nette\Application\BadRequestException(403);
+        }
     }
     
+    public function renderEdit(): void
+    {
+        if (!$this->user->isLoggedIn()){
+            throw new \Nette\Application\BadRequestException(403);
+        }
+    }
     
     protected function createComponentDeleteForm(): Form
     {

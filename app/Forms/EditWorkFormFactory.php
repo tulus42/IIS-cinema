@@ -8,7 +8,7 @@ use App\Model;
 use Nette;
 use Nette\Application\UI\Form;
 
-final class NewWorkFormFactory{
+final class EditWorkFormFactory{
     use Nette\SmartObject;
 
     /** @var FormFactory */
@@ -22,7 +22,7 @@ final class NewWorkFormFactory{
         $this->workManager = $workManager;
     }
 
-    public function createWorkForm(callable $onSuccess): Form
+    public function createEditWorkForm(int $workId, callable $onSuccess): Form
     {
         $form = $this->factory->create();
 
@@ -58,11 +58,24 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-text')
             ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
 
-        $form->addSubmit('send', 'Pridať')
+        
+        $this_work = $this->workManager->getWork($workId);
+
+        $form->setDefaults([
+            'name' => $this_work->name,
+            'genre' => $this_work->genre,
+            'type' => $this_work->type,
+            'picture' => $this_work->picture,
+            'description' => $this_work->description,
+            'duration' => $this_work->duration,
+            'rating' => $this_work->rating
+        ]);
+
+        $form->addSubmit('send', 'Uložiť')
             ->setHtmlAttribute('class', 'form-button');
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
-            $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);
+        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($workId, $onSuccess): void {
+            $this->workManager->editWork($workId, $values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);
             $onSuccess();
         };
 

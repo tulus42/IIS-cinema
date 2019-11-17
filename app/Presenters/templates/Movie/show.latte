@@ -1,4 +1,8 @@
 {block content}
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+	    <p class="pull-right"><a href="{link Movie:edit $piece_of_work->id_piece_of_work}">Editovať dielo</a></p>
+	{/if}
+
     <div class="column8">
         <div class="one-movie-container">
             

@@ -24,6 +24,16 @@ class UserManagmentPresenter extends BasePresenter
         $this->userManager = $userManager;
     }
 
+
+    public function startup(): void
+    {
+        parent::startup();
+
+        if (!$this->user->isLoggedIn() or !$this->user->isInRole('admin')){
+            throw new \Nette\Application\BadRequestException(403);
+        }
+    }
+
     public function renderShowGroup(string $role)
     {
         

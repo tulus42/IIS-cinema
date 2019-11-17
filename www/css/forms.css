@@ -54,6 +54,7 @@
 }
 
 .form-text-description{
+    padding: 8px;
     background: #fff;
     font-family: 'Nunito', sans-serif;
     color: black;
@@ -65,7 +66,6 @@
     height: 150px;
     width: 300px;
     text-align: left;
-    padding: 0.4em 0.4em 0.4em 0;
     line-height: 1em;
 
 }

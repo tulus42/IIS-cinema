@@ -60,9 +60,9 @@ class WorkManager
     /**
      * Edits existing work
      */
-    public function editWork(string $id, string $name, string $genre, string $type, string $image, string $description, int $duration, int $rating)
+    public function editWork(int $id, string $name, string $genre, string $type, string $image, string $description, int $duration, $rating)
     {
-        $this->database->table(self::TABLE_NAME)->where($id)->update([
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->update([
             self::COLUMN_NAME => $name,
             self::COLUMN_GENRE => $genre,
             self::COLUMN_TYPE => $type,
@@ -84,5 +84,10 @@ class WorkManager
             $this->eventManager->deleteEvent($event->id_cultural_event);
         }
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->delete();
+    }
+
+    public function getWork(int $id)
+    {
+        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->select('*')->fetch();
     }
 }
