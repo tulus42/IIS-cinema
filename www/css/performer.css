@@ -1,0 +1,27 @@
+.performer{
+    text-decoration: none;
+    color:  #D1D7E0;
+    padding:10px;
+    background-color:#205ed1;
+    border-radius:12px;
+    margin: 15px;
+}
+
+.performer:hover{
+    background-color: #091a6a;
+}
+
+.work-performer{
+    text-decoration: none;
+    background-color: #1dc0fd;
+    color: #3f4547;
+    text-align: center;
+    padding: 4px;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.work-performer:hover{
+    background-color:#205ed1; 
+    color: #D1D7E0;
+}

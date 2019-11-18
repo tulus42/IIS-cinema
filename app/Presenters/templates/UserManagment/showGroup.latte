@@ -1,0 +1,31 @@
+{block content}
+{if $user->isLoggedIn() and $user->isInRole('admin')}
+    <a class="pull-right" href="{link UserManagment:add}">
+        Pridať užívateľa
+    </a>
+{/if}
+
+<div class="main-block-register">
+    <h1 align="center">{$title}</h1>
+    <table class="user-table">
+        <thead>
+        <tr>
+            <th>Užívateľské meno</th>
+            <th>Právo<br></th>
+            <th>Zmazať</th>
+        </tr>
+        </thead>
+        <tbody>
+        {if $all_users}
+            {foreach $all_users as $one_user}
+            <tr>
+                <td><a href="{link UserManagment:profile $one_user->username}" class="username">{$one_user->username}</a></td>
+                <td class="other-columns">{$one_user->rights}</td>
+                <td class="other-columns"><a href="{link UserManagment:delete $role,$one_user->username}" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
+            </tr>
+            {/foreach}
+        {/if}
+        </tbody>
+    </table>
+</div>
+{/block}

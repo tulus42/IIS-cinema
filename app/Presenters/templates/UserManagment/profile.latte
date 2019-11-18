@@ -1,21 +1,19 @@
 {block content}
 
 <div class="main-block-register" align="center">
-    <p class="pull-right"><a href="{link User:edit}">Upraviť profil</a></p>
+    <p class="pull-right"><a href="{link UserManagment:edit $this_profile->username}">Upraviť profil</a></p>
     <br>
-    <h1>Váš Profil</h1>
+    <h1>Profil</h1>
     <br>
     <h4>Používateľské meno: {$this_profile->username}</h4>
     <h4>Krstné meno: {$this_profile->name}</h4>
     <h4>Priezvisko: {$this_profile->surname}</h4>
+    <h4>Právomoc: {$this_profile->rights}</h4>
     <h4>Dátum narodenia: {$this_profile->date_of_birth|date: '%d.%m.%Y'}<h4>
+    {if $this_profile->phone_number}
     <h4>Telefónne číslo: {$this_profile->phone_number}<h4>
+    {/if}
     <h4>E-mail: {$this_profile->e_mail}<h4>
 
-    <br>
-    <p class="pull-left"><a href="#">Moje navštívené udalosti</a></p>
-    <p class="pull-right"><a href="delete">Zmazať profil</a></p>
-
 </div>
-
-{/block}
+{block}

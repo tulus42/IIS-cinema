@@ -1,0 +1,32 @@
+{block content}
+{if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+	<p class="pull-right"><a href="{link Performer:add}">Pridať účinkujúceho</a></p>
+{/if}
+<div class="main-block-register">
+    <h1 align="center">Herci/Účinkujúci</h1>
+
+    <table class="user-table">
+        <thead>
+        <tr>
+            <th>Priezvisko</th>
+            <th>Meno</th>
+            <th>Zmazať</th>
+        </tr>
+        </thead>
+        <tbody>
+            {if $performers}
+                {foreach $performers as $performer}
+                <tr>
+                    <td class="other-columns"><a href="{link Performer:profile $performer->performer_id}" class="username">{$performer->surname}</a></td>
+                    <td class="other-columns"><a href="{link Performer:profile $performer->performer_id}" class="username">{$performer->name}</a></td>
+                    <td class="other-columns"><a href="{link Performer:delete $performer->performer_id}" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
+                </tr>
+                {/foreach}
+            {else}
+                <p>Momentálne nie sú dostupný žiadni herci/Účinkujúci</p>
+            {/if}
+        </tbody>
+    </table>
+
+</div>
+{/block}

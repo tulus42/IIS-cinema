@@ -9,7 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use App\Presenters;
 
-class NewEventFormFactory
+class EditEventFormFactory
 {
     use Nette\SmartObject;
 

@@ -8,7 +8,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class EventPresenter extends Nette\Application\UI\Presenter
+class EventPresenter extends BasePresenter
 {
     /** @var Nette\Database\Context */
     private $database;
@@ -32,6 +32,11 @@ class EventPresenter extends Nette\Application\UI\Presenter
         $this->seatManager = $seatManager;
     }
 
+    public function renderEdit(int $event_id)
+    {
+
+    }
+
 
     public function createComponentNewEventForm(): Form
     {
@@ -47,7 +52,7 @@ class EventPresenter extends Nette\Application\UI\Presenter
         ;
     }
 
-    public function renderShow($event_id): void
+    public function renderShow(int $event_id): void
     {
         $event = $this->database->table('cultural_event')->get($event_id);
         $this->template->event = $event;

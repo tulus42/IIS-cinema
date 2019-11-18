@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 use App\Forms;
 use App\Model;
 
-class MoviePresenter extends Nette\Application\UI\Presenter
+class MoviePresenter extends BasePresenter
 {
     /** @var Nette\Database\Context */
 	private $database;
@@ -17,15 +17,19 @@ class MoviePresenter extends Nette\Application\UI\Presenter
 
 	/** @var Forms\NewWorkFormFactory */
     private $newWorkFactory;
+
+    /** @var Forms\EditWorkFormFactory */
+    private $editWorkFactory;
     
     /** @var Model\WorkManager */
     private $workManager;
 
-    public function __construct(Nette\Database\Context $database, Forms\NewWorkFormFactory $newWorkFactory, Model\WorkManager $workManager)
+    public function __construct(Nette\Database\Context $database, Forms\NewWorkFormFactory $newWorkFactory, Model\WorkManager $workManager, Forms\EditWorkFormFactory $editWorkFactory)
     {
         $this->database = $database;
         $this->newWorkFactory = $newWorkFactory;
         $this->workManager = $workManager;
+        $this->editWorkFactory = $editWorkFactory;
     }
 
     public function renderShow(int $id_piece_of_work): void
@@ -40,6 +44,23 @@ class MoviePresenter extends Nette\Application\UI\Presenter
     {
         $piece_of_work = $this->database->table('cultural_piece_of_work')->get($id_piece_of_work);
         $this->template->piece_of_work = $piece_of_work;
+    }
+
+    public function renderEdit(int $id_piece_of_work): void
+    {
+
+    }
+
+    /**
+	 * New work form factory.
+	 */
+    protected function createComponentEditWorkForm(): Form
+    {
+        $work_id = (int) $this->getParameter('id_piece_of_work');
+        return $this->editWorkFactory->createEditWorkForm($work_id, function (): void{
+            $work_id = (int) $this->getParameter('id_piece_of_work');
+            $this->redirect('Movie:show', $work_id);
+        });
     }
 
     /**
@@ -77,7 +98,27 @@ class MoviePresenter extends Nette\Application\UI\Presenter
 	{
         $workId = (int) $this->getParameter('id_piece_of_work');
 		$this->redirect("Movie:show", $workId);
-	}
+    }
+    
+    public function renderAddPerformer(int $id_piece_of_work)
+    {
+        $this->template->already_stars_in = $this->database->query('SELECT performer.name, performer.surname
+        FROM performer
+        JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ';');
+
+        /*
+        $not_stars_in = $this->database->query('SELECT performer.name, performer.surname
+        FROM performer
+        JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work!=' . $id_piece_of_work . ';');
+        */
+
+        /*
+        $this->template->performer_movies = $this->database->query('SELECT cultural_piece_of_work.id_piece_of_work, cultural_piece_of_work.name
+        FROM cultural_piece_of_work
+        JOIN stars_in ON cultural_piece_of_work.id_piece_of_work=stars_in.id_piece_of_work where stars_in.performer_id=' . $id .';');
+        */
+    }
+
 }
 
 

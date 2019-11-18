@@ -1,4 +1,8 @@
 {block content}
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+	    <p class="pull-right"><a href="{link Movie:edit $piece_of_work->id_piece_of_work}">Editovať dielo</a></p>
+	{/if}
+
     <div class="column8">
         <div class="one-movie-container">
             
@@ -30,11 +34,14 @@
                     </div>
 
                     <div class="row">
-                        <h2>Účinkujú: 
+                        <h3>Účinkujú: 
                             {foreach $starsIn as $i}
-                                {$i->performer->name} {$i->performer->surname}{if !($iterator->last)}, {/if} 
+                                <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
                             {/foreach}
-                        </h2>
+                            {if $user->isLoggedIn() and $user->isInRole('admin')}
+                            <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
+                            {/if}
+                        </h3>
                     </div>                    
                 </div>
             </div>

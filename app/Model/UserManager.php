@@ -102,12 +102,30 @@ final class UserManager implements Nette\Security\IAuthenticator
 	{
 		Nette\Utils\Validators::assert($email, 'email');
 		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
-		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->insert([
+		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->update([
 			self::COLUMN_NAME => $name,
 			self::COLUMN_SURNAME => $surname,
 			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
 			self::COLUMN_PHONE_NUMBER => $phone_number,
 			self::COLUMN_EMAIL => $email
+			
+		]);
+	}
+
+	/**
+	 * Edits existing user
+	 */
+	public function editUserAdmin(string $username, string $name, string $surname, string $email, string $dateOfBirth, string $phone_number, string $role): void
+	{
+		Nette\Utils\Validators::assert($email, 'email');
+		$dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
+		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->update([
+			self::COLUMN_NAME => $name,
+			self::COLUMN_SURNAME => $surname,
+			self::COLUMN_DATE_OF_BIRTH => $dateOfBirth,
+			self::COLUMN_PHONE_NUMBER => $phone_number,
+			self::COLUMN_EMAIL => $email,
+			self::COLUMN_ROLE => $role
 		]);
 	}
 
@@ -119,6 +137,24 @@ final class UserManager implements Nette\Security\IAuthenticator
 		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->delete();
 		
 	}
+
+	public function getUsers(string $role)
+	{
+		if($role == "all")
+		{
+			return $this->database->table(self::TABLE_NAME)->order(self::COLUMN_USERNAME . ' ASC')->select('*')->fetchAll();
+		}
+		else
+		{
+			return $this->database->table(self::TABLE_NAME)->order(self::COLUMN_USERNAME . ' ASC')->where(self::COLUMN_ROLE, $role)->select('*')->fetchAll();
+		}
+	}
+
+	public function getUser(string $username)
+	{
+		return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->select('*')->fetch();
+	}
+
 }
 
 class DuplicateNameException extends \Exception
