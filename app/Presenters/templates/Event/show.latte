@@ -30,6 +30,7 @@
                     </div>
                 </div>
 
+                {var $reservationArray = 0}
                 {for $column=1; $column <= $hall->number_of_columns; $column++}
                     {var $seatID = $column + $row * $hall->number_of_columns}
                     <div class="column">
@@ -41,21 +42,21 @@
                     {var $mycolor}
                     {switch $seatManager->getSeat($seatTable,$row,$column)->state}
                         {case "available"}
-                            {var $mycolor = "00ff00"}
-
+                            {var $mycolor = "#00ff00"}
                         {case "taken"}
-                            {var $mycolor = "ff0000"} 
+                            {var $mycolor = "#ff0000"}
                         {case "reserved"}
-                            {$mycolor = "0000ff"}  
+                            {var $mycolor = "#0000ff"}  
 
                         {default}
                     {/switch}
 
                     <script>
-                        document.getElementById({$seatID}).style.backgroundColor = $mycolor;
+                        document.getElementById({$seatID}).onclick = function(){
 
-                        document.getElementById($seatID).onclick = function(){
-                            document.getElementById({$seatID}).style.backgroundColor = "pink";
+                            document.getElementById({$seatID}).style.backgroundColor = {$seatManager->clickOnSeat()};
+                            
+                            
                         }
                     </script>  
                            

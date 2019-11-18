@@ -106,6 +106,14 @@ class MoviePresenter extends BasePresenter
         FROM performer
         JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ';');
 
+        $this->template->doesnt_star_in = $this->database->query('SELECT *
+        FROM performer
+        WHERE performer_id NOT IN (
+            SELECT performer_id
+            FROM stars_in
+            WHERE stars_in.id_piece_of_work = ' . $id_piece_of_work . ')
+            ;');
+
         /*
         $not_stars_in = $this->database->query('SELECT performer.name, performer.surname
         FROM performer

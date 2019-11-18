@@ -8,5 +8,10 @@
     {/if}
     <br>
     <h2>Herci v databáze<h2>
+    {if $doesnt_star_in}
+        {foreach $doesnt_star_in as $not_in}
+            <p>{$not_in->name} {$not_in->surname}</p>
+        {/foreach}
+    {/if}
 </div>
 {/block}

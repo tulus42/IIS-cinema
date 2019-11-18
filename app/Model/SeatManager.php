@@ -27,10 +27,19 @@ class SeatManager
     /** @var Model\HallManager */
     private $hallManager;
 
+    /** @var */
+    private $reservationArr;
+
+    /** @var */
+    private $reservationCnt;
+
+
     public function __construct(Nette\Database\Context $database, Model\HallManager $hallManager)
 	{
         $this->database = $database;
         $this->hallManager = $hallManager;
+        $this->reservationArr = array();
+        $this->reservationCnt = 0;
     }
 
     public function addSeat(int $cultural_event, int $row, int $column, string $state)
@@ -93,5 +102,16 @@ class SeatManager
             if ($seat->row == $row && $seat->column == $column)
                 return $seat;
         }
+    }
+
+
+    public function clickOnSeat(){
+        if ($this->reservationCnt < 2) {
+            $this->reservationCnt += 1;
+            return "#ff0000";
+        } else {
+            return "#00ff00";
+        }
+        
     }
 }
