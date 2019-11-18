@@ -87,4 +87,11 @@ class SeatManager
             }
         }
     }
+
+    public function getSeat($seat_table, $row, $column){
+        foreach($seat_table as $seat) {
+            if ($seat->row == $row && $seat->column == $column)
+                return $seat;
+        }
+    }
 }

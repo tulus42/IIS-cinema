@@ -19,13 +19,17 @@ class EventPresenter extends Nette\Application\UI\Presenter
     /** @var Model\EventManager */
     private $eventManager;
 
+    /** @var Model\SeatManager */
+    private $seatManager;
+
     
 
-    public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager)
+    public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager, Model\SeatManager $seatManager)
     {
         $this->database = $database;
         $this->newEventFactory = $newEventFactory;
         $this->eventManager = $eventManager;
+        $this->seatManager = $seatManager;
     }
 
 
@@ -45,9 +49,6 @@ class EventPresenter extends Nette\Application\UI\Presenter
 
     public function renderShow($event_id): void
     {
-        // $hall = $this->database->table('hall')->get($hall_num);
-        // $this->template->hall = $hall;
-
         $event = $this->database->table('cultural_event')->get($event_id);
         $this->template->event = $event;
 
@@ -58,8 +59,9 @@ class EventPresenter extends Nette\Application\UI\Presenter
         $this->template->piece_of_work = $piece_of_work;
 
         $seat = $event->related('seat');
-        $this->template->seat = $seat;
+        $this->template->seatTable = $seat;
 
+        $this->template->seatManager = $this->seatManager;
     }
 
     public function renderDelete(int $id_cultural_event): void

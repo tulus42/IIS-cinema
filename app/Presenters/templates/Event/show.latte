@@ -12,9 +12,8 @@
     
     </h1>
 
-    {foreach $seat as $blabla}
-        {$blabla->row}
-    {/foreach}
+    
+    
 
 
     <div class="hall-view">
@@ -39,9 +38,27 @@
                         </button>
                     </div>
 
+                    {var $mycolor}
+                    {switch $seatManager->getSeat($seatTable,$row,$column)->state}
+                        {case "available"}
+                            {var $mycolor = "00ff00"}
+
+                        {case "taken"}
+                            {var $mycolor = "ff0000"} 
+                        {case "reserved"}
+                            {$mycolor = "0000ff"}  
+
+                        {default}
+                    {/switch}
+
                     <script>
-                        document.getElementById({$seatID}).style.color = 'red';
-                    </script>
+                        document.getElementById({$seatID}).style.backgroundColor = $mycolor;
+
+                        document.getElementById($seatID).onclick = function(){
+                            document.getElementById({$seatID}).style.backgroundColor = "pink";
+                        }
+                    </script>  
+                           
 
                 {/for}
 
