@@ -2,16 +2,47 @@
 <div class="main-block-register" align="center">
     <h2>Účinkujúci herci</h2>
     {if $already_stars_in}
-        {foreach $already_stars_in as $stars_in}
-            <p>{$stars_in->name} {$stars_in->surname}</p>
-        {/foreach}
+    <table class="performer-table">
+        <thead>
+        <tr>
+            <th>Meno</th>
+            <th>Zmazať</th>
+        </tr>
+        </thead>
+        <tbody>
+        
+            {foreach $already_stars_in as $stars_in}
+            <tr>
+                <td class="other-columns"><a href="#" class="username">{$stars_in->surname} {$stars_in->name}</a></td>
+                <td class="other-columns"><a href="#" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
+            </tr>
+            {/foreach}
+        
+        </tbody>
+    </table>
+    {else}
+        <p>Momentálne nie sú pridaní žiadni herci</p>
     {/if}
+
     <br>
-    <h2>Herci v databáze<h2>
-    {if $doesnt_star_in}
-        {foreach $doesnt_star_in as $not_in}
-            <p>{$not_in->name} {$not_in->surname}</p>
-        {/foreach}
-    {/if}
+    <h2>Herci v databáze</h2>
+    <table class="performer-table">
+        <thead>
+        <tr>
+            <th>Meno</th>
+            <th>Pridať</th>
+        </tr>
+        </thead>
+        <tbody>
+        {if $doesnt_star_in}
+            {foreach $doesnt_star_in as $not_in}
+            <tr>
+                <td class="other-columns"><a href="#" class="username">{$not_in->surname} {$not_in->name}</a></td>
+                <td class="other-columns"><a href="#" class="delete-user-button">&nbsp;&nbsp;+&nbsp;&nbsp;</a></td>
+            </tr>
+            {/foreach}
+        {/if}
+        </tbody>
+    </table>
 </div>
 {/block}

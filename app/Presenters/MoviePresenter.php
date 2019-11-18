@@ -104,7 +104,7 @@ class MoviePresenter extends BasePresenter
     {
         $this->template->already_stars_in = $this->database->query('SELECT performer.name, performer.surname
         FROM performer
-        JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ';');
+        JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ' ORDER BY surname ASC, name ASC;;');
 
         $this->template->doesnt_star_in = $this->database->query('SELECT *
         FROM performer
@@ -112,19 +112,7 @@ class MoviePresenter extends BasePresenter
             SELECT performer_id
             FROM stars_in
             WHERE stars_in.id_piece_of_work = ' . $id_piece_of_work . ')
-            ;');
-
-        /*
-        $not_stars_in = $this->database->query('SELECT performer.name, performer.surname
-        FROM performer
-        JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work!=' . $id_piece_of_work . ';');
-        */
-
-        /*
-        $this->template->performer_movies = $this->database->query('SELECT cultural_piece_of_work.id_piece_of_work, cultural_piece_of_work.name
-        FROM cultural_piece_of_work
-        JOIN stars_in ON cultural_piece_of_work.id_piece_of_work=stars_in.id_piece_of_work where stars_in.performer_id=' . $id .';');
-        */
+            ORDER BY surname ASC, name ASC;');
     }
 
 }
