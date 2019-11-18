@@ -18,5 +18,12 @@ class HomepagePresenter extends BasePresenter
     public function renderDefault(): void
     {
         $this->template->movies = $this->database->table('cultural_piece_of_work')->order('name ASC');
+
+        $this->template->movies = $this->database->query('SELECT *
+        FROM cultural_piece_of_work
+        WHERE id_piece_of_work IN (
+            SELECT id_piece_of_work
+            FROM cultural_event
+            );');
     }
 }
