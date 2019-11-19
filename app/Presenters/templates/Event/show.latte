@@ -30,19 +30,21 @@
                     </div>
                 </div>
 
-                {var $reservationArray = 0}
                 {for $column=1; $column <= $hall->number_of_columns; $column++}
-                    {var $seatID = $column + $row * $hall->number_of_columns}
+                    {var $seatID = $column .','. $row}
+                    {var $seatState = $seatManager->getSeat($seatTable,$row,$column)->state}
                     <div class="column">
-                        <button class="seat" id={$seatID}>
+                        <button class="seat" id={$seatID} onclick="dosomething({$seatID}, {$seatState})">
                             {$column}
                         </button>
                     </div>
     
                     {var $mycolor}
-                    {switch $seatManager->getSeat($seatTable,$row,$column)->state}
+                    {switch $seatState}
                         {case "available"}
                             {var $mycolor = "#00ff00"}
+                            
+                            
                         {case "taken"}
                             {var $mycolor = "#ff0000"}
                         {case "reserved"}
@@ -52,16 +54,33 @@
                     {/switch}
 
                     <script>
-                        document.getElementById({$seatID}).onclick = function(){
-
-                            document.getElementById({$seatID}).style.backgroundColor = {$seatManager->clickOnSeat()};
-                            
-                            
-                        }
+                        document.getElementById({$seatID}).style.backgroundColor = {$mycolor};
                     </script>  
-                           
-
                 {/for}
+
+            <script>
+                var reservationArray = [];
+
+                function dosomething(seatID, state){
+                    if (state == "available") {
+                        if (!reservationArray.includes(seatID)) {
+                            if (reservationArray.length < 2) {
+                                reservationArray.push(seatID);
+                                
+                                document.getElementById(seatID).style.backgroundColor = "#00ffff";
+                            }
+                        } else {
+                            for( var i = 0; i < reservationArray.length; i++){ 
+                                if ( reservationArray[i] == seatID) {
+                                    reservationArray.splice(i, 1); 
+                                }
+                            }
+                            document.getElementById(seatID).style.backgroundColor = "#ffffff";
+
+                        }
+                    }
+                }
+            </script>
 
                 <div class="column">
                     <div class="row2">

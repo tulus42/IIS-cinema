@@ -108,9 +108,9 @@ class SeatManager
     public function clickOnSeat(){
         if ($this->reservationCnt < 3) {
             $this->reservationCnt += 1;
-            return "#ff0000";
+            return "#0000ff";
         } else {
-            return 0;
+            return "#ffffff";
         }
         
     }
