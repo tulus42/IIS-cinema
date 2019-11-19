@@ -21,7 +21,7 @@
             Plátno
         </div>
 
-
+        {var $reservationArray}
         {for $row=1; $row <=$hall->number_of_rows; $row++}
             <div class="row">
                 <div class="column">
@@ -42,13 +42,13 @@
                     {var $mycolor}
                     {switch $seatState}
                         {case "available"}
-                            {var $mycolor = "#00ff00"}
+                            {var $mycolor = "#D1D7E0"}
                             
                             
                         {case "taken"}
                             {var $mycolor = "#ff0000"}
                         {case "reserved"}
-                            {var $mycolor = "#0000ff"}  
+                            {var $mycolor = "#ff0000"}  
 
                         {default}
                     {/switch}
@@ -75,11 +75,15 @@
                                     reservationArray.splice(i, 1); 
                                 }
                             }
-                            document.getElementById(seatID).style.backgroundColor = "#ffffff";
-
+                            document.getElementById(seatID).style.backgroundColor = "#D1D7E0";
                         }
                     }
+                    document.getElementById("reservedSeats").innerHTML = reservationArray;
+                    document.getElementById("suma").innerHTML = reservationArray.length * {$event->price}
                 }
+
+                
+                
             </script>
 
                 <div class="column">
@@ -89,6 +93,16 @@
                 </div>
             </div>
         {/for}
+    </div>
+
+    <div >
+        <h2>Rezervované sedadlá:</h2>
+        <div id="reservedSeats"></div>
+    </div>
+
+    <div>
+        <h2>Suma na zaplatenie:</h2>
+        <div id="suma"></div>
     </div>
 
     
