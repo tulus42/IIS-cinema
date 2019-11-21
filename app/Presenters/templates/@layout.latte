@@ -34,7 +34,9 @@
 				{if $user->isLoggedIn() and $user->isInRole('admin')}
 				<li><a href="{link UserManagment:list}"><i class="fas fa-users-cog"></i>Užívatelia</a></li>
 				{/if}
+				{if $user->isLoggedIn() and ($user->isInRole('admin') or $user->isInRole('cashier'))}
 				<li><a href="#"><i class="fas fa-address-card"></i>Rezervácie</a></li>
+				{/if}
 				<li><a href="{link Homepage:default}"><i class="fas fa-home"></i>Domov</a></li>
 				<li><a href="{link Movie:allMovies}"><i class="fas fa-film"></i>Filmy</a></li>
 				<li><a href="{link HallList:hallList}"><i class="fas fa-chair"></i>Sály</a></li>

@@ -38,7 +38,7 @@
                             {foreach $starsIn as $i}
                                 <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
                             {/foreach}
-                            {if $user->isLoggedIn() and $user->isInRole('admin')}
+                            {if $user->isLoggedIn() and ($user->isInRole('admin') or $user->isInRole('redactor'))}
                             <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
                             {/if}
                         </h3>
@@ -67,7 +67,7 @@
                     </a>
                 {/foreach}
 
-                {if $user->isLoggedIn() and $user->isInRole('admin')}
+                {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
                 <a class="event" href="{link Event:add $piece_of_work->id_piece_of_work}">
                     Pridať<br/>predstavenie
                 </a>

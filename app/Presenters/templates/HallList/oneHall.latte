@@ -1,6 +1,9 @@
 {block content}
     <h1>Sála {$hall->hall_num}</h1>
-    <p class="pull-right"><a href="{link HallList:delete $hall->hall_num}">Zmazať sálu</a></p>
+    
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+		<p class="pull-right"><a class="admin-button" href="{link HallList:delete $hall->hall_num}">Zmazať sálu</a></p>
+	{/if}
 
     <div class="hall-view">
 
