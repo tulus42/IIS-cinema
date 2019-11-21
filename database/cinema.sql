@@ -93,7 +93,6 @@ CREATE TABLE `seat`(
 
 -- Table for connesting stars that star in a piece of work
 CREATE TABLE `stars_in`(
-    `stars_in_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `performer_id` int(8) NOT NULL,
     `id_piece_of_work` int(8) NOT NULL
 ) ENGINE=InnoDB CHARSET=utf8;
@@ -109,6 +108,9 @@ ADD PRIMARY KEY(`username`);
 
 ALTER TABLE `hall`
 ADD PRIMARY KEY(`hall_num`);
+
+ALTER TABLE `stars_in`
+ADD PRIMARY KEY(`performer_id`,`id_piece_of_work`);
 
 -- ALTER TABLE `performer`
 -- ADD PRIMARY KEY(`performer_id`);

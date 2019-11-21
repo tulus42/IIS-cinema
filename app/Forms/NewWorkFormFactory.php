@@ -61,7 +61,7 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-text');
 
         $form->addUpload('poster', '*Plagát')
-            ->setRequired(true)
+            //->setRequired(true)
             ->addRule(Form::IMAGE, 'Plagát musí byť JPEG, PNG')
             ->setHtmlAttribute('class', 'form-file');
 
@@ -88,13 +88,31 @@ final class NewWorkFormFactory{
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
             $current_poster = $values->poster;
             try{
-                $values->poster = $this->imageStorage->SaveUpload($current_poster);
+                //$values->poster = $this->imageStorage->SaveUpload($current_poster);
             }
             catch(\Exception $e){
                 dump('ERROR!');
             }
 
-            $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);
+            $allGenres = array(
+                'akčný',
+                'dobrodružný',
+                'dráma',
+                'fantasy',
+                'filozofický',
+                'historický',
+                'horor',
+                'komédia',
+                'krimi',
+                'mysteriózny',
+                'politický',
+                'romantický',
+                'triller',
+                'vedecký',
+                'western'
+            );
+
+            $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->picture, $values->description, $values->duration, $values->rating);
             $onSuccess();
         };
 
