@@ -3,17 +3,18 @@
 		<p class="pull-right"><a class="admin-button" href="{link Movie:add}">Pridať film</a></p>
 	{/if}
 
+	
+
+	{if count($movies) != 0}
 	<div class="row">
         <h1 class="cinema-title">Zoznam filmov</h1>
     </div>
-
-	{if $movies}
 	<div class="show-block">
 	{foreach $movies as $movie}
 			<p><a  class="movie-list" href="{link Movie:show $movie->id_piece_of_work}">{$movie->name}</a></p>
 	{/foreach}
 	</div>
 	{else}
-		<p>Momentálne sa v databáze nenchádzajú žiadne filmy</p>
+		<h1 class="cinema-title">Momentálne sa v databáze nenchádzajú žiadne filmy</h1>
 	{/if}
 {/block}
