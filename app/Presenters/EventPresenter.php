@@ -112,23 +112,22 @@ class EventPresenter extends BasePresenter
         $tmpSeatArray = [];
         $seatArray = [];
 
-        $tmpSeatArray=explode("%!", $reservationArray);
-        $eventID = $tmpSeatArray[1];
+        $tmpSeatArray=explode("q", $reservationArray);
+        $eventID = array_pop($tmpSeatArray);
 
-        $tmpSeatArray=explode("%", $tmpSeatArray[0]);        
-        
+
         foreach($tmpSeatArray as $seat) {
             array_push($seatArray, explode(":", $seat));
         }
+
         
         $this->template->seatArray = $seatArray;
-
-
         
         $event = $this->database->table('cultural_event')->get($eventID);
-        
         $this->template->event = $event;
 
+        $piece_of_work = $this->database->table('cultural_piece_of_work')->get($event->id_piece_of_work);
+        $this->template->piece_of_work = $piece_of_work;
     }
 
    

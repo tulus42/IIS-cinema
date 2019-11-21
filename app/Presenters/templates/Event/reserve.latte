@@ -1,5 +1,16 @@
 {block content}
-    {foreach $seatArray as $seat}
-        {$seat[0]},{$seat[1]}
-    {/foreach}
+    <div>
+        <h1>
+            {$piece_of_work->name},
+            Sála {$event->hall_num},
+            {$event->date|date: '%d. %m. %Y'},
+            {$event->time|date: '%H:%I'}
+        </h1>
+        
+        <h2>Rezervované sedadlá:
+        {foreach $seatArray as $seat}
+            {$seat[0]}:{$seat[1]}{if !$iterator->last}, {/if}
+        {/foreach}
+        </h2>
+    <div>
 {/block}
