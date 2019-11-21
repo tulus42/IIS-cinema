@@ -115,6 +115,10 @@ class MoviePresenter extends BasePresenter
             ORDER BY surname ASC, name ASC;');
     }
 
+    public function renderAllMovies(): void
+    {
+        $this->template->movies = $this->database->table('cultural_piece_of_work')->order('name ASC');
+    }
 }
 
 

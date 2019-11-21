@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Contributte\\ImageStorage\\' => array($vendorDir . '/ublaboo/image-storage/src'),
 );

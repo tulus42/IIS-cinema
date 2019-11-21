@@ -246,3 +246,33 @@ font-size: 1.1em;
 .main_content{
 padding-left: 270px;
 }
+
+.admin-button{
+  margin-right: 10px;
+  padding: 5px;
+  text-decoration: none;
+  border-radius: 10px;
+  font-family: 'Nunito', sans-serif;
+  color: #3f4547;
+  text-align: center;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #1dc0fd;
+  margin-bottom : 20px;
+}
+
+.admin-button:hover{
+  background-color:#205ed1; 
+  color: #D1D7E0;
+}
+
+.show-block{
+  background-color: #D1D7E0;
+  border-radius: 12px;
+  border: solid #636b6f 3px;
+  margin: 40px;
+  padding: 30px;
+  padding-bottom: 50px;
+  font-size: 20px;
+}

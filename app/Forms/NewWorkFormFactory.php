@@ -42,6 +42,11 @@ final class NewWorkFormFactory{
         ])
             ->setHtmlAttribute('class', 'form-text');
 
+        $form->addUpload('poster', '*Plagát')
+            ->setRequired(true)
+            ->addRule(Form::IMAGE, 'Plagát musí byť JPEG, PNG')
+            ->setHtmlAttribute('class', 'form-file');
+
         $form->addText('picture', '*URL obrázka')
             ->setHtmlAttribute('class', 'form-text')
             ->setRequired();
@@ -58,10 +63,19 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-text')
             ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
 
+
         $form->addSubmit('send', 'Pridať')
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+            $current_poster = $values->poster;
+            try{
+                $values->poster = $this->imageStorage->SaveUpload($current_poster);
+            }
+            catch(\Exception $e){
+                dump('ERROR!');
+            }
+
             $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);
             $onSuccess();
         };

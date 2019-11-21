@@ -61,16 +61,14 @@ class EventManager
     /**
      * Edits existing event
      */
-    public function editEvent(string $date, string $time, int $price, string $piece_of_work, string $hall_num)
+    public function editEvent(int $event_id, string $date, string $time, int $price)
     {
         $date = date('Y-m-d', strtotime($date));
-        $time = date('H:M', strtotime($time));
-        $this->database->table(self::TABLE_NAME)->where($id)->update([
+        //$time = date('H:M', strtotime($time));
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $event_id)->update([
             self::COLUMN_DATE => $date,
             self::COLUMN_TIME => $time,
             self::COLUMN_PRICE => $price,
-            self::COLUMN_WORK => $piece_of_work,
-            self::COLUMN_HALL => $hall_num,
         ]);
     }
 
@@ -82,6 +80,11 @@ class EventManager
         $hall = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $id)->fetch();
         $this->seatManager->deleteSeatsToEvent($hall->hall_num,$id);
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $id)->delete();
+    }
+
+    public function getEvent(int $id)
+    {
+        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EVENT_ID, $id)->fetch();
     }
 
     public function getAllEvents(string $id): array

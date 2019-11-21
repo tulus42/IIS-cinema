@@ -16,12 +16,11 @@ session:
 
 
 database:
-	dsn: 'mysql:host=127.0.0.1:3307;dbname=cinema'
+	dsn: 'mysql:host=127.0.0.1;dbname=cinema'
 	user: root
 	password:
 	options:
 		lazy: yes
-
 
 services:
 	- App\Model\WorkManager
@@ -35,6 +34,7 @@ services:
 	- App\Forms\EditWorkFormFactory
 	- App\Forms\EditUserProfileFormFactory
 	- App\Forms\EditOwnProfileFormFactory
+	- App\Forms\EditEventFormFactory
 	- App\Forms\NewUserFormFactory
 	- App\Forms\NewPerformerFormFactory
 	- App\Forms\NewEventFormFactory

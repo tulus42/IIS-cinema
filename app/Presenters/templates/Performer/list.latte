@@ -1,6 +1,6 @@
 {block content}
 {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-	<p class="pull-right"><a href="{link Performer:add}">Pridať účinkujúceho</a></p>
+	<p class="pull-right"><a class="admin-button" href="{link Performer:add}">Pridať účinkujúceho</a></p>
 {/if}
 <div class="main-block-register">
     <h1 align="center">Herci/Účinkujúci</h1>
