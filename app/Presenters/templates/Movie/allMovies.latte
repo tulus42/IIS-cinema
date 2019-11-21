@@ -2,29 +2,18 @@
 	{if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
 		<p class="pull-right"><a class="admin-button" href="{link Movie:add}">Pridať film</a></p>
 	{/if}
-	
+
 	<div class="row">
         <h1 class="cinema-title">Zoznam filmov</h1>
     </div>
 
+	{if $movies}
+	<div class="show-block">
 	{foreach $movies as $movie}
-	<div class="column4">
-		<div class="movie-container">
-			<p class="movie-title"><a href="{link Movie:show $movie->id_piece_of_work}" style="color:#3f4547">{$movie->name}</a></p>
-		
-			<div class="movie-poster">
-				<a href="{link Movie:show $movie->id_piece_of_work}"><img src={$movie->picture}></a>
-			</div>
-
-			<div class="movie-description">
-				<p>{$movie->description|truncate:370, '...'}</p>
-			</div>
-
-			
-			<div class="buy-tickets">
-				<button class="buy-button" type="button">Objednať lístky</button>
-			</div>
-		</div>
-	</div>
+			<p><a  class="movie-list" href="{link Movie:show $movie->id_piece_of_work}">{$movie->name}</a></p>
 	{/foreach}
+	</div>
+	{else}
+		<p>Momentálne sa v databáze nenchádzajú žiadne filmy</p>
+	{/if}
 {/block}

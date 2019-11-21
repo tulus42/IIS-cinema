@@ -30,9 +30,27 @@ final class EditWorkFormFactory{
             ->setHtmlAttribute('class', 'form-text')
             ->setRequired();
 
-        $form->addText('genre', '*Žáner:')
+        $allGenres = array(
+            'akčný',
+            'dobrodružný',
+            'dráma',
+            'fantasy',
+            'filozofický',
+            'historický',
+            'horor',
+            'komédia',
+            'krimi',
+            'mysteriózny',
+            'politický',
+            'romantický',
+            'triller',
+            'vedecký',
+            'western'
+        );
+
+        $form->addSelect('genre', '*Žáner:')
             ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setItems($allGenres, false);
 
         $form->addSelect('type', '*Typ', [
             'film' => 'film',

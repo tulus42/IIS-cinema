@@ -5,8 +5,8 @@
 	<div class="row">
         <h1 class="cinema-title">Práve v predaji</h1>
     </div>
-		
-
+	
+	{if $movies}
 	{foreach $movies as $movie}
 	<div class="column4">
 		<div class="movie-container">
@@ -22,9 +22,11 @@
 
 			
 			<div class="buy-tickets">
-				<button class="buy-button" type="button">Objednať lístky</button>
+				<a class="buy-button" href="{link Movie:show $movie->id_piece_of_work}">Objednať lístky</a>
 			</div>
 		</div>
 	</div>
 	{/foreach}
-{/block}
+	{else}
+		<p>Momentálne nepremietame žiadne filmy</p>
+	{/if}

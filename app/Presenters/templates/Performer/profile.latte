@@ -1,4 +1,9 @@
 {block content}
+{if $one_performer}
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+        <a class="pull-right admin-button" href="#">Zmazať herca</a>
+    {/if}
+{/if}
 <div class="main-block-register">
     {if $one_performer}
         <h1 align="center">Profil herca</h1>
@@ -10,8 +15,12 @@
             {foreach $performer_movies as $one_movie}
                 <a href="{link Movie:show $one_movie->id_piece_of_work}" class="work-performer">{$one_movie->name}</a>
             {/foreach}
+        {else}
+            <p>Tento herec zatiaľ nikde neúčinkuje</p>
         {/if}
         </p>
+    {else}
+        <p align="center">Herec nenájdený</p>
     {/if}
 </div>
 {/block}
