@@ -105,5 +105,11 @@ class EventPresenter extends BasePresenter
 	{
         $eventId = (int) $this->getParameter('id_cultural_event');
 		$this->redirect("Event:show", $eventId);
-	}
+    }
+    
+    public function renderReserve($seatArray): void
+    {
+        $this->template->$seatArray = $seatArray;
+
+    }
 }

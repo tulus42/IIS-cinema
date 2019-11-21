@@ -8,7 +8,7 @@
         {$piece_of_work->name},
         Sála {$event->hall_num},
         {$event->date|date: '%d. %m. %Y'},
-        {$event->time|date: '%H:%M'}
+        {$event->time|date: '%H:%i'}
     
     </h1>
 
@@ -82,9 +82,11 @@
                     document.getElementById("suma").innerHTML = reservationArray.length * {$event->price}
                 }
 
-                
-                
+                function getReservationArray() {
+                    return reservationArray;
+                }
             </script>
+
 
                 <div class="column">
                     <div class="row2">
@@ -95,15 +97,24 @@
         {/for}
     </div>
 
-    <div >
+
+
+    <div>
         <h2>Rezervované sedadlá:</h2>
-        <div id="reservedSeats"></div>
+        <div id="reservedSeats">0</div>
+    </div>
+
+    <div>
     </div>
 
     <div>
         <h2>Suma na zaplatenie:</h2>
-        <div id="suma"></div>
+        <div id="suma">0</div>
     </div>
+
+    <button href="{link Movie:delete $piece_of_work->id_piece_of_work}">
+        Vybrať spôsob platby
+    </button>
 
     
     

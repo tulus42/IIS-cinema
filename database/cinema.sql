@@ -2,7 +2,7 @@
 -- Database: cinema.sql
 
 -- Drop tables if they already exists
-DROP TABLE IF EXISTS `user_attended`;
+DROP TABLE IF EXISTS `reservation`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `stars_in`;
 DROP TABLE IF EXISTS `seat`;
@@ -28,9 +28,18 @@ CREATE TABLE `user`(
 ) ENGINE=InnoDB CHARSET=utf8;
 
 -- Table for all the movies given user saw
-CREATE TABLE `user_attended`(
-    `username` VARCHAR(255) NOT NULL,
-    `id_piece_of_work` int(8) NOT NULL
+CREATE TABLE `reservation`(
+    `reservation_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(255),
+    `id_piece_of_work` int(8) NOT NULL,
+    `paid` ENUM('paid', 'unpaid'),
+    `seat1` int(8) NOT NULL,
+    `seat2` int(8),
+    `seat3` int(8),
+    `seat4` int(8),
+    `seat5` int(8),
+    `seat6` int(8)
+
 ) ENGINE=InnoDB CHARSET=utf8;
 
 -- Table structure for performance
@@ -72,6 +81,7 @@ CREATE TABLE `performer`(
 
 -- Table structure for seat
 CREATE TABLE `seat`(
+    `seat_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `cultural_event_id` int(8) NOT NULL,
     -- we will see whether we need this or not
     -- `cultural_event_time` TIME NOT NULL, --why is this var name diffrent? than the one in cultural event?
@@ -88,12 +98,14 @@ CREATE TABLE `stars_in`(
     `id_piece_of_work` int(8) NOT NULL
 ) ENGINE=InnoDB CHARSET=utf8;
 
+
+
 -- Constraints for primary keys
 ALTER TABLE `user`
 ADD PRIMARY KEY(`username`);
 
-ALTER TABLE `user_attended`
-ADD PRIMARY KEY(`username`, `id_piece_of_work`);
+-- ALTER TABLE `user_attended`
+-- ADD PRIMARY KEY(`username`, `id_piece_of_work`);
 
 ALTER TABLE `hall`
 ADD PRIMARY KEY(`hall_num`);
@@ -101,8 +113,8 @@ ADD PRIMARY KEY(`hall_num`);
 -- ALTER TABLE `performer`
 -- ADD PRIMARY KEY(`performer_id`);
 
-ALTER TABLE `seat`
-ADD PRIMARY KEY(`cultural_event_id`, `row`, `column`);
+-- ALTER TABLE `seat`
+-- ADD PRIMARY KEY(`cultural_event_id`, `row`, `column`);
 
 
 -- Constraints for foreign keys
@@ -110,6 +122,39 @@ ALTER TABLE `seat`
 ADD CONSTRAINT FK_event_seat
 FOREIGN KEY(`cultural_event_id`) REFERENCES `cultural_event`(`id_cultural_event`)
 ON DELETE CASCADE;
+
+-- seats
+ALTER TABLE `reservation`
+ADD CONSTRAINT FK_seat1
+FOREIGN KEY(`seat1`) REFERENCES `seat`(`seat_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `reservation`
+ADD CONSTRAINT FK_seat2
+FOREIGN KEY(`seat2`) REFERENCES `seat`(`seat_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `reservation`
+ADD CONSTRAINT FK_seat3
+FOREIGN KEY(`seat3`) REFERENCES `seat`(`seat_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `reservation`
+ADD CONSTRAINT FK_seat4
+FOREIGN KEY(`seat4`) REFERENCES `seat`(`seat_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `reservation`
+ADD CONSTRAINT FK_seat5
+FOREIGN KEY(`seat5`) REFERENCES `seat`(`seat_id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `reservation`
+ADD CONSTRAINT FK_seat6
+FOREIGN KEY(`seat6`) REFERENCES `seat`(`seat_id`)
+ON DELETE CASCADE;
+-- end of seats
+
 
 ALTER TABLE `cultural_event`
 ADD CONSTRAINT FK_event_hall
@@ -131,12 +176,12 @@ ADD CONSTRAINT FK_stars_in_work
 FOREIGN KEY(`id_piece_of_work`) REFERENCES `cultural_piece_of_work`(`id_piece_of_work`)
 ON DELETE CASCADE;
 
-ALTER TABLE `user_attended`
+ALTER TABLE `reservation`
 ADD CONSTRAINT FK_user_user
 FOREIGN KEY(`username`) REFERENCES `user`(`username`)
 ON DELETE CASCADE;
 
-ALTER TABLE `user_attended`
+ALTER TABLE `reservation`
 ADD CONSTRAINT FK_work_work
 FOREIGN KEY(`id_piece_of_work`) REFERENCES `cultural_piece_of_work`(`id_piece_of_work`)
 ON DELETE CASCADE;
@@ -182,17 +227,17 @@ VALUES
     ('Ryan', 'Reynolds');
 
 -- INSERT TO seat
-INSERT INTO `seat`
+INSERT INTO `seat` (`cultural_event_id`, `row`, `column`, `state`)
 VALUES
     ('1', '1','1','available'),
     ('1', '1','2','available');
 
 -- relationship tables
--- INSERT TO user_attended
-INSERT INTO `user_attended` 
+-- INSERT TO reservation
+INSERT INTO `reservation` (`username`, `id_piece_of_work`, `paid`, `seat1`) 
 VALUES
-    ('dolar', '1'),
-    ('Maniac42', '2');
+    ('dolar', '1', 'unpaid', '1'),
+    ('Maniac42', '2', 'paid', '2');
 
 
 -- kto kde hrá
