@@ -15,17 +15,17 @@ class HomepagePresenter extends BasePresenter
         $this->database = $database;
     }
 
-    
-
     public function renderDefault(): void
     {
-
-        $this->template->movies = $this->database->query('SELECT *
+        
+        $all_movies_with_events = $this->database->query('SELECT *
         FROM cultural_piece_of_work
         WHERE id_piece_of_work IN (
             SELECT id_piece_of_work
             FROM cultural_event
             ); ');
+        $this->template->movies = $all_movies_with_events;
 
+        $this->template->number = (int) $all_movies_with_events->getRowCount();
     }
 }

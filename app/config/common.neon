@@ -30,6 +30,7 @@ services:
 	- App\Model\SeatManager
 	- App\Model\PerformerManager
 	- App\Model\StarsInManager
+	- App\Model\ReservationManager
 	- App\Forms\FormFactory
 	- App\Forms\EditWorkFormFactory
 	- App\Forms\EditUserProfileFormFactory
