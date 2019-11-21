@@ -107,9 +107,29 @@ class EventPresenter extends BasePresenter
 		$this->redirect("Event:show", $eventId);
     }
     
-    public function renderReserve($seatArray): void
+    public function renderReserve($reservationArray): void
     {
-        $this->template->$seatArray = $seatArray;
+        $tmpSeatArray = [];
+        $seatArray = [];
+
+        $tmpSeatArray=explode("%!", $reservationArray);
+        $eventID = $tmpSeatArray[1];
+
+        $tmpSeatArray=explode("%", $tmpSeatArray[0]);        
+        
+        foreach($tmpSeatArray as $seat) {
+            array_push($seatArray, explode(":", $seat));
+        }
+        
+        $this->template->seatArray = $seatArray;
+
+
+        
+        $event = $this->database->table('cultural_event')->get($eventID);
+        
+        $this->template->event = $event;
 
     }
+
+   
 }
