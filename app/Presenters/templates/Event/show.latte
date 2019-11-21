@@ -21,7 +21,6 @@
             Plátno
         </div>
 
-        {var $reservationArray}
         {for $row=1; $row <=$hall->number_of_rows; $row++}
             <div class="row">
                 <div class="column">
@@ -31,10 +30,10 @@
                 </div>
 
                 {for $column=1; $column <= $hall->number_of_columns; $column++}
-                    {var $seatID = $column .','. $row}
+                    {var $seatID = $row.':'.$column}
                     {var $seatState = $seatManager->getSeat($seatTable,$row,$column)->state}
                     <div class="column">
-                        <button class="seat" id={$seatID} onclick="dosomething({$seatID}, {$seatState})">
+                        <button class="seat" id={$seatID} onclick="clickOnSeat({$seatID}, {$seatState})">
                             {$column}
                         </button>
                     </div>
@@ -43,8 +42,6 @@
                     {switch $seatState}
                         {case "available"}
                             {var $mycolor = "#D1D7E0"}
-                            
-                            
                         {case "taken"}
                             {var $mycolor = "#ff0000"}
                         {case "reserved"}
@@ -58,13 +55,16 @@
                     </script>  
                 {/for}
 
+            {var $reservationArray = [1,2,3]}
+
             <script>
                 var reservationArray = [];
-
-                function dosomething(seatID, state){
+                
+                
+                function clickOnSeat(seatID, state){
                     if (state == "available") {
                         if (!reservationArray.includes(seatID)) {
-                            if (reservationArray.length < 2) {
+                            if (reservationArray.length < 6) {
                                 reservationArray.push(seatID);
                                 
                                 document.getElementById(seatID).style.backgroundColor = "#00ffff";
@@ -77,15 +77,47 @@
                             }
                             document.getElementById(seatID).style.backgroundColor = "#D1D7E0";
                         }
+                        reservationArray.sort();
                     }
                     document.getElementById("reservedSeats").innerHTML = reservationArray;
                     document.getElementById("suma").innerHTML = reservationArray.length * {$event->price}
+
+                   
+                    
+                    if (reservationArray.length == 0) {
+                        document.getElementById("continueButton").style.color = "#777777";
+                        var link = document.getElementById("continueButtonLink");
+                        var myHref = "#";
+                        link.setAttribute("href", myHref);
+                        
+                    } else {
+                        // KLIKNI A POTVRD REZERVACIU // // // // // 
+                        document.getElementById("continueButton").style.color = 'black';
+                        var link = document.getElementById("continueButtonLink");
+
+                        var arrStr = encodeURIComponent(JSON.stringify(reservationArray));
+
+                        
+                        
+
+                        var myHref = {link Event:reserve} + "?reservationArray=" + reservationArray.join("%") + "%!" + {$event->id_cultural_event};
+
+                        
+                        
+                        document.getElementById("nieco").innerHTML = myHref;
+                        
+
+
+
+                        link.setAttribute("href", myHref);
+                    }
                 }
 
-                function getReservationArray() {
-                    return reservationArray;
-                }
             </script>
+
+            
+
+            
 
 
                 <div class="column">
@@ -99,12 +131,18 @@
 
 
 
-    <div>
-        <h2>Rezervované sedadlá:</h2>
-        <div id="reservedSeats">0</div>
-    </div>
 
     <div>
+        <h2>Rezervované sedadlá:</h2>
+        <div id="reservedSeats">
+        </div>
+    </div>
+
+
+    <div id="nieco">
+    </div>
+
+    <div id="nieco1">
     </div>
 
     <div>
@@ -112,9 +150,11 @@
         <div id="suma">0</div>
     </div>
 
-    <button href="{link Movie:delete $piece_of_work->id_piece_of_work}">
-        Vybrať spôsob platby
-    </button>
+    <a id="continueButtonLink" href="#">
+        <button id="continueButton" style="color:#777777">
+            Vybrať spôsob platby
+        </button>
+    </a>
 
     
     
