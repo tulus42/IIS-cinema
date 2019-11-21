@@ -134,8 +134,23 @@ final class UserManager implements Nette\Security\IAuthenticator
 	 */
 	public function deleteUser(string $username)
 	{
-		$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->delete();
-		
+		$current_user = $this->getUser($username);
+		if($current_user->rights == 'admin'){
+			$admin_count = $this->getAdminCount();
+			// there always has to be 1 admin
+			if($admin_count > 1){
+				$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->delete();
+			}
+		}
+		else{
+			$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->delete();
+		}
+	}
+
+	public function getAdminCount()
+	{
+		$result = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ROLE, 'admin')->fetchAll();
+		return count($result);
 	}
 
 	public function getUsers(string $role)

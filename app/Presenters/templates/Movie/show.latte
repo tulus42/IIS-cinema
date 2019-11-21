@@ -1,6 +1,6 @@
 {block content}
     {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-	    <p class="pull-right"><a href="{link Movie:edit $piece_of_work->id_piece_of_work}">Editovať dielo</a></p>
+	    <p class="pull-right"><a class="admin-button" href="{link Movie:edit $piece_of_work->id_piece_of_work}">Editovať dielo</a></p>
 	{/if}
 
     <div class="column8">
@@ -38,7 +38,7 @@
                             {foreach $starsIn as $i}
                                 <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
                             {/foreach}
-                            {if $user->isLoggedIn() and $user->isInRole('admin')}
+                            {if $user->isLoggedIn() and ($user->isInRole('admin') or $user->isInRole('redactor'))}
                             <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
                             {/if}
                         </h3>
@@ -63,11 +63,11 @@
                 {foreach $events as $event}
                     <a class="event" href="{link Event:show $event->id_cultural_event}">
                             {$event->date|date: '%d. %m. %Y'}<br>
-                            {$event->time|date: '%H:%M'}
+                            {$event->time|date: '%H:%I'}
                     </a>
                 {/foreach}
 
-                {if $user->isLoggedIn() and $user->isInRole('admin')}
+                {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
                 <a class="event" href="{link Event:add $piece_of_work->id_piece_of_work}">
                     Pridať<br/>predstavenie
                 </a>

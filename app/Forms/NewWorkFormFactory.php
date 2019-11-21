@@ -30,9 +30,27 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-text')
             ->setRequired();
 
-        $form->addText('genre', '*Žáner:')
+        $allGenres = array(
+            'akčný',
+            'dobrodružný',
+            'dráma',
+            'fantasy',
+            'filozofický',
+            'historický',
+            'horor',
+            'komédia',
+            'krimi',
+            'mysteriózny',
+            'politický',
+            'romantický',
+            'triller',
+            'vedecký',
+            'western'
+        );
+
+        $form->addSelect('genre', '*Žáner:')
             ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setItems($allGenres, true);
 
         $form->addSelect('type', '*Typ', [
             'film' => 'film',
@@ -41,6 +59,11 @@ final class NewWorkFormFactory{
             'iné' => 'iné'
         ])
             ->setHtmlAttribute('class', 'form-text');
+
+        $form->addUpload('poster', '*Plagát')
+            //->setRequired(true)
+            ->addRule(Form::IMAGE, 'Plagát musí byť JPEG, PNG')
+            ->setHtmlAttribute('class', 'form-file');
 
         $form->addText('picture', '*URL obrázka')
             ->setHtmlAttribute('class', 'form-text')
@@ -58,11 +81,38 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-text')
             ->addRule(Form::RANGE, 'Hodnotenie musí byť v rozmedzí 0 až 100', [0, 100]);
 
+
         $form->addSubmit('send', 'Pridať')
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
-            $this->workManager->addWork($values->name, $values->genre, $values->type, $values->picture, $values->description, $values->duration, $values->rating);
+            $current_poster = $values->poster;
+            try{
+                //$values->poster = $this->imageStorage->SaveUpload($current_poster);
+            }
+            catch(\Exception $e){
+                dump('ERROR!');
+            }
+
+            $allGenres = array(
+                'akčný',
+                'dobrodružný',
+                'dráma',
+                'fantasy',
+                'filozofický',
+                'historický',
+                'horor',
+                'komédia',
+                'krimi',
+                'mysteriózny',
+                'politický',
+                'romantický',
+                'triller',
+                'vedecký',
+                'western'
+            );
+
+            $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->picture, $values->description, $values->duration, $values->rating);
             $onSuccess();
         };
 

@@ -1,7 +1,7 @@
 {block content}
 
-<div class="main-block-register" align="center">
-    <p class="pull-right"><a href="{link UserManagment:edit $this_profile->username}">Upraviť profil</a></p>
+<div class="show-block" align="center">
+    <p class="pull-right"><a class="admin-button" href="{link UserManagment:edit $this_profile->username}">Upraviť profil</a></p>
     <br>
     <h1>Profil</h1>
     <br>
@@ -14,6 +14,9 @@
     <h4>Telefónne číslo: {$this_profile->phone_number}<h4>
     {/if}
     <h4>E-mail: {$this_profile->e_mail}<h4>
+
+    <br>
+    <p class="pull-right"><a class="admin-button" href="#">Zmazať profil</a></p>
 
 </div>
 {block}

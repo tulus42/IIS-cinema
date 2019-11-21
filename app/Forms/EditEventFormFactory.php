@@ -31,9 +31,11 @@ class EditEventFormFactory
         $this->hallManager = $hallManager;
     }
 
-    public function createEventForm(int $workId, callable $onSuccess): Form
+    public function createEditEventForm(int $eventId, callable $onSuccess): Form
     {
         $form = $this->factory->create();
+
+        $currentEvent = $this->eventManager->getEvent($eventId);
 
         $form->addText('dateOfEvent', '*Dátum konania:')
 			->setType('Date')
@@ -51,18 +53,34 @@ class EditEventFormFactory
             ->addRule(Form::FLOAT, 'Cena musí byť číslo')
             ->setRequired();
 
+        /*
         $allHalls = $this->hallManager->getAllHalls();
-
         $form->addSelect('hall', '*Hala:')
             ->setHtmlAttribute('class', 'form-text')
-            ->setItems($allHalls, true);
+            ->setItems($allHalls);
+            */
 
-        $form->addSubmit('send', 'Pridať')
+        $formating_date = $currentEvent->date;
+        $result_date = $formating_date->format('Y-m-d');
+
+        $formating_time = $currentEvent->time;
+        $result_time = $formating_time->format('h:i');
+        //dump(Date(($currentEvent->time)->format('h:i')));
+
+        $form->setDefaults([
+            'price' => (float) $currentEvent->price,
+            //'hall' => $currentEvent->hall_num,
+            'dateOfEvent' => Date($result_date),
+            //'timeOfEvent' => DateTime(($currentEvent->time)->format('h:i'))
+        ]);
+
+        $form->addSubmit('send', 'Uložiť')
             ->setHtmlAttribute('class', 'form-button');
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($workId, $onSuccess): void {
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($eventId, $onSuccess): void {
             try{
-                $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, (int) $values->price, $workId, $values->hall);
+                $this->eventManager->editEvent($eventId, $values->dateOfEvent, $values->timeOfEvent, (int) $values->price);
                 $onSuccess();
             } catch(Model\DuplicateNameException $e) {
                 // TODO DUPLICATE ERROR

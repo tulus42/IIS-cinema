@@ -1,6 +1,6 @@
 {block content}
     {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-        <a class="pull-right" href="{link Event:delete $event->id_cultural_event}">Zmazať predstavenie</a>
+        <a class="pull-right admin-button" href="{link Event:delete $event->id_cultural_event}">Zmazať predstavenie</a>
     {/if}
 
 
@@ -8,7 +8,7 @@
         {$piece_of_work->name},
         Sála {$event->hall_num},
         {$event->date|date: '%d. %m. %Y'},
-        {$event->time|date: '%H:%i'}
+        {$event->time|date: '%H:%I'}
     
     </h1>
 

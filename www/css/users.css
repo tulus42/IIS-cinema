@@ -2,8 +2,10 @@
     text-decoration: none;
     color:  #D1D7E0;
     padding:10px;
-    background-color:#205ed1;
+    background-color: #1dc0fd;
     border-radius:12px;
+    font-family: 'Nunito', sans-serif;
+    color: #3f4547;
 }
 
 .role-par{
@@ -12,7 +14,8 @@
 }
 
 .role-button:hover{
-    background-color: #091a6a;
+    background-color:#205ed1; 
+    color: #D1D7E0;
 }
 
 .user-table {
@@ -55,7 +58,7 @@
 }
 
 .username:hover{
-    padding: 8px;
+    padding: 4px;
     border-radius: 12px;
     background: #205ed1;
     color: #D1D7E0;
@@ -63,12 +66,14 @@
 
 .delete-user-button{
     text-decoration: none;
-    background: #205ed1;
+    background-color: #1dc0fd;
     color:  #D1D7E0;
     margin: 5px;
     border-radius: 50%;
+    color: #3f4547;
 }
 
 .delete-user-button:hover{
-    background-color: #091a6a;
+    background-color:#205ed1; 
+    color: #D1D7E0;
 }

@@ -14,6 +14,20 @@ class ComposerStaticInit02a4daa12af974eb5bd9bc3204fd14f5
         'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'C' => 
+        array (
+            'Contributte\\ImageStorage\\' => 25,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Contributte\\ImageStorage\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ublaboo/image-storage/src',
+        ),
+    );
+
     public static $classMap = array (
         'App\\Bootstrap' => __DIR__ . '/../..' . '/app/Bootstrap.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
@@ -402,6 +416,8 @@ class ComposerStaticInit02a4daa12af974eb5bd9bc3204fd14f5
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit02a4daa12af974eb5bd9bc3204fd14f5::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit02a4daa12af974eb5bd9bc3204fd14f5::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInit02a4daa12af974eb5bd9bc3204fd14f5::$classMap;
 
         }, null, ClassLoader::class);
