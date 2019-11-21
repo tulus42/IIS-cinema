@@ -53,4 +53,6 @@ class ReservationManager
             self::COLUMN_SEAT_6 => $seat6,
         ]);
     }
+
+    
 }
