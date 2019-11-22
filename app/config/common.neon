@@ -44,6 +44,7 @@ services:
 	- App\Forms\NewWorkFormFactory
 	- App\Forms\SignInFormFactory
 	- App\Forms\SignUpFormFactory
+	- App\Forms\NewReservationFormFactory
 	router: App\Router\RouterFactory::createRouter
 
 

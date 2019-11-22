@@ -1,0 +1,28 @@
+.eventHeaderContainer{
+    text-align: center;
+    background-color: #D1D7E0;
+    border-radius: 12px;
+    border: solid #636b6f 3px;
+    margin: 30px;
+    padding-top: 30px;
+
+}
+
+.eventSeatsContainer{
+    background-color: #D1D7E0;
+    border-radius: 2px;
+    border: solid #636b6f 2px;
+    padding:30px;
+    margin-top: 30px;
+}
+
+.eventSeatHeader{
+    text-align: left;
+}
+
+.eventSeatColumn{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+

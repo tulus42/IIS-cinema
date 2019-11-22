@@ -11,7 +11,7 @@ DONE: 5. V homepage zobrazovať iba tie filmy, čo majú aj event
 DONE: Not necessary anayways 11. V cultural_event zmeniť primary key z id_cultural_event na (date, time, hall_num);
 12. Kontrola dátumu eventu
 13. Zredukovanie ťahania z databáze v presentery - spraviť na to funkciu v modeloch
-14. V databázi zmeniť kľúče stars_in, oba sú primárne a každý je zároveň cudzím v inej tabuľke, nepotrebujeme teda stars_in_id, zároveň to zaručí unikátnosť
+DONE: 14. V databázi zmeniť kľúče stars_in, oba sú primárne a každý je zároveň cudzím v inej tabuľke, nepotrebujeme teda stars_in_id, zároveň to zaručí unikátnosť
 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
 
 EXTRA IDEAS:
