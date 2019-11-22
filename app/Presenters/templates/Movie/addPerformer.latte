@@ -14,7 +14,7 @@
             {foreach $already_stars_in as $stars_in}
             <tr>
                 <td class="other-columns"><a href="{link Performer:profile $stars_in->performer_id}" class="username">{$stars_in->surname} {$stars_in->name}</a></td>
-                <td class="other-columns"><button class="delete-user-button" onclick="removePerformer({$stars_in->performer_id}, {$work})">&nbsp;-&nbsp;</button></td>
+                <td class="other-columns"><a href="{link Movie:removePerf $work, $stars_in->performer_id}" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
             </tr>
             {/foreach}
         
@@ -38,7 +38,7 @@
             {foreach $doesnt_star_in as $not_in}
             <tr>
                 <td class="other-columns"><a href="{link Performer:profile $not_in->performer_id}" class="username">{$not_in->surname} {$not_in->name}</a></td>
-                <td class="other-columns"><button class="delete-user-button" onclick="addPerformer({$not_in->performer_id}, {$work})">&nbsp;+&nbsp;</button></td>
+                <td class="other-columns"><a href="{link Movie:addPerf $work, $not_in->performer_id}" class="delete-user-button">&nbsp;&nbsp;+&nbsp;&nbsp;</a></td>
             </tr>
             {/foreach}
         {/if}
@@ -46,20 +46,6 @@
     </table>
 </div>
 
-<p id="fungujem"></p>
 
 
-<script>
-    function addPerformer(performerID, movieID){
-        document.getElementById('fungujem').innerHTML = 'Pridavam ' + performerID + ' z ' + movieID;
-
-        //location.reload();
-    }
-
-    function removePerformer(performerID, movieID){
-        document.getElementById('fungujem').innerHTML = 'Odoberam ' + performerID + ' z ' + movieID;
-        //location.reload();
-    }
-</script>
-{/block}
 

@@ -121,12 +121,83 @@ class MoviePresenter extends BasePresenter
         $this->template->starsInManager = $this->starsInManager;
 
         $this->template->work = $this->getParameter('id_piece_of_work');
+        
     }
 
     public function renderAllMovies(): void
     {
         $this->template->movies = $this->database->table('cultural_piece_of_work')->order('name ASC');
     }
+
+    public function createComponentAddPerf()
+    {
+        $form = new Form;
+        $form->addSubmit('delete', 'Áno')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'AddP'];
+        $form->addSubmit('cancel', 'Nie')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'goBack'];
+		$form->addProtection();
+		return $form;
+    }
+
+    public function createComponentRemovePerf()
+    {
+        $form = new Form;
+        $form->addSubmit('delete', 'Áno')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'RemoveP'];
+        $form->addSubmit('cancel', 'Nie')
+            ->setHtmlAttribute('class', 'form-button')
+			->onClick[] = [$this, 'goBack'];
+		$form->addProtection();
+		return $form;
+    }
+
+
+    public function renderRemovePerf($work_id, $perf_id)
+    {
+        ;
+    }
+
+    public function renderAddPerf($work_id, $perf_id)
+    {
+        ;
+    }
+
+    public function goBack()
+    {
+        $param = $this->getParameter('work_id');
+        $this->redirect('AddPerformer', $param);
+    }
+
+    public function AddP()
+    {
+        $work_id = $this->getParameter('work_id');
+        $perf_id = $this->getParameter('perf_id');
+        $this->starsInManager->addPerformer((int) $perf_id, (int) $work_id);
+        $this->goBack();
+    }
+    
+    public function RemoveP()
+    {
+        //dump($work_id);
+        //dump($perf_id);
+        $work_id = $this->getParameter('work_id');
+        $perf_id = $this->getParameter('perf_id');
+        $this->starsInManager->removePerformer((int) $perf_id, (int) $work_id);
+        $this->goBack();
+        //$this->redirect('AddPerformer', $work_id);
+        //$this->redirect($this);
+    }
+
+    /*
+    public function renderAddPerf($work_id, $perf_id)
+    {
+        $this->starsInManager->addPerformer((int) $perf_id, (int) $work_id);
+        //$this->redirect('AddPerformer', $work_id);
+    }*/
 }
 
 

@@ -30,14 +30,8 @@ class StarsInManager
 
     public function addPerformer(int $performer, int $work)
     {
-        try{
-            $this->database->table(self::TABLE_NAME)->insert([
-                self::COLUMN_PERFORMER => $performer,
-                self::COLUMN_WORK => $work
-            ]);
-        } catch (Nette\Database\UniqueConstraintViolationException $e) {
-			throw new DuplicateNameException;
-		}
+        
+        $this->database->query("INSERT into stars_in values ($performer, $work);");
     }
 
     public function removePerformer(int $performer, int $work)
