@@ -24,12 +24,16 @@ class MoviePresenter extends BasePresenter
     /** @var Model\WorkManager */
     private $workManager;
 
-    public function __construct(Nette\Database\Context $database, Forms\NewWorkFormFactory $newWorkFactory, Model\WorkManager $workManager, Forms\EditWorkFormFactory $editWorkFactory)
+    /** @var Model\StarsInManager */
+    private $starsInManager;
+
+    public function __construct(Nette\Database\Context $database, Forms\NewWorkFormFactory $newWorkFactory, Model\WorkManager $workManager, Forms\EditWorkFormFactory $editWorkFactory, Model\StarsInManager $starsInManager)
     {
         $this->database = $database;
         $this->newWorkFactory = $newWorkFactory;
         $this->workManager = $workManager;
         $this->editWorkFactory = $editWorkFactory;
+        $this->starsInManager = $starsInManager;
     }
 
     public function renderShow(int $id_piece_of_work): void
@@ -102,7 +106,7 @@ class MoviePresenter extends BasePresenter
     
     public function renderAddPerformer(int $id_piece_of_work)
     {
-        $this->template->already_stars_in = $this->database->query('SELECT performer.name, performer.surname
+        $this->template->already_stars_in = $this->database->query('SELECT performer.performer_id, performer.name, performer.surname
         FROM performer
         JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ' ORDER BY surname ASC, name ASC;;');
 
@@ -113,6 +117,10 @@ class MoviePresenter extends BasePresenter
             FROM stars_in
             WHERE stars_in.id_piece_of_work = ' . $id_piece_of_work . ')
             ORDER BY surname ASC, name ASC;');
+
+        $this->template->starsInManager = $this->starsInManager;
+
+        $this->template->work = $this->getParameter('id_piece_of_work');
     }
 
     public function renderAllMovies(): void

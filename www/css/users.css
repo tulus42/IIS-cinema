@@ -71,6 +71,8 @@
     margin: 5px;
     border-radius: 50%;
     color: #3f4547;
+    border:none;
+    padding: 5px;
 }
 
 .delete-user-button:hover{

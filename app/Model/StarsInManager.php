@@ -20,7 +20,6 @@ class StarsInManager
 
     private const
         TABLE_NAME = 'stars_in',
-        COLUMN_ID = 'stars_in_id',
         COLUMN_PERFORMER = 'performer_id',
         COLUMN_WORK = 'id_piece_of_work';
 
@@ -29,9 +28,21 @@ class StarsInManager
         $this->database = $database;
     }
 
-    public function addStarsIn(int $performer, int $work)
+    public function addPerformer(int $performer, int $work)
     {
+        try{
+            $this->database->table(self::TABLE_NAME)->insert([
+                self::COLUMN_PERFORMER => $performer,
+                self::COLUMN_WORK => $work
+            ]);
+        } catch (Nette\Database\UniqueConstraintViolationException $e) {
+			throw new DuplicateNameException;
+		}
+    }
 
+    public function removePerformer(int $performer, int $work)
+    {
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_PERFORMER, $performer)->where(self::COLUMN_WORK, $work)->delete();
     }
 
     public function deletePerformer(int $performer)
