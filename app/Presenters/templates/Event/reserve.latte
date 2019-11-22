@@ -1,5 +1,36 @@
 {block content}
-    {foreach $seatArray as $seat}
-        {$seat[0]},{$seat[1]}
-    {/foreach}
+    <div class="eventHeaderContainer">
+        <h1>
+            {$piece_of_work->name},
+            Sála {$event->hall_num},
+            {$event->date|date: '%d. %m. %Y'},
+            {$event->time|date: '%H:%I'}
+        </h1>
+        
+        
+    
+
+        <div class="eventSeatsContainer">
+            <div class="one-hall-name">
+                <h2>Rezervované sedadlá</h2>
+            </div>
+
+            <div class="one-hall-capacity">
+                <h2>Rad/Sedadlo</h2>
+            </div>
+
+            
+
+
+        </div>  
+
+    </div>  
+
+    {control newReservationForm}
+
+    <div>
+        <button id="Potvrdenie">
+            Potvrdiť rezerváciu
+        </button>
+    </div>
 {/block}

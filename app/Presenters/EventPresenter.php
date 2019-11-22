@@ -25,15 +25,19 @@ class EventPresenter extends BasePresenter
     /** @var Model\SeatManager */
     private $seatManager;
 
+    /** @var Forms\newReservationFormFactory */
+    private $newReservationFormFactory;
+
     
 
-    public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager, Model\SeatManager $seatManager, Forms\EditEventFormFactory $editEventFactory)
+    public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager, Model\SeatManager $seatManager, Forms\EditEventFormFactory $editEventFactory, Forms\newReservationFormFactory $newReservationFormFactory)
     {
         $this->database = $database;
         $this->newEventFactory = $newEventFactory;
         $this->eventManager = $eventManager;
         $this->seatManager = $seatManager;
         $this->editEventFactory = $editEventFactory;
+        $this->newReservationFormFactory = $newReservationFormFactory;
     }
 
     public function renderEdit(int $event_id)
@@ -123,24 +127,30 @@ class EventPresenter extends BasePresenter
         $tmpSeatArray = [];
         $seatArray = [];
 
-        $tmpSeatArray=explode("%!", $reservationArray);
-        $eventID = $tmpSeatArray[1];
+        $tmpSeatArray=explode("q", $reservationArray);
+        $eventID = array_pop($tmpSeatArray);
 
-        $tmpSeatArray=explode("%", $tmpSeatArray[0]);        
-        
+
         foreach($tmpSeatArray as $seat) {
             array_push($seatArray, explode(":", $seat));
         }
+
         
         $this->template->seatArray = $seatArray;
-
-
         
         $event = $this->database->table('cultural_event')->get($eventID);
-        
         $this->template->event = $event;
 
+        $piece_of_work = $this->database->table('cultural_piece_of_work')->get($event->id_piece_of_work);
+        $this->template->piece_of_work = $piece_of_work;
     }
 
    
+
+    protected function createComponentNewReservationForm(): Form
+    {
+        return $this->newReservationFormFactory->createReservationForm(function (): void{
+            
+        });
+    }
 }
