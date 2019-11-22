@@ -30,8 +30,11 @@ class StarsInManager
 
     public function addPerformer(int $performer, int $work)
     {
-        
-        $this->database->query("INSERT into stars_in values ($performer, $work);");
+        try{
+            $this->database->query("INSERT into stars_in values ($performer, $work);");
+        } catch (Nette\Database\UniqueConstraintViolationException $e) {
+			;
+		}
     }
 
     public function removePerformer(int $performer, int $work)
@@ -44,7 +47,7 @@ class StarsInManager
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_PERFORMER, $performer)->delete();
     }
 
-    public function deleteMovie(int $work)
+    public function deleteWork(int $work)
     {
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_WORK, $work)->delete();
     }

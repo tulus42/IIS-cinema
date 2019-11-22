@@ -30,11 +30,15 @@ class WorkManager
 
     /** @var Model\EventManager */
     private $eventManager;
+
+    /** @var Model\StarsInManager */
+    private $starsInManager;
     
-    public function __construct(Nette\Database\Context $database, Model\EventManager $eventManager)
+    public function __construct(Nette\Database\Context $database, Model\EventManager $eventManager, Model\StarsInManager $starsInManager)
 	{
 		$this->database = $database;
         $this->eventManager = $eventManager;
+        $this->starsInManager = $starsInManager;
     }
     
     /**
@@ -79,6 +83,7 @@ class WorkManager
     public function deleteWork(string $id)
     {
         //$work = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->fetch();
+        $this->starsInManager->deleteWork((int) $id);
         $events = $this->eventManager->getAllEvents($id);
         foreach($events as $event){
             $this->eventManager->deleteEvent($event->id_cultural_event);

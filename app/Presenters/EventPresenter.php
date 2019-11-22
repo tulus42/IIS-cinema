@@ -15,6 +15,9 @@ class EventPresenter extends BasePresenter
     
     /** @var Forms\NewEventFormFactory */
     private $newEventFactory;
+
+    /** @var Forms\EditEventFormFactory */
+    private $editEventFactory;
     
     /** @var Model\EventManager */
     private $eventManager;
@@ -24,12 +27,13 @@ class EventPresenter extends BasePresenter
 
     
 
-    public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager, Model\SeatManager $seatManager)
+    public function __construct(Nette\Database\Context $database, Forms\NewEventFormFactory $newEventFactory, Model\EventManager $eventManager, Model\SeatManager $seatManager, Forms\EditEventFormFactory $editEventFactory)
     {
         $this->database = $database;
         $this->newEventFactory = $newEventFactory;
         $this->eventManager = $eventManager;
         $this->seatManager = $seatManager;
+        $this->editEventFactory = $editEventFactory;
     }
 
     public function renderEdit(int $event_id)
@@ -37,6 +41,13 @@ class EventPresenter extends BasePresenter
 
     }
 
+    public function createComponentEditEventForm(): Form
+    {
+        $event_id = (int) $this->getParameter('event_id');
+        return $this->editEventFactory->createEditEventForm($event_id, function (): void{
+            $this->redirect('Event:show', (int) $this->getParameter('event_id'));
+        });
+    }
 
     public function createComponentNewEventForm(): Form
     {

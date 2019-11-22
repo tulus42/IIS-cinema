@@ -11,6 +11,7 @@ use Nette\Application\UI\Form;
 final class NewWorkFormFactory{
     use Nette\SmartObject;
 
+
     /** @var FormFactory */
     private $factory;
     

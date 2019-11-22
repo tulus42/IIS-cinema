@@ -8,6 +8,7 @@ use App\Model;
 use Nette;
 use Nette\Application\UI\Form;
 use App\Presenters;
+use Nette\Utils\DateTime;
 
 class EditEventFormFactory
 {
@@ -52,27 +53,20 @@ class EditEventFormFactory
             ->addRule(Form::MIN, 'Cena nesmie byť záporné číslo', 0)
             ->addRule(Form::FLOAT, 'Cena musí byť číslo')
             ->setRequired();
-
-        /*
-        $allHalls = $this->hallManager->getAllHalls();
-        $form->addSelect('hall', '*Hala:')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setItems($allHalls);
-            */
-
+        
         $formating_date = $currentEvent->date;
         $result_date = $formating_date->format('Y-m-d');
 
+        
         $formating_time = $currentEvent->time;
-        $result_time = $formating_time->format('h:i');
-        //dump(Date(($currentEvent->time)->format('h:i')));
-
+        $result_time = $formating_time->format('%h:%i');
+     
         $form->setDefaults([
             'price' => (float) $currentEvent->price,
-            //'hall' => $currentEvent->hall_num,
             'dateOfEvent' => Date($result_date),
-            //'timeOfEvent' => DateTime(($currentEvent->time)->format('h:i'))
+            'timeOfEvent' => $result_time
         ]);
+        
 
         $form->addSubmit('send', 'Uložiť')
             ->setHtmlAttribute('class', 'form-button');

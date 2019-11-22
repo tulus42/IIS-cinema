@@ -129,6 +129,9 @@
         {/for}
     </div>
 
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+        <a class="pull-right admin-button" href="{link Event:edit $event->id_cultural_event}">Editovať predstavenie</a>
+    {/if}
 
 
 
@@ -155,6 +158,7 @@
             Vybrať spôsob platby
         </button>
     </a>
+
 
     
     

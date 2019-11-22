@@ -2,80 +2,78 @@
     {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
 	    <p class="pull-right"><a class="admin-button" href="{link Movie:edit $piece_of_work->id_piece_of_work}">Editovať dielo</a></p>
 	{/if}
-
-    <div class="column8">
-        <div class="one-movie-container">
+    
+    <div class="one-movie-container">
+        
+        <div class="row">
+            <h1 class="one-movie-title">{$piece_of_work->name}</h1>
             
-            <div class="row">
-                <h1 class="one-movie-title">{$piece_of_work->name}</h1>
-                
-            <div class="row">
+        <div class="row">
 
-            <div class="row">
-                <div class="column3">
-                    <img class="one-movie-image" src={$piece_of_work->picture}>
-                </div>
-
-                <div class="column5">
-                    <div class="row">
-                        <h2>Žáner: {$piece_of_work->genre}</h2>
-                    </div>
-
-                    <div class="row">
-                        <h2>Dĺžka: {$piece_of_work->duration} min.</h2>
-                    </div>
-
-                    <div class="row">
-                        <h2>Typ: {$piece_of_work->type}</h2>
-                    </div>
-
-                    <div class="row">
-                        <h2>Hodnotenie: {$piece_of_work->rating}%</h2>
-                    </div>
-
-                    <div class="row">
-                        <h3>Účinkujú: 
-                            {foreach $starsIn as $i}
-                                <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
-                            {/foreach}
-                            {if $user->isLoggedIn() and ($user->isInRole('admin') or $user->isInRole('redactor'))}
-                            <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
-                            {/if}
-                        </h3>
-                    </div>                    
-                </div>
+        <div class="row">
+            <div class="column3">
+                <img class="one-movie-image" src={$piece_of_work->picture}>
             </div>
 
-            <div class="row">
-                
-                <div class="one-movie-description">
-                    <h2>Popis:</h2>
+            <div class="column5">
+                <div class="row">
+                    <h2>Žáner: {$piece_of_work->genre}</h2>
                 </div>
-            </div>
-            <div class="row">
-                <div class="one-movie-description">
-                    <p>{$piece_of_work->description}</p>
 
-                <div>
-            </div>
-            
-            <div class="row">
-                {foreach $events as $event}
-                    <a class="event" href="{link Event:show $event->id_cultural_event}">
-                            {$event->date|date: '%d. %m. %Y'}<br>
-                            {$event->time|date: '%H:%I'}
-                    </a>
-                {/foreach}
+                <div class="row">
+                    <h2>Dĺžka: {$piece_of_work->duration} min.</h2>
+                </div>
 
-                {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-                <a class="event" href="{link Event:add $piece_of_work->id_piece_of_work}">
-                    Pridať<br/>predstavenie
-                </a>
-                {/if}
+                <div class="row">
+                    <h2>Typ: {$piece_of_work->type}</h2>
+                </div>
+
+                <div class="row">
+                    <h2>Hodnotenie: {$piece_of_work->rating}%</h2>
+                </div>
+
+                <div class="row">
+                    <h3>Účinkujú: 
+                        {foreach $starsIn as $i}
+                            <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
+                        {/foreach}
+                        {if $user->isLoggedIn() and ($user->isInRole('admin') or $user->isInRole('redactor'))}
+                        <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
+                        {/if}
+                    </h3>
+                </div>                    
             </div>
         </div>
-        {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-            <a class="pull-right event" href="{link Movie:delete $piece_of_work->id_piece_of_work}">Zmazať kultúrne dielo</a>
-        {/if}
-	</div>
+
+        <div class="row">
+            
+            <div class="one-movie-description">
+                <h2>Popis:</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="one-movie-description">
+                <p>{$piece_of_work->description}</p>
+
+            <div>
+        </div>
+        
+        <div class="row">
+            {foreach $events as $event}
+                <a class="event" href="{link Event:show $event->id_cultural_event}">
+                        {$event->date|date: '%d. %m. %Y'}<br>
+                        {$event->time|date: '%H:%I'}
+                </a>
+            {/foreach}
+
+            {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+            <a class="event" href="{link Event:add $piece_of_work->id_piece_of_work}">
+                Pridať<br/>predstavenie
+            </a>
+            {/if}
+        </div>
+    </div>
+    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+        <a class="pull-right event" href="{link Movie:delete $piece_of_work->id_piece_of_work}">Zmazať kultúrne dielo</a>
+    {/if}
 {/block}

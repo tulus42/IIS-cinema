@@ -73,8 +73,7 @@ class MoviePresenter extends BasePresenter
     protected function createComponentNewWorkForm(): Form
     {
         return $this->newWorkFactory->createWorkForm(function (): void{
-            $this->restoreRequest($this->backlink);
-            $this->redirect('Homepage:default');
+            $this->redirect('Movie:allMovies');
         });
     }
 
