@@ -10,9 +10,30 @@
         <h1 class="cinema-title">Zoznam filmov</h1>
     </div>
 	<div class="show-block">
-	{foreach $movies as $movie}
-			<p><a  class="movie-list" href="{link Movie:show $movie->id_piece_of_work}">{$movie->name}</a></p>
-	{/foreach}
+	<table class="user-table">
+        <thead>
+        <tr>
+            <th>Názov</th>
+            <th>Žáner</th>
+			<th>Hodnotenie</th>
+        </tr>
+        </thead>
+		
+        <tbody>
+			{foreach $movies as $movie}
+                <tr>
+                    <td><a class="username" href="{link Movie:show $movie->id_piece_of_work}">{$movie->name}</a></td>
+                    <td class="other-columns">{$movie->genre}</td>
+					{if $movie->rating == null}
+					<td class="other-columns">N/A</td>
+					{else}
+					<td class="other-columns">{$movie->rating}%</td>
+					{/if}
+
+                </tr>
+			{/foreach}
+        </tbody>
+    </table>
 	</div>
 	{else}
 		<h1 class="cinema-title">Momentálne sa v databáze nenchádzajú žiadne filmy</h1>

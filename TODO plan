@@ -1,8 +1,8 @@
-3. Vygenerovanie sedadiel pri pridaní eventu ?
+3. Vygenerovanie sedadiel pri pridaní eventu ? (buď teda natvrdo pridať sedadlá v DB alebo to generovanie spraviť na databázovej vrstve)
 4. Cyklické mazanie
 DONE: 5. V homepage zobrazovať iba tie filmy, čo majú aj event
 6. Zoznamov filmov ako je na zozname sál
-TODO TODAY: 7. Po pridaní filmu to admina presmeruje na view page toho filmu aby mohol rovno aj predstavenie pridať
+7. Po pridaní filmu to admina presmeruje na view page toho filmu aby mohol rovno aj predstavenie pridať
 8. Zmeniť pridávanie obrázkov z URL na výber obrázku z počítača
 9. Ofašovať pridávanie do tabuľky a kontrolu s primárnym kľúčom
 DONE: 10. Prerobiť tlačítka pre sály
@@ -10,8 +10,8 @@ DONE: Not necessary anayways 11. V cultural_event zmeniť primary key z id_cultu
 12. Kontrola dátumu eventu (či sa nesnaží pridať event v minulom čase)
 13. Zredukovanie ťahania z databáze v presentery - spraviť na to funkciu v modeloch
 DONE: 14. V databázi zmeniť kľúče stars_in, oba sú primárne a každý je zároveň cudzím v inej tabuľke, nepotrebujeme teda stars_in_id, zároveň to zaručí unikátnosť
-15. bolo zmazané delete z eventu omylom, dodať + formátovanie
-16. Pri edit event sa nenačítava čas
+DONE: 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
+DONE: 16. Pri edit event sa nenačítava čas
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu
