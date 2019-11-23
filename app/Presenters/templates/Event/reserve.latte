@@ -17,6 +17,11 @@
 
             <div class="one-hall-capacity">
                 <h2>Rad/Sedadlo</h2>
+                {foreach $seatArray as $seat}
+                    Rad:{$seat->row} Sedadlo:{$seat->column}<br>
+                    
+
+                {/foreach}
             </div>
 
             

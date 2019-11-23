@@ -122,35 +122,47 @@ class EventPresenter extends BasePresenter
 		$this->redirect("Event:show", $eventId);
     }
     
-    public function renderReserve($reservationArray): void
+    public function renderReserve($reservationArray, $event): void
     {
-        $tmpSeatArray = [];
-        $seatArray = [];
+        $event = $this->database->table('cultural_event')->get($event);
+        $this->template->event = $event;       
 
-        $tmpSeatArray=explode("q", $reservationArray);
-        $eventID = array_pop($tmpSeatArray);
-
-
-        foreach($tmpSeatArray as $seat) {
-            array_push($seatArray, explode(":", $seat));
-        }
-
-        
-        $this->template->seatArray = $seatArray;
-        
-        $event = $this->database->table('cultural_event')->get($eventID);
-        $this->template->event = $event;
+        $this->template->seatArray = $this->parseReservationArray($reservationArray, $event->id_cultural_event);
 
         $piece_of_work = $this->database->table('cultural_piece_of_work')->get($event->id_piece_of_work);
         $this->template->piece_of_work = $piece_of_work;
     }
-
    
 
     protected function createComponentNewReservationForm(): Form
     {
-        return $this->newReservationFormFactory->createReservationForm(function (): void{
+        $eventID = (int) $this->getParameter('event');
+        $event = $this->database->table('cultural_event')->get($eventID);
+
+        $work = $this->database->table('cultural_piece_of_work')->where('id_piece_of_work = ?', $event->id_piece_of_work)->fetch();
+
+        $seats = $this->getparameter('reservationArray');
+        $seats = $this->parseReservationArray($seats, $eventID);
+        
+        return $this->newReservationFormFactory->createReservationForm($work, $event, $seats, function (): void{
             
         });
+    }
+
+
+    public function parseReservationArray($reservationArray, $eventID){
+        $tmpSeatArray = [];
+        $seatArray = [];
+
+        $tmpSeatArray=explode("q", $reservationArray);
+
+
+        foreach($tmpSeatArray as $seat) {
+            $tmpSeat = explode(":", $seat);
+            $tmpSeat = $this->database->table('seat')->where('row = ? AND column = ? AND cultural_event_id = ?', $tmpSeat[0], $tmpSeat[1], $eventID)->fetch();
+            array_push($seatArray, $tmpSeat);
+        }
+
+        return $seatArray;
     }
 }

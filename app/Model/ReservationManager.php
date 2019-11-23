@@ -17,7 +17,6 @@ class ReservationManager
     private const
         TABLE_NAME = 'reservation',
         COLUMN_ID = 'reservation_id',
-        COLUMN_USER = 'username',
         COLUMN_WORK = 'id_piece_of_work',
         COLUMN_STATE = 'paid',
         COLUMN_SEAT_1 = 'seat1',
@@ -26,6 +25,7 @@ class ReservationManager
         COLUMN_SEAT_4 = 'seat4',
         COLUMN_SEAT_5 = 'seat5',
         COLUMN_SEAT_6 = 'seat6';
+
 
     /** @var Nette\Database\Context */
     private $database;
@@ -39,12 +39,12 @@ class ReservationManager
         $this->seatManager = $seatManager;
     }
 
-    public function createReservation(string $username, int $work, string $status, $seat1, $seat2, $seat3, $seat4, $seat5, $seat6)
+    public function createReservation(int $work, string $status, $seat1, $seat2, $seat3, $seat4, $seat5, $seat6)
     {
+        
         $this->database->table(self::TABLE_NAME)->insert([
-            self::COLUMN_USER => $username,
-            self::COLUMN_WORK => $status,
-            self::COLUMN_STATE => $state,
+            self::COLUMN_WORK => $work,
+            self::COLUMN_STATE => $status,
             self::COLUMN_SEAT_1 => $seat1,
             self::COLUMN_SEAT_2 => $seat2,
             self::COLUMN_SEAT_3 => $seat3,
@@ -53,6 +53,9 @@ class ReservationManager
             self::COLUMN_SEAT_6 => $seat6,
         ]);
     }
+
+
+    
 
     
 }

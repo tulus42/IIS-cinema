@@ -2,6 +2,7 @@
 -- Database: cinema.sql
 
 -- Drop tables if they already exists
+DROP TABLE IF EXISTS `user_reserves`;
 DROP TABLE IF EXISTS `reservation`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `stars_in`;
@@ -30,7 +31,6 @@ CREATE TABLE `user`(
 -- Table for all the movies given user saw
 CREATE TABLE `reservation`(
     `reservation_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `username` VARCHAR(255),
     `id_piece_of_work` int(8) NOT NULL,
     `paid` ENUM('paid', 'unpaid'),
     `seat1` int(8) NOT NULL,
@@ -40,6 +40,12 @@ CREATE TABLE `reservation`(
     `seat5` int(8),
     `seat6` int(8)
 
+) ENGINE=InnoDB CHARSET=utf8;
+
+CREATE TABLE `user_reserves`(
+    `user_reserve_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    `reservation_id` int(8),
+    `username` VARCHAR(8)
 ) ENGINE=InnoDB CHARSET=utf8;
 
 -- Table structure for performance
@@ -179,14 +185,20 @@ FOREIGN KEY(`id_piece_of_work`) REFERENCES `cultural_piece_of_work`(`id_piece_of
 ON DELETE CASCADE;
 
 ALTER TABLE `reservation`
-ADD CONSTRAINT FK_user_user
+ADD CONSTRAINT FK_reserve_piece_of_work
+FOREIGN KEY(`id_piece_of_work`) REFERENCES `cultural_piece_of_work`(`id_piece_of_work`)
+ON DELETE CASCADE;
+
+ALTER TABLE `user_reserves`
+ADD CONSTRAINT FK_reserve_to_user
 FOREIGN KEY(`username`) REFERENCES `user`(`username`)
 ON DELETE CASCADE;
 
-ALTER TABLE `reservation`
-ADD CONSTRAINT FK_work_work
-FOREIGN KEY(`id_piece_of_work`) REFERENCES `cultural_piece_of_work`(`id_piece_of_work`)
+ALTER TABLE `user_reserves`
+ADD CONSTRAINT FK_user_to_reserve
+FOREIGN KEY(`reservation_id`) REFERENCES `reservation`(`reservation_id`)
 ON DELETE CASCADE;
+
 
 
 
@@ -236,10 +248,10 @@ VALUES
 
 -- relationship tables
 -- INSERT TO reservation
-INSERT INTO `reservation` (`username`, `id_piece_of_work`, `paid`, `seat1`) 
+INSERT INTO `reservation` (`id_piece_of_work`, `paid`, `seat1`) 
 VALUES
-    ('dolar', '1', 'unpaid', '1'),
-    ('Maniac42', '2', 'paid', '2');
+    ('1', 'unpaid', '1'),
+    ('2', 'paid', '2');
 
 
 -- kto kde hrá

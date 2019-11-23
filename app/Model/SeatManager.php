@@ -16,6 +16,7 @@ class SeatManager
 
     private const
         TABLE_NAME = 'seat',
+        COLUMN_SEAT_ID = 'seat_id',
         COLUMN_CULTURAL_EVENT = 'cultural_event_id',
         COLUMN_ROW = 'row',
         COLUMN_COLUMN = 'column',
@@ -113,5 +114,13 @@ class SeatManager
             return "#ffffff";
         }
         
+    }
+
+    public function reserveSeats($seats)
+    {
+        foreach ($seats as $seat)
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_SEAT_ID, $seat->seat_id)->update([
+            self::COLUMN_STATE => "reserved"
+        ]);
     }
 }
