@@ -127,7 +127,8 @@ class EventPresenter extends BasePresenter
         $event = $this->database->table('cultural_event')->get($event);
         $this->template->event = $event;       
 
-        $this->template->seatArray = $this->parseReservationArray($reservationArray, $event->id_cultural_event);
+        $seatArray = $this->parseReservationArray($reservationArray, $event->id_cultural_event);
+        $this->template->seatArray = $seatArray;
 
         $piece_of_work = $this->database->table('cultural_piece_of_work')->get($event->id_piece_of_work);
         $this->template->piece_of_work = $piece_of_work;
@@ -143,9 +144,16 @@ class EventPresenter extends BasePresenter
 
         $seats = $this->getparameter('reservationArray');
         $seats = $this->parseReservationArray($seats, $eventID);
+
+        if ($this->user->isLoggedIn()){
+            $userID = $this->getUser()->id;
+            $this->template->this_profile = $this->database->table('user')->get($userID);
+        } else {
+            $userID = '';
+        }
         
-        return $this->newReservationFormFactory->createReservationForm($work, $event, $seats, function (): void{
-            
+        return $this->newReservationFormFactory->createReservationForm($work, $event, $seats, $userID, $this, function (): void{
+            $this->redirect('Event:reserveSuccess');
         });
     }
 
@@ -164,5 +172,41 @@ class EventPresenter extends BasePresenter
         }
 
         return $seatArray;
+    }
+
+    public function renderReserveSuccess($reservation): void
+    {
+        $reservation = $this->database->table('reservation')->get($reservation);
+        $this->template->reservation = $reservation;
+        
+        $seats = [];
+        array_push($seats, $this->database->table('seat')->get($reservation->seat1));
+
+        if ($reservation->seat2 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($reservation->seat2));
+        }
+
+        if ($reservation->seat3 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($reservation->seat3));
+        }
+
+        if ($reservation->seat4 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($reservation->seat4));
+        }
+
+        if ($reservation->seat5 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($reservation->seat5));
+        }
+
+        if ($reservation->seat6 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($reservation->seat6));
+        }
+
+        $this->template->seats = $seats;
+    }
+
+    public function renderReserveUnSuccess(): void
+    {
+
     }
 }

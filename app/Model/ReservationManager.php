@@ -42,7 +42,7 @@ class ReservationManager
     public function createReservation(int $work, string $status, $seat1, $seat2, $seat3, $seat4, $seat5, $seat6)
     {
         
-        $this->database->table(self::TABLE_NAME)->insert([
+        return $this->database->table(self::TABLE_NAME)->insert([
             self::COLUMN_WORK => $work,
             self::COLUMN_STATE => $status,
             self::COLUMN_SEAT_1 => $seat1,
@@ -52,6 +52,11 @@ class ReservationManager
             self::COLUMN_SEAT_5 => $seat5,
             self::COLUMN_SEAT_6 => $seat6,
         ]);
+    }
+
+    public function getReservation()
+    {
+                    
     }
 
 

@@ -31,6 +31,7 @@ services:
 	- App\Model\PerformerManager
 	- App\Model\StarsInManager
 	- App\Model\ReservationManager
+	- App\Model\UserReservesManager
 	- App\Forms\FormFactory
 	- App\Forms\EditWorkFormFactory
 	- App\Forms\EditUserProfileFormFactory
