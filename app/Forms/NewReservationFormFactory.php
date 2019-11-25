@@ -44,13 +44,7 @@ final class NewReservationFormFactory{
         $form->addSubmit('pay', 'Potvrdiť rezerváciu');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($work, $event, $seats, $userID, $presenter, $onSuccess): void {
-            $paid = '';
-            switch ($values->paymentMethod) {
-                case 'card': $paid = 'paid';break;
-                case 'cash': $paid = 'unpaid';break;
-            }
-
-            
+                        
             $seatsID = [];
             foreach ($seats as $seat) {
                 array_push($seatsID, $seat->seat_id);
@@ -60,7 +54,19 @@ final class NewReservationFormFactory{
                 }
             }
 
-            $this->seatManager->reserveSeats($seats);
+            $paid = '';
+            switch ($values->paymentMethod) {
+                case 'card': 
+                    $paid = 'paid';
+                    $this->seatManager->takeSeats($seats);
+                    break;
+                case 'cash': 
+                    $paid = 'unpaid';
+                    $this->seatManager->reserveSeats($seats);
+                    break;
+            }
+
+            
 
             while (count($seatsID) < 6) {
                 array_push($seatsID, NULL);

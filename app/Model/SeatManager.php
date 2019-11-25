@@ -136,4 +136,12 @@ class SeatManager
             self::COLUMN_STATE => "reserved"
         ]);
     }
+
+    public function takeSeats($seats)
+    {
+        foreach ($seats as $seat)
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_SEAT_ID, $seat->seat_id)->update([
+            self::COLUMN_STATE => "taken"
+        ]);
+    }
 }
