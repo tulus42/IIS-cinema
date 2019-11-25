@@ -1,5 +1,16 @@
 {block content}
-    {foreach $reservations as $reservation}
-        {$reservation->reservation_id}
-    {/foreach}
+    {if $res_count!=0}
+        {foreach $reservations as $one}
+            <a href="{link Reservation:oneReservation $one->reservation_id}">
+            <p>{$one->reservation_id}
+            {if $one->paid=='paid'}
+                zaplatené</p>
+            {else}
+                nezaplatené</p>
+            {/if}
+            </a>
+        {/foreach}
+    {else}
+        <h1 align="center">Momentálne neexistujú žiadne rezervácie k tejto udalosti</h1>
+    {/if}
 {/block}
