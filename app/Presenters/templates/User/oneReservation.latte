@@ -1,6 +1,32 @@
 {block content}
-    {$reservation[0]->reservation_id}
-    {$reservation[2]->name}
-    {$reservation[1]->date|date: '%d. %m. %Y'}, 
-                {$reservation[1]->time|date: '%h:%I'}
+    <div class='eventHeaderContainer'>
+        <div>
+            <h1>Rezervácia číslo {$reservation[0]->reservation_id}<br></h1>
+            <h2>{$reservation[2]->name}</h2>
+            {$reservation[1]->date|date: '%d. %m. %Y'}, 
+            {$reservation[1]->time|date: '%h:%I'}
+            
+            <h2><br>Vaše sedadlá sú:</h2>
+            {foreach $reservation[3] as $seat}
+                Rad: {$seat->row}, Miesto: {$seat->column}<br>
+            {/foreach}
+
+
+        </div>
+
+        <a href='{link Homepage:default}'>
+            <button class='form-button'>
+                Späť na hlavnú stránku
+            </button>
+        </a>
+
+        <a href='{link User:myReservations}'>
+            <button class='form-button'>
+                Späť na prehľad rezervácií
+            </button>
+        </a>
+    </div>
+    
+    
+    
 {/block}

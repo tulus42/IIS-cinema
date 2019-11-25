@@ -1,2 +1,5 @@
 {block content}
+    {foreach $reservations as $reservation}
+        {$reservation->reservation_id}
+    {/foreach}
 {/block}

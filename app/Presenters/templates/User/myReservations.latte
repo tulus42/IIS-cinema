@@ -42,7 +42,7 @@
             </div>
 
             <div class="res-next">
-                {$reservation[0]->paid}
+                {$reservation[0]->paid != "paid" ? "Nezaplatené" : "Zapalatené"}
             </div>
         </a>
         

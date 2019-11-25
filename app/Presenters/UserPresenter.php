@@ -145,21 +145,17 @@ class UserPresenter extends BasePresenter
 
             $res = $this->database->table('reservation')->get($reservationID);
 
-            
-
-
-            
-            $seat = $this->database->table('seat')->get($res->seat1);
+                        
             $event = $this->database->table('cultural_event')->get($seat->cultural_event_id);
             $work = $this->database->table('cultural_piece_of_work')->get($res->id_piece_of_work);
 
             $tmpArr = [];
-            array_push($tmpArr, $res->seat1);
-            $res->seat2 == null ? 0 : array_push($tmpArr, $res->seat2);
-            $res->seat3 == null ? 0 : array_push($tmpArr, $res->seat3);
-            $res->seat4 == null ? 0 : array_push($tmpArr, $res->seat4);
-            $res->seat5 == null ? 0 : array_push($tmpArr, $res->seat5);
-            $res->seat6 == null ? 0 : array_push($tmpArr, $res->seat6);
+            array_push($tmpArr, $this->database->table('seat')->get($res->seat1));
+            $res->seat2 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat2));
+            $res->seat3 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat3));
+            $res->seat4 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat4));
+            $res->seat5 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat5));
+            $res->seat6 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat6));
 
             
             $resArr = [];
