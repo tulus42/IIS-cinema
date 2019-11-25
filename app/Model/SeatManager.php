@@ -28,6 +28,9 @@ class SeatManager
     /** @var Model\HallManager */
     private $hallManager;
 
+    /** @var Model\ReservationManager */
+    private $reservationManager;
+
     /** @var */
     private $reservationArr;
 
@@ -35,10 +38,11 @@ class SeatManager
     private $reservationCnt;
 
 
-    public function __construct(Nette\Database\Context $database, Model\HallManager $hallManager)
+    public function __construct(Nette\Database\Context $database, Model\HallManager $hallManager, Model\ReservationManager $reservationManager)
 	{
         $this->database = $database;
         $this->hallManager = $hallManager;
+        $this->reservationManager = $reservationManager;
         $this->reservationArr = array();
         $this->reservationCnt = 0;
     }
@@ -62,8 +66,17 @@ class SeatManager
 
     }
 
+    public function getSeatId(int $cultural_event, int $row, int $column)
+    {
+        $id = $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_CULTURAL_EVENT, $cultural_event)->where(self::COLUMN_ROW, $row)->where(self::COLUMN_COLUMN, $column)->fetch();
+        return $id->seat_id;
+    }
+
     public function deleteSeat(int $cultural_event, int $row, int $column)
     {
+        $seatId = $this->getSeatId($cultural_event, $row, $column);
+        $this->reservationManager->deleteReservation($seatId);
+
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_CULTURAL_EVENT, $cultural_event)->where(self::COLUMN_ROW, $row)->where(self::COLUMN_COLUMN, $column)->delete();
     }
 

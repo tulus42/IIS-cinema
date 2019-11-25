@@ -33,10 +33,14 @@ class ReservationManager
     /** @var Model\SeatManager*/
     private $seatManager;
 
-    public function __construct(Nette\Database\Context $database, Model\StarsInManager $seatManager)
+    /** @var Model\UserReservesManager */
+    private $userReservesManager;
+
+    public function __construct(Nette\Database\Context $database, Model\StarsInManager $seatManager, Model\UserReservesManager $userReservesManager)
 	{
         $this->database = $database;
         $this->seatManager = $seatManager;
+        $this->userReservesManager = $userReservesManager;
     }
 
     public function createReservation(int $work, string $status, $seat1, $seat2, $seat3, $seat4, $seat5, $seat6)
@@ -75,5 +79,18 @@ class ReservationManager
         return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id_reservation)->fetch();
     }
 
-    
+    public function deleteReservation(int $seatId)
+    {
+        $reservationId = $this->getReservationId($seatId);
+        if(is_object($reservationId)){
+            $this->userReservesManager->deleteUserReservers($reservationId->reservation_id);
+        }
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_SEAT_1, $seatId)->delete();
+    }
+
+    public function getReservationId(int $seat1)
+    {
+        $id = $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_SEAT_1, $seat1)->fetch();
+        return $id;
+    }
 }

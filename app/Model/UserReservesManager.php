@@ -38,7 +38,10 @@ class UserReservesManager
         ]);
     }
 
-
+    public function deleteUserReservers(int $reservation_id)
+    {
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_RESERVATION, $reservation_id)->delete();
+    }
     
 
     
