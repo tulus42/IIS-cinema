@@ -38,11 +38,10 @@ class SeatManager
     private $reservationCnt;
 
 
-    public function __construct(Nette\Database\Context $database, Model\HallManager $hallManager, Model\ReservationManager $reservationManager)
+    public function __construct(Nette\Database\Context $database, Model\HallManager $hallManager)
 	{
         $this->database = $database;
         $this->hallManager = $hallManager;
-        $this->reservationManager = $reservationManager;
         $this->reservationArr = array();
         $this->reservationCnt = 0;
     }
@@ -66,6 +65,13 @@ class SeatManager
 
     }
 
+    public function freeSeat(int $seat_id)
+    {
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_SEAT_ID, $seat_id)->update([
+            self::COLUMN_STATE => "available"
+        ]);
+    }
+
     public function getSeatId(int $cultural_event, int $row, int $column)
     {
         $id = $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_CULTURAL_EVENT, $cultural_event)->where(self::COLUMN_ROW, $row)->where(self::COLUMN_COLUMN, $column)->fetch();
@@ -75,9 +81,19 @@ class SeatManager
     public function deleteSeat(int $cultural_event, int $row, int $column)
     {
         $seatId = $this->getSeatId($cultural_event, $row, $column);
-        $this->reservationManager->deleteReservation($seatId);
-
+        //$this->reservationManager->deleteReservation($seatId);
+        $reservationId = $this->getReservationId($seatId);
+        if(is_object($reservationId)){
+            $this->database->table('user_reserves')->where('reservation_id', $reservation_id)->delete();
+        }
+        $this->database->table('reservation_id')->where('seat1', $seatId)->delete();
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_CULTURAL_EVENT, $cultural_event)->where(self::COLUMN_ROW, $row)->where(self::COLUMN_COLUMN, $column)->delete();
+    }
+
+    public function getReservationId(int $seat1)
+    {
+        $id = $this->database->table('reservation')->select('*')->where('seat1', $seat1)->fetch();
+        return $id;
     }
 
     public function findAll(): Nette\Database\Table\Selection
@@ -135,5 +151,10 @@ class SeatManager
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_SEAT_ID, $seat->seat_id)->update([
             self::COLUMN_STATE => "reserved"
         ]);
+    }
+
+    public function deleteUserReservers(int $reservation_id)
+    {
+
     }
 }

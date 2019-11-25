@@ -36,7 +36,7 @@ class ReservationManager
     /** @var Model\UserReservesManager */
     private $userReservesManager;
 
-    public function __construct(Nette\Database\Context $database, Model\StarsInManager $seatManager, Model\UserReservesManager $userReservesManager)
+    public function __construct(Nette\Database\Context $database, Model\SeatManager $seatManager, Model\UserReservesManager $userReservesManager)
 	{
         $this->database = $database;
         $this->seatManager = $seatManager;
@@ -92,5 +92,39 @@ class ReservationManager
     {
         $id = $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_SEAT_1, $seat1)->fetch();
         return $id;
+    }
+
+    public function payReservation(int $reservation_id)
+    {
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $reservation_id)->update([
+            self::COLUMN_STATE => "paid"
+        ]);
+    }
+
+    public function removeReservation(int $reservation_id)
+    {
+        $current_reservation = $this->getOneReservation($reservation_id);
+
+        $this->seatManager->freeSeat($current_reservation->seat1);
+
+        if($current_reservation->seat2 != NULL){
+            $this->seatManager->freeSeat($current_reservation->seat2);
+        }
+        if($current_reservation->seat3 != NULL){
+            $this->seatManager->freeSeat($current_reservation->seat3);
+        }
+        if($current_reservation->seat4 != NULL){
+            $this->seatManager->freeSeat($current_reservation->seat4);
+        }
+        if($current_reservation->seat5 != NULL){
+            $this->seatManager->freeSeat($current_reservation->seat5);
+        }
+        if($current_reservation->seat6 != NULL){
+            $this->seatManager->freeSeat($current_reservation->seat6);
+        }
+
+        $this->userReservesManager->deleteUserReservers($reservation_id);
+
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $reservation_id)->delete();
     }
 }

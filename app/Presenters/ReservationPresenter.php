@@ -82,13 +82,16 @@ class ReservationPresenter extends BasePresenter
         $this->template->seats = $seats;
     }
 
-    public function renderDeleteReservation(int $id_event)
+    public function renderDeleteReservation(int $red_id, int $id_event)
     {
-        //$this->redirect('Reservation:OneEvent', $this->getParameter('id_event'));
+        $this->reservationManager->removeReservation($red_id);
+        $this->template->event_id = $id_event;
     }
 
     public function renderPayReservation(int $red_id, int $id_event)
     {
-        ;
+        $this->reservationManager->payReservation($red_id);
+        $this->template->reservation_id = $red_id;
+        $this->template->event_id = $id_event;
     }
 }
