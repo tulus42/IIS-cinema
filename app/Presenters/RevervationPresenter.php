@@ -29,12 +29,17 @@ class ReservationPresenter extends BasePresenter
 
     public function renderMovieEventList()
     {
-        $this->template->events = $this->eventManager->allEvents();
+        $events = $this->eventManager->allEvents();
+        $this->template->event_count = $events->getRowCount();
+        $this->template->events = $events;
     }
 
     public function renderEventList(int $id_work)
     {
-        $this->template->events = $this->eventManager->getEventByWork($id_work);
+        $events = $this->eventManager->getEventByWork($id_work);
+        //$this->template->event_count = $events->getRowCount();
+        //dump($this->template->event_count);
+        $this->template->events = $events;
     }
 
     public function renderOneEvent(int $id_event)
