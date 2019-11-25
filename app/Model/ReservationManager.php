@@ -54,7 +54,7 @@ class ReservationManager
         ]);
     }
 
-    public function allEventReservation($id_event)
+    public function allEventReservation(int $id_event)
     {
         $res = $this->database->query('SELECT *
         FROM reservation
@@ -70,7 +70,10 @@ class ReservationManager
     }
 
 
-    
+    public function getOneReservation(int $id_reservation)
+    {
+        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id_reservation)->fetch();
+    }
 
     
 }
