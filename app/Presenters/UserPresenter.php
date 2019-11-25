@@ -145,12 +145,13 @@ class UserPresenter extends BasePresenter
 
             $res = $this->database->table('reservation')->get($reservationID);
 
+            $seat1 = $this->database->table('seat')->get($res->seat1);
                         
-            $event = $this->database->table('cultural_event')->get($seat->cultural_event_id);
+            $event = $this->database->table('cultural_event')->get($seat1->cultural_event_id);
             $work = $this->database->table('cultural_piece_of_work')->get($res->id_piece_of_work);
 
             $tmpArr = [];
-            array_push($tmpArr, $this->database->table('seat')->get($res->seat1));
+            array_push($tmpArr, $seat1);
             $res->seat2 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat2));
             $res->seat3 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat3));
             $res->seat4 == null ? 0 : array_push($tmpArr, $this->database->table('seat')->get($res->seat4));
