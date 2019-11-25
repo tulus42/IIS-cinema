@@ -145,6 +145,7 @@ class UserPresenter extends BasePresenter
 
             $res = $this->database->table('reservation')->get($reservationID);
 
+
             $seat1 = $this->database->table('seat')->get($res->seat1);
                         
             $event = $this->database->table('cultural_event')->get($seat1->cultural_event_id);
@@ -170,6 +171,123 @@ class UserPresenter extends BasePresenter
         
         }else{
             throw new \Nette\Application\BadRequestException(403);
+        }
+    }
+
+    public function renderMySeenMovies(): void
+    {
+        if ($this->user->isLoggedIn()){
+            $userID = $this->getUser()->id;
+
+            $movies = $this->database->query('SELECT *
+            FROM cultural_piece_of_work
+            WHERE id_piece_of_work IN (
+                SELECT id_piece_of_work
+                FROM reservation
+                WHERE reservation_id IN (
+                    SELECT reservation_id
+                    FROM user_reserves
+                    WHERE username = "'.$userID.'"
+                )
+            )
+            GROUP BY id_piece_of_work
+            ;');
+
+            $this->template->movies = $movies;
+
+
+            $tmpMovies = $this->database->table('cultural_piece_of_work')->where('id_piece_of_work', $this->database->table('reservation')->where('reservation_id', $this->database->table('user_reserves')->where('username ?', $userID)->select('reservation_id'))->select('id_piece_of_work'))->select('genre');
+            $genres = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            foreach ($tmpMovies as $movie) {
+                switch ($movie->genre) {
+                    case "akčný": $genres[0]++;
+                    break;
+                    case "dobrodružný": $genres[1]++;
+                    break;
+                    case "dráma": $genres[2]++;
+                    break;
+                    case "fantasy": $genres[3]++;
+                    break;
+                    case "filozofický": $genres[4]++;
+                    break;
+                    case "historický": $genres[5]++;
+                    break;
+                    case "horor": $genres[6]++;
+                    break;
+                    case "komédia": $genres[7]++;
+                    break;
+                    case "krimi": $genres[8]++;
+                    break;
+                    case "mysteriózny": $genres[9]++;
+                    break;
+                    case "politický": $genres[10]++;
+                    break;
+                    case "romantický": $genres[11]++;
+                    break;
+                    case "triller": $genres[12]++;
+                    break;
+                    case "vedecký": $genres[13]++;
+                    break;
+                    case "western": $genres[14]++;
+                    break;
+                }
+            }
+            
+            $mostSeenGenreIndex = array_keys($genres, max($genres));
+            $mostSeenGenre = $this->getGenreFromIndex($mostSeenGenreIndex[0]);
+            
+
+            $notSeenMovie = $this->database->query('SELECT *
+            FROM cultural_piece_of_work
+            WHERE id_piece_of_work NOT IN (
+                SELECT id_piece_of_work
+                FROM reservation
+                WHERE reservation_id IN (
+                    SELECT reservation_id
+                    FROM user_reserves
+                    WHERE username = "'.$userID.'"   
+                )
+            ) AND genre = "'.$mostSeenGenre.'"
+            AND id_piece_of_work IN (
+                SELECT id_piece_of_work
+                FROM cultural_event
+            )
+            GROUP BY id_piece_of_work
+            ;');
+            
+            if ($notSeenMovie != null) {
+                $notSeenMovie = $notSeenMovie->fetch();
+            }
+
+            $this->template->notSeen = $notSeenMovie;
+            
+            
+    
+
+            
+        }else{
+            throw new \Nette\Application\BadRequestException(403);
+        }
+    }
+
+    public function getGenreFromIndex($i)
+    {
+        switch ($i) {
+            case 0: return "akčný";
+            case 1: return "dobrodružný";
+            case 2: return "dráma";
+            case 3: return "fantasy";
+            case 4: return "filozofický";
+            case 5: return "historický";
+            case 6: return "horor";
+            case 7: return "komédia";
+            case 8: return "krimi";
+            case 9: return "mysteriózny";
+            case 10: return "politický";
+            case 11: return "romantický";
+            case 12: return "triller";
+            case 13: return "vedecký";
+            case 14: return "western";
         }
     }
     

@@ -2,7 +2,9 @@
     <div class='eventHeaderContainer'>
         <div>
             <h1>Rezervácia číslo {$reservation[0]->reservation_id}<br></h1>
-            <h2>{$reservation[2]->name}</h2>
+            <a href="{link Movie:show $reservation[2]->id_piece_of_work}">
+                <h2>{$reservation[2]->name}</h2>
+            </a>
             {$reservation[1]->date|date: '%d. %m. %Y'}, 
             {$reservation[1]->time|date: '%h:%I'}<br>
             {if $reservation[0]->paid == "paid"}

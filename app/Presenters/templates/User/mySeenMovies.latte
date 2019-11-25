@@ -1,0 +1,41 @@
+{block content}
+    <h1>Predstavenia, ktoré ste už videli:</h1>
+    {foreach $movies as $movie}
+        <a class="res-container" href="{link Movie:show $movie->id_piece_of_work}">
+            <div class="res-num">
+                <h3>{$movie->name}</h3>
+            </div>
+            <div class="res-next">
+                <h3>{$movie->type}</h3>
+            </div>
+            <div class="res-next">
+                <h3>{$movie->genre}</h3>
+            </div>
+            <div class="res-next">
+                <h3>{$movie->rating}%</h3>
+            </div>
+        </a>
+    {/foreach}
+
+
+    
+    {if $notSeen != null}
+        <h1>Odporúčame si pozrieť:</h1>
+        <a class="res-container" href="{link Movie:show $notSeen->id_piece_of_work}">
+            <div class="res-num">
+                <h3>{$notSeen->name}</h3>
+            </div>
+            <div class="res-next">
+                <h3>{$notSeen->type}</h3>
+            </div>
+            <div class="res-next">
+                <h3>{$notSeen->genre}</h3>
+            </div>
+            <div class="res-next">
+                <h3>{$notSeen->rating}%</h3>
+            </div>
+        </a>
+    {else}
+        <h1>Nenašli sme pre Vás žiadne vhodné odporúčania</h1>
+    {/if}
+{/block}

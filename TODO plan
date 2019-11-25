@@ -13,6 +13,7 @@ DONE: 14. V databázi zmeniť kľúče stars_in, oba sú primárne a každý je 
 DONE: 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
 DONE: 16. Pri edit event sa nenačítava čas
 17. Opraviť hall.css -> hala vyzerá škaredo
+18. zabrániť prístupu každého prihláseného užívateľa ku všetkých rezerváciam cez url
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu
