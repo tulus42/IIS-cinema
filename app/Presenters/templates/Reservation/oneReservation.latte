@@ -1,5 +1,19 @@
 {block content}
     <div class="main-block-register">
         <h2 align="center">Číslo rezervácie: {$one_res->reservation_id}</h2>
+
+        <h2>Vaše sedadlá sú:</h2>
+            {foreach $seats as $seat}
+                Rad: {$seat->row}, Miesto: {$seat->column}<br>
+            {/foreach}
+
+        <table>
+            <tbody>
+                <tr>
+                    <td><a href="{link Reservation:DeleteReservation $id_event}">Zmazať<a></td>
+                    <td><a href="{link Reservation:PayReservation $one_res->reservation_id,$id_event}">Zaplatiť</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 {/block}

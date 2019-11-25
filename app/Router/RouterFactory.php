@@ -19,17 +19,6 @@ final class RouterFactory
 	{
 		$router = new RouteList;
 		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
-		$router[] = new Route('<action>[/<url>]', [
-            'presenter' => 'Core:Movie',
-            'action' => [
-                Route::FILTER_STRICT => true,
-                Route::FILTER_TABLE => [
-                    // řetězec v URL => akce presenteru
-                    'RemovePerf' => 'RemovePerf',
-                    'AddPerf' => 'AddPerf'
-                ]
-            ]
-        ]);
 		return $router;
 	}
 }

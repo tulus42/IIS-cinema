@@ -1,7 +1,7 @@
 {block content}
     {if $res_count!=0}
         {foreach $reservations as $one}
-            <a href="{link Reservation:oneReservation $one->reservation_id}">
+            <a href="{link Reservation:oneReservation $one->reservation_id, $id_event}">
             <p>{$one->reservation_id}
             {if $one->paid=='paid'}
                 zaplatené</p>

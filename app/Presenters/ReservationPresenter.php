@@ -47,10 +47,48 @@ class ReservationPresenter extends BasePresenter
         $reservations = $this->reservationManager->allEventReservation($id_event);
         $this->template->res_count = $reservations->getRowCount();
         $this->template->reservations = $reservations;
+        $this->template->id_event = $id_event;
     }
 
-    public function renderOneReservation(int $id_reservation)
+    public function renderOneReservation(int $id_reservation, int $id_event)
     {
-        $this->template->one_res = $this->reservationManager->getOneReservation($id_reservation);
+        $one_res = $this->reservationManager->getOneReservation($id_reservation);
+        $this->template->one_res = $one_res;
+        $this->template->id_event = $this->getParameter('id_event');
+
+        $seats = [];
+        array_push($seats, $this->database->table('seat')->get($one_res->seat1));
+
+        if ($one_res->seat2 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($one_res->seat2));
+        }
+
+        if ($one_res->seat3 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($one_res->seat3));
+        }
+
+        if ($one_res->seat4 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($one_res->seat4));
+        }
+
+        if ($one_res->seat5 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($one_res->seat5));
+        }
+
+        if ($one_res->seat6 != NULL) {
+            array_push($seats, $this->database->table('seat')->get($one_res->seat6));
+        }
+
+        $this->template->seats = $seats;
+    }
+
+    public function renderDeleteReservation(int $id_event)
+    {
+        //$this->redirect('Reservation:OneEvent', $this->getParameter('id_event'));
+    }
+
+    public function renderPayReservation(int $red_id, int $id_event)
+    {
+        ;
     }
 }
