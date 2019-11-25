@@ -1,0 +1,20 @@
+{block content}
+    {if $events}
+        {foreach $events as $event}
+        <a href="{link Reservation:oneEvent $event->id_cultural_event}" class="hall-list-container">
+            <div class="one-hall-name">
+                <h3>Dátum: {$event->date|date: '%d. %m. %Y'}</h3>
+            </div>
+            
+            <div class="one-hall-capacity">
+                <h3>Čas: {$event->time|date: '%H:%I'}</h3>
+            </div>
+            
+            <div class="one-hall-address">
+                <h3>Sála: {$event->hall_num}</h3>
+            </div>
+
+        </a>
+        {/foreach}
+    {/if}
+{/block}
