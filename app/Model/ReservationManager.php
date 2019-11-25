@@ -54,9 +54,19 @@ class ReservationManager
         ]);
     }
 
-    public function getReservation()
+    public function allEventReservation($id_event)
     {
-                    
+        $res = $this->database->query('SELECT *
+        FROM reservation
+        WHERE seat1 IN (
+            SELECT seat_id
+            FROM seat
+            WHERE cultural_event_id = '.$id_event.'
+        )
+        ;');
+
+
+        return $res;
     }
 
 

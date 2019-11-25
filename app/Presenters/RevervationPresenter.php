@@ -44,6 +44,6 @@ class ReservationPresenter extends BasePresenter
 
     public function renderOneEvent(int $id_event)
     {
-        //$this->template->reservations = $this->reservationManager->allEventReservation($id_event);
+        $this->template->reservations = $this->reservationManager->allEventReservation($id_event);
     }
 }
