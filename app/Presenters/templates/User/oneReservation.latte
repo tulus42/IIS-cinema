@@ -1,0 +1,6 @@
+{block content}
+    {$reservation[0]->reservation_id}
+    {$reservation[2]->name}
+    {$reservation[1]->date|date: '%d. %m. %Y'}, 
+                {$reservation[1]->time|date: '%h:%I'}
+{/block}

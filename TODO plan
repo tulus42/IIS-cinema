@@ -12,6 +12,7 @@ DONE: Not necessary anayways 11. V cultural_event zmeniť primary key z id_cultu
 DONE: 14. V databázi zmeniť kľúče stars_in, oba sú primárne a každý je zároveň cudzím v inej tabuľke, nepotrebujeme teda stars_in_id, zároveň to zaručí unikátnosť
 DONE: 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
 DONE: 16. Pri edit event sa nenačítava čas
+17. Opraviť hall.css -> hala vyzerá škaredo
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu

@@ -56,6 +56,7 @@
                     <div class="column8">
                         <ul>
 							{if $user->isLoggedIn()}
+							<li class="res-link link"><a href="{link User:myReservations}">Moje rezervácie</a></li>
 							<li class="log-link link"><a href="{link User:profile}">Môj profil</a></li>
                             <li class="reg-link link"><a href="{link Sign:out}">Odhlásenie</a></li>
 							{else}

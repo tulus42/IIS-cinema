@@ -71,6 +71,12 @@ header ul li a:hover{
   color: black;
 }
 
+.res-link{
+  position:absolute;
+  top:30px;
+  right:360px;
+}
+
 .log-link{
   position:absolute;
   top:30px;
