@@ -3,7 +3,7 @@
         <div class="main-block-register">
             <h1 align="center">Zoznam filmov s udalosťami</h1>
             {foreach $events as $event}
-                <p><a href="{link Reservation:eventList $event->id_piece_of_work}">{$event->name}</a></p>
+                <p class="role-par"><a class="role-button" href="{link Reservation:eventList $event->id_piece_of_work}">{$event->name}</a></p>
             {/foreach}
         </div>
     {else}
