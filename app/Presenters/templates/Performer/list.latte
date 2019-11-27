@@ -9,7 +9,9 @@
         <thead>
         <tr>
             <th>Meno</th>
-            <th>Zmazať</th>
+            {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+                <th>Zmazať</th>
+            {/if}
         </tr>
         </thead>
         <tbody>
@@ -17,7 +19,9 @@
                 {foreach $performers as $performer}
                 <tr>
                     <td class="other-columns"><a href="{link Performer:profile $performer->performer_id}" class="username">{$performer->surname} {$performer->name}</a></td>
-                    <td class="other-columns"><a href="{link Performer:delete $performer->performer_id}" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
+                    {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
+                        <td class="other-columns"><a href="{link Performer:delete $performer->performer_id}" class="delete-user-button">&nbsp;&nbsp;-&nbsp;&nbsp;</a></td>
+                    {/if}
                 </tr>
                 {/foreach}
             {else}

@@ -14,6 +14,7 @@ DONE: 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
 DONE: 16. Pri edit event sa nenačítava čas
 17. Opraviť hall.css -> hala vyzerá škaredo
 18. zabrániť prístupu každého prihláseného užívateľa ku všetkých rezerváciam cez url
+19. Relatívne pozicovanie hornej lišty
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu
