@@ -6,7 +6,9 @@
 	{/if}
 
     <div class="hall-view">
-
+        <div class="screen">
+            Plátno
+        </div>
         {for $row=1; $row <=$hall->number_of_rows; $row++}
             <div class="row">
                 <div class="column">
@@ -16,12 +18,17 @@
                 </div>
                 {for $column=1; $column <= $hall->number_of_columns; $column++}
                     <div class="column">
-                        <div class="seat">
+                        <div class="seat-in-list">
                             {$column}
                         </div>
                     </div>
 
                 {/for}
+                <div class="column">
+                    <div class="row2">
+                        <h3>Rad: {$row}</h3>
+                    </div>
+                </div>
             </div>
         {/for}
     </div>
