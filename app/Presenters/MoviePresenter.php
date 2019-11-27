@@ -109,6 +109,10 @@ class MoviePresenter extends BasePresenter
         FROM performer
         JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ' ORDER BY surname ASC, name ASC;;');
 
+        
+        $this->template->stars_in_count = $this->template->already_stars_in->getRowCount();
+        
+
         $this->template->doesnt_star_in = $this->database->query('SELECT *
         FROM performer
         WHERE performer_id NOT IN (
@@ -117,7 +121,8 @@ class MoviePresenter extends BasePresenter
             WHERE stars_in.id_piece_of_work = ' . $id_piece_of_work . ')
             ORDER BY surname ASC, name ASC;');
 
-        $this->template->starsInManager = $this->starsInManager;
+
+        $this->template->doesnt_star_in_count = $this->template->doesnt_star_in->getRowCount();
 
         $this->template->work = $this->getParameter('id_piece_of_work');
         

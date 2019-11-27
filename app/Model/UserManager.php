@@ -6,7 +6,7 @@ namespace App\Model;
 
 use Nette;
 use Nette\Security\Passwords;
-
+use App\Model;
 
 /**
  * Users management.
@@ -33,11 +33,14 @@ final class UserManager implements Nette\Security\IAuthenticator
 	/** @var Passwords */
 	private $passwords;
 
+	/** @var Model\ReservationManager */
+	private $reservationManager;
 
-	public function __construct(Nette\Database\Context $database, Passwords $passwords)
+	public function __construct(Nette\Database\Context $database, Passwords $passwords, Model\ReservationManager $reservationManager)
 	{
 		$this->database = $database;
 		$this->passwords = $passwords;
+		$this->reservationManager = $reservationManager;
 	}
 
 
@@ -143,6 +146,7 @@ final class UserManager implements Nette\Security\IAuthenticator
 			}
 		}
 		else{
+			$this->reservationManager->deleteUser($username);
 			$this->database->table(self::TABLE_NAME)->where(self::COLUMN_USERNAME, $username)->delete();
 		}
 	}

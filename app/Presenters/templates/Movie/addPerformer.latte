@@ -1,14 +1,8 @@
 {block content}
 <div class="main-block-register" align="center">
     <h2>Účinkujúci herci</h2>
-    {if $already_stars_in}
+    {if $stars_in_count!=0}
     <table class="performer-table">
-        <thead>
-        <tr>
-            <th>Meno</th>
-            <th>Zmazať</th>
-        </tr>
-        </thead>
         <tbody>
         
             {foreach $already_stars_in as $stars_in}
@@ -21,29 +15,27 @@
         </tbody>
     </table>
     {else}
-        <p>Momentálne nie sú pridaní žiadni herci</p>
+        <h3>Momentálne nie sú k tomuto dielu priradení žiadni herci</h3>
     {/if}
 
     <br>
     <h2>Herci v databáze</h2>
+    {if $doesnt_star_in_count!=0}
     <table class="performer-table">
-        <thead>
-        <tr>
-            <th>Meno</th>
-            <th>Pridať</th>
-        </tr>
-        </thead>
         <tbody>
-        {if $doesnt_star_in}
+        
             {foreach $doesnt_star_in as $not_in}
             <tr>
                 <td class="other-columns"><a href="{link Performer:profile $not_in->performer_id}" class="username">{$not_in->surname} {$not_in->name}</a></td>
                 <td class="other-columns"><a href="{link Movie:addPerf $work, $not_in->performer_id}" class="delete-user-button">&nbsp;&nbsp;+&nbsp;&nbsp;</a></td>
             </tr>
             {/foreach}
-        {/if}
+        
         </tbody>
     </table>
+    {else}
+        <h3>Žiadni ďaľší herci už nie sú dostupní</h3>
+    {/if}
 </div>
 
 

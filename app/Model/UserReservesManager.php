@@ -43,6 +43,9 @@ class UserReservesManager
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_RESERVATION, $reservation_id)->delete();
     }
     
-
+    public function getAllUserReservations(string $username)
+    {
+        return $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_USER, $username)->fetchAll();
+    }
     
 }
