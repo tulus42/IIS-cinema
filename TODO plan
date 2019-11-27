@@ -12,9 +12,11 @@ DONE: Not necessary anayways 11. V cultural_event zmeniť primary key z id_cultu
 DONE: 14. V databázi zmeniť kľúče stars_in, oba sú primárne a každý je zároveň cudzím v inej tabuľke, nepotrebujeme teda stars_in_id, zároveň to zaručí unikátnosť
 DONE: 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
 DONE: 16. Pri edit event sa nenačítava čas
-17. Opraviť hall.css -> hala vyzerá škaredo
-18. zabrániť prístupu každého prihláseného užívateľa ku všetkých rezerváciam cez url
+DONE: 17. Opraviť hall.css -> hala vyzerá škaredo
+DONE: 18. zabrániť prístupu každého prihláseného užívateľa ku všetkých rezerváciam cez url
 19. Relatívne pozicovanie hornej lišty
+20. add movie - upraviť formulár - * pri povinných 
+21. Event v tom istom čase a dátume - vypíše error
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu

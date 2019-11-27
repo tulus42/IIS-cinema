@@ -67,8 +67,8 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-file');
 
         $form->addText('picture', '*URL obrázka')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setHtmlAttribute('class', 'form-text');
+            // ->setRequired();
 
         $form->addTextArea('description', 'Popis:')
             ->setHtmlAttribute('class', 'form-text-description');
@@ -113,7 +113,7 @@ final class NewWorkFormFactory{
                 'western'
             );
 
-            $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->picture, $values->description, $values->duration, $values->rating);
+            $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->poster, $values->picture, $values->description, $values->duration, $values->rating);
             $onSuccess();
         };
 
