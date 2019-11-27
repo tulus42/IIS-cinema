@@ -145,6 +145,10 @@ class UserPresenter extends BasePresenter
 
             $res = $this->database->table('reservation')->get($reservationID);
 
+            $userRes = $this->database->table('user_reserves')->where('reservation_id = ?', $reservationID)->fetch();
+            if ($userRes->username != $userID) {
+                throw new \Nette\Application\BadRequestException(403);
+            }
 
             $seat1 = $this->database->table('seat')->get($res->seat1);
                         
