@@ -61,11 +61,6 @@ final class NewWorkFormFactory{
         ])
             ->setHtmlAttribute('class', 'form-text');
 
-        $form->addUpload('poster', '*Plagát')
-            //->setRequired(true)
-            ->addRule(Form::IMAGE, 'Plagát musí byť JPEG, PNG')
-            ->setHtmlAttribute('class', 'form-file');
-
         $form->addText('picture', '*URL obrázka')
             ->setHtmlAttribute('class', 'form-text');
             // ->setRequired();
@@ -73,7 +68,7 @@ final class NewWorkFormFactory{
         $form->addTextArea('description', 'Popis:')
             ->setHtmlAttribute('class', 'form-text-description');
 
-        $form->addInteger('duration', 'Dĺžka trvania:')
+        $form->addInteger('duration', '*Dĺžka trvania:')
             ->setHtmlAttribute('class', 'form-text')
             ->setRequired()
             ->addRule(Form::MIN, 'Dĺžka nesmie byť záporné číslo', 0);
@@ -87,13 +82,6 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
-            $current_poster = $values->poster;
-            try{
-                //$values->poster = $this->imageStorage->SaveUpload($current_poster);
-            }
-            catch(\Exception $e){
-                dump('ERROR!');
-            }
 
             $allGenres = array(
                 'akčný',

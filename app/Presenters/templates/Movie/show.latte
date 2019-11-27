@@ -28,17 +28,20 @@
                     <h2>Typ: {$piece_of_work->type}</h2>
                 </div>
 
+                {if $piece_of_work->rating}
                 <div class="row">
                     <h2>Hodnotenie: {$piece_of_work->rating}%</h2>
                 </div>
+                {/if}
 
                 <div class="row">
                     <h3>Účinkujú: 
+                        
                         {foreach $starsIn as $i}
                             <a href="{link Performer:profile $i->performer_id}" class="work-performer">{$i->performer->name} {$i->performer->surname}</a>{if !($iterator->last)}, {/if} 
                         {/foreach}
                         {if $user->isLoggedIn() and ($user->isInRole('admin') or $user->isInRole('redactor'))}
-                        <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+&nbsp;</a>
+                            <a href="{link Movie:addPerformer $piece_of_work->id_piece_of_work}" class="work-performer">&nbsp;+/-&nbsp;</a>
                         {/if}
                     </h3>
                 </div>                    
@@ -51,12 +54,17 @@
                 <h2>Popis:</h2>
             </div>
         </div>
+        
         <div class="row">
             <div class="one-movie-description">
-                <p>{$piece_of_work->description}</p>
-
+                {if strlen($piece_of_work->description)!=0}
+                    <p>{$piece_of_work->description}</p>
+                {else}
+                    <h2>Popis nie je momentálne dostupný</h2>
+                {/if}
             <div>
         </div>
+        
         
         <div class="row">
             {foreach $events as $event}

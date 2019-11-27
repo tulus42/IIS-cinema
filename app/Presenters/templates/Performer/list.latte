@@ -6,14 +6,6 @@
     <h1 align="center">Herci/Účinkujúci</h1>
 
     <table class="user-table">
-        <thead>
-        <tr>
-            <th>Meno</th>
-            {if $user->isLoggedIn() and ($user->isInRole('redactor') or $user->isInRole('admin'))}
-                <th>Zmazať</th>
-            {/if}
-        </tr>
-        </thead>
         <tbody>
             {if $performers}
                 {foreach $performers as $performer}

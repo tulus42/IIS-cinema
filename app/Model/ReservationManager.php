@@ -127,4 +127,12 @@ class ReservationManager
 
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $reservation_id)->delete();
     }
+
+    public function deleteUser(string $username)
+    {
+        $all_reservations = $this->userReservesManager->getAllUserReservations($username);
+        foreach($all_reservations as $one_reservation){
+            $this->removeReservation($one_reservation->reservation_id);
+        }
+    }
 }

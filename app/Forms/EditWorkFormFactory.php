@@ -67,7 +67,7 @@ final class EditWorkFormFactory{
         $form->addTextArea('description', 'Popis:')
             ->setHtmlAttribute('class', 'form-text-description');
 
-        $form->addInteger('duration', 'Dĺžka trvania:')
+        $form->addInteger('duration', '*Dĺžka trvania:')
             ->setHtmlAttribute('class', 'form-text')
             ->setRequired()
             ->addRule(Form::MIN, 'Dĺžka nesmie byť záporné číslo', 0);

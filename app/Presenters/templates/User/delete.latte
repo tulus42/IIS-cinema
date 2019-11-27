@@ -3,6 +3,7 @@
 <div class="main-block-register" align="center">
 {if $current_user}
     <p>Určite chcete zmazať profil užívateľa {$current_user->username}?</p>
+    <p>Zmazanie účtu spôsobí zmazanie všetkých rezervácií, aj zaplatených</p>
 {else}
     <p>Účet nenájdený<p>
 {/if}

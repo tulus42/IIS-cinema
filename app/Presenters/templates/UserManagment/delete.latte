@@ -3,6 +3,7 @@
 <div class="main-block-register" align="center">
     {if $one_user}
         <p>Určite chcete zmazať účet používateľa {$one_user->username}?</p>
+        <p>Zmazanie účtu spôsobí zmazanie všetkých rezervácií, aj zaplatených</p>
         {control deleteForm}
     {else}
         <p>Užívateľ nenájdený</p>

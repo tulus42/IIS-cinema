@@ -1,6 +1,6 @@
 {block content}
 {if $user->isLoggedIn() and $user->isInRole('admin')}
-    <a class="pull-right " href="{link UserManagment:add}">
+    <a class="pull-right admin-button" href="{link UserManagment:add}">
         Pridať užívateľa
     </a>
 {/if}
