@@ -121,12 +121,18 @@ class EventManager
     {
         $events = $this->database->query('SELECT DISTINCT cultural_event.id_piece_of_work, cultural_piece_of_work.name 
         FROM cultural_event 
-        JOIN cultural_piece_of_work ON cultural_event.id_piece_of_work=cultural_piece_of_work.id_piece_of_work');
+        JOIN cultural_piece_of_work ON cultural_event.id_piece_of_work=cultural_piece_of_work.id_piece_of_work ORDER BY cultural_piece_of_work.name ASC');
         return $events;
     }
 
     public function getEventByWork(int $work_id)
     {
-        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_WORK, $work_id)->fetchAll();
+        return $this->database->table(self::TABLE_NAME)->order(self::COLUMN_DATE . ' ASC')->order(self::COLUMN_TIME . ' ASC')->where(self::COLUMN_WORK, $work_id)->fetchAll();
+    }
+
+    public function findDuplicateEvent(string $date, string $time, string $hall_num)
+    {
+        $events = $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_DATE, $date)->where(self::COLUMN_TIME, $time)->where(self::COLUMN_HALL, $hall_num)->fetchAll();
+        return count($events);
     }
 }

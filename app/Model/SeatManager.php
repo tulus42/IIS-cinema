@@ -86,7 +86,7 @@ class SeatManager
         if(is_object($reservationId)){
             $this->database->table('user_reserves')->where('reservation_id', $reservation_id)->delete();
         }
-        $this->database->table('reservation_id')->where('seat1', $seatId)->delete();
+        $this->database->table('reservation')->where('seat1', $seatId)->delete();
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_CULTURAL_EVENT, $cultural_event)->where(self::COLUMN_ROW, $row)->where(self::COLUMN_COLUMN, $column)->delete();
     }
 

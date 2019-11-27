@@ -13,8 +13,6 @@ final class SignUpFormFactory
 {
 	use Nette\SmartObject;
 
-	private const PASSWORD_MIN_LENGTH = 7;
-
 	/** @var FormFactory */
 	private $factory;
 
@@ -58,22 +56,23 @@ final class SignUpFormFactory
 
 		$form->addPassword('password', '*Heslo:')
 			->setHtmlAttribute('class', 'form-text')
-			->setOption('description', sprintf('Minimálne %d znakov', self::PASSWORD_MIN_LENGTH))
-			->setRequired('Prosím vložte Vaše heslo')
-			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
+			->setRequired('Prosím vložte Vaše heslo');
 
 		$form->addPassword('passwordConfirm', '*Potvrdenie hesla:')
 			->setHtmlAttribute('class', 'form-text')
-			->setRequired('Prosím vložte Vaše heslo')
-			->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
+			->setRequired('Prosím vložte Vaše heslo');
 
 		
 		$form->addSubmit('send', 'Registrovať sa')
 			->setHtmlAttribute('class', 'form-button');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+			$today = date("Y-m-d");
+			if($values->dateOfBirth > $today){
+				$form['dateOfBirth']->addError('Dátum narodenia musí byť v minulosti');
+				return;
+			}
 			try {
-				//$values->dateOfBirth = date('Y-m-d', strtotime($values->dateOfBirth));
 				$this->userManager->addUser($values->username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, "viewer", $values->password);
 				$onSuccess();
 			} catch (Model\DuplicateNameException $e) {

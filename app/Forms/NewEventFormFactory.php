@@ -61,12 +61,29 @@ class NewEventFormFactory
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($workId, $onSuccess): void {
+            $today = date("Y-m-d");
+            if($today > $values->dateOfEvent){
+                $form['dateOfEvent']->addError('Nie je možné vytvoriť udalosť v minulosti');
+                return;
+            }
+            else if($today == $values->dateOfEvent){
+                $now = date("H:I");
+                if($now > $values->timeOfEvent){
+                    $form['timeOfEvent']->addError('Nie je možné vytvoriť udalosť v minulosti');
+                    return;
+                }
+            }
             try{
-                $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, (int) $values->price, $workId, $values->hall);
-                $onSuccess();
+                $count = $this->eventManager->findDuplicateEvent($values->dateOfEvent, $values->timeOfEvent, $values->hall);
+                if($count == 0){
+                    $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, (int) $values->price, $workId, $values->hall);
+                    $onSuccess();
+                }
+                else{
+                    $form['dateOfEvent']->addError('Udalosť v tento čas a deň vo zvolenej sále už existuje');
+                }
             } catch(Model\DuplicateNameException $e) {
-                // TODO DUPLICATE ERROR
-                //$form['hall_num']->addError('Sála s týmto názvom už existuje');
+
             }
         };
 

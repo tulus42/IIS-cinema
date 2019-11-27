@@ -12,8 +12,6 @@ final class EditUserProfileFormFactory
 {
     use Nette\SmartObject;
 
-	private const PASSWORD_MIN_LENGTH = 7;
-
 	/** @var FormFactory */
 	private $factory;
 
@@ -77,6 +75,11 @@ final class EditUserProfileFormFactory
         ]);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($username, $onSuccess): void {
+            $today = date("Y-m-d");
+			if($values->dateOfBirth > $today){
+				$form['dateOfBirth']->addError('Dátum narodenia musí byť v minulosti');
+				return;
+			}
             $this->userManager->editUserAdmin($username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, $values->role);
             $onSuccess();
         };
