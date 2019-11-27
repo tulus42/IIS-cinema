@@ -44,7 +44,7 @@ class WorkManager
     /**
      * Adds new work
      */
-    public function addWork(string $name, string $genre, string $type, string $image, string $description, int $duration, $rating)
+    public function addWork(string $name, string $genre, string $type, $poster, string $image, string $description, int $duration, $rating)
     {
         try{
             $this->database->table(self::TABLE_NAME)->insert([
