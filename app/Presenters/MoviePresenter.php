@@ -52,7 +52,7 @@ class MoviePresenter extends BasePresenter
 
     public function renderEdit(int $id_piece_of_work): void
     {
-
+        ;
     }
 
     /**
@@ -196,12 +196,6 @@ class MoviePresenter extends BasePresenter
         //$this->redirect($this);
     }
 
-    /*
-    public function renderAddPerf($work_id, $perf_id)
-    {
-        $this->starsInManager->addPerformer((int) $perf_id, (int) $work_id);
-        //$this->redirect('AddPerformer', $work_id);
-    }*/
 }
 
 

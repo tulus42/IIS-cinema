@@ -41,7 +41,8 @@ final class NewReservationFormFactory{
             'cash' => 'V hotovosti pri prevzatí',
         ])->setRequired();
         
-        $form->addSubmit('pay', 'Potvrdiť rezerváciu');
+        $form->addSubmit('pay', 'Potvrdiť rezerváciu')
+            ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($work, $event, $seats, $userID, $presenter, $onSuccess): void {
                         

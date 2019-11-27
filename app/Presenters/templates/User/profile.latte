@@ -9,7 +9,9 @@
     <h4>Krstné meno: {$this_profile->name}</h4>
     <h4>Priezvisko: {$this_profile->surname}</h4>
     <h4>Dátum narodenia: {$this_profile->date_of_birth|date: '%d.%m.%Y'}<h4>
-    <h4>Telefónne číslo: {$this_profile->phone_number}<h4>
+    {if $this_profile->phone_number}
+        <h4>Telefónne číslo: {$this_profile->phone_number}<h4>
+    {/if}
     <h4>E-mail: {$this_profile->e_mail}<h4>
 
     <br>
