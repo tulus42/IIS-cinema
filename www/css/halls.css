@@ -43,6 +43,19 @@
 
 }
 
+.seat-in-list{
+    margin-right: auto;
+    margin-bottom: 1px;
+    height: 28px;
+    width: 38px;
+    text-align: center;
+    font-size: 20px;
+    background-color: #D1D7E0;
+    border-radius: 12px;
+    border: solid #636b6f 3px;
+
+}
+
 .column{
     display:inline;
     float:left;
