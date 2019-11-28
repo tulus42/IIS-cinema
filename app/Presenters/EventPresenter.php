@@ -40,9 +40,16 @@ class EventPresenter extends BasePresenter
         $this->newReservationFormFactory = $newReservationFormFactory;
     }
 
+    public function checkPrivileges()
+    {
+        if (!$this->user->isLoggedIn() or !($this->user->isInRole('admin') or $this->user->isInRole('redactor'))){
+            throw new \Nette\Application\BadRequestException(404);
+        }
+    }
+
     public function renderEdit(int $event_id)
     {
-
+        $this->checkPrivileges();
     }
 
     public function createComponentEditEventForm(): Form
@@ -64,7 +71,7 @@ class EventPresenter extends BasePresenter
 
     public function renderAdd(string $id_piece_of_work)
     {
-        ;
+        $this->checkPrivileges();
     }
 
     public function renderShow(int $event_id): void
@@ -86,6 +93,8 @@ class EventPresenter extends BasePresenter
 
     public function renderDelete(int $id_cultural_event): void
     {
+        $this->checkPrivileges();
+        
         $cultural_event = $this->database->table('cultural_event')->get($id_cultural_event);
         $this->template->cultural_event = $cultural_event;
 

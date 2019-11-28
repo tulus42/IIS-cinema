@@ -29,6 +29,13 @@ class HallListPresenter extends BasePresenter
         $this->eventManager = $eventManager;
     }
 
+    public function checkPrivileges()
+    {
+        if (!$this->user->isLoggedIn() or !($this->user->isInRole('admin') or $this->user->isInRole('redactor'))){
+            throw new \Nette\Application\BadRequestException(404);
+        }
+    }
+
     public function renderHallList(): void
     {
         $this->template->halls = $this->database->table('hall');
@@ -41,6 +48,11 @@ class HallListPresenter extends BasePresenter
         
     }
 
+    public function renderAdd()
+    {
+        $this->checkPrivileges();
+    }
+
     public function createComponentNewHallForm()
     {
         return $this->newHallFactory->createHallForm(function (): void{
@@ -50,6 +62,7 @@ class HallListPresenter extends BasePresenter
 
     public function renderDelete(string $hall_num)
     {
+        $this->checkPrivileges();
         $hall = $this->database->table('hall')->get($hall_num);
         $this->template->hall = $hall;
     }
