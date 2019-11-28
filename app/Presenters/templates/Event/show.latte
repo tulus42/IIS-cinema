@@ -11,6 +11,7 @@
         {$event->time|date: '%H:%I'}
     
     </h1>
+    <h2 id="more-than-6" style="color:red;"></h2>
 
     
     
@@ -62,12 +63,16 @@
                 
                 
                 function clickOnSeat(seatID, state){
+                    document.getElementById("more-than-6").innerHTML = "";
+
                     if (state == "available") {
                         if (!reservationArray.includes(seatID)) {
                             if (reservationArray.length < 6) {
                                 reservationArray.push(seatID);
                                 
                                 document.getElementById(seatID).style.backgroundColor = "#00ffff";
+                            } else {
+                                document.getElementById("more-than-6").innerHTML = "Nie je možné rezervovať viac ako 6 sedadiel";
                             }
                         } else {
                             for( var i = 0; i < reservationArray.length; i++){ 
