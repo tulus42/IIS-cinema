@@ -196,6 +196,30 @@ class MoviePresenter extends BasePresenter
         //$this->redirect($this);
     }
 
+
+    public function renderGallery($workID, $pictureNum): void
+    {
+        $work = $this->database->table('cultural_piece_of_work')->get($workID);
+        
+        $gallery = $this->workManager->getGallery($work);
+
+        $actualPic = $this->workManager->getActualPicture($gallery, $pictureNum);
+
+        $nextPic = $this->workManager->getNextPic($gallery, $pictureNum);
+        $prevPic = $this->workManager->getPrevPic($gallery, $pictureNum);
+
+        $this->template->actualPic = $actualPic;
+        $this->template->nextPic = $nextPic;
+        $this->template->prevPic = $prevPic;
+        $this->template->workID = $workID;
+
+
+
+        
+
+
+    }
+
 }
 
 

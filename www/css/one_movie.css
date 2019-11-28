@@ -55,3 +55,27 @@
     background-color:#205ed1; 
     color: #D1D7E0;
 }
+
+.gallery{
+    margin-top: 30px;
+    margin-left: 30px;
+    border: none;
+    background-color: #1dc0fd;
+    padding: 10px;
+    padding-right: 100px;
+    padding-left: 100px;
+    font-family: 'Nunito', sans-serif;
+    color: #3f4547;
+    text-align: center;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+
+.gallery:hover{
+    background-color:#205ed1; 
+    color: #D1D7E0;
+}

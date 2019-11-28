@@ -55,6 +55,11 @@ CREATE TABLE `cultural_piece_of_work`(
     `genre` VARCHAR(255) NOT NULL,
     `type` VARCHAR(255) NOT NULL, -- should it be enum or just varchar?
     `picture` VARCHAR(255) NOT NULL, -- what about this one?
+    `picture2` VARCHAR(255),
+    `picture3` VARCHAR(255),
+    `picture4` VARCHAR(255),
+    `picture5` VARCHAR(255),
+    `picture6` VARCHAR(255),
     `poster` LONGBLOB,
     `description` VARCHAR(1024) NOT NULL,
     `duration` INT NOT NULL,
@@ -213,11 +218,18 @@ VALUES
     ('user','Jozko', 'Mrkvicka', '1989-11-01','0903456789','admin@admin.com','viewer', '$2y$10$hpN46XsemmBP35MoapSMZu4rC38Q8WUqgfytiWnZcsLi1AuqNGKHy'); -- HESL: ahoj
 
 -- INSERT TO cultural_piece_of_work
-INSERT INTO `cultural_piece_of_work` (`name`, `genre`, `type`, `picture`, `description`, `duration`, `rating`)
+INSERT INTO `cultural_piece_of_work` (`name`, `genre`, `type`, `picture`, `picture2`, `picture3`, `picture4`, `description`, `duration`, `rating`)
 VALUES 
-    ('Deadpool','komédia','film', 'https://images-na.ssl-images-amazon.com/images/I/51Gh9OaWVcL.jpg','Než se stal Deadpoolem, byl Wadem Wilsonem (Ryan Reynolds), bývalým členem speciálních jednotek. Když mu lékaři diagnostikovali pokročilé stadium rakoviny, podrobil se experimentální léčbě v rámci programu Weapon X, známého a populárního především mezi x-menovskými mutanty. Díky tomu se Wade zbavil rakoviny, a nejenže zůstal naživu, ale také jako bonus získal schopnost rychlého samouzdravování. Bohužel však – například oproti Wolverinovi, který po podobné léčbě zůstal celkem sexy – z tohoto pokusu vyšel trvale znetvořený. ','108','81'),
-    ('Deadpool 2','komédia','film', 'https://m.media-amazon.com/images/M/MV5BYzQ3MWEzMDMtYTczMi00MWI0LWE0MTAtMzU5MzAxY2NmNTllXkEyXkFqcGdeQXVyNDIzMTQwODY@._V1_UY268_CR43,0,182,268_AL_.jpg','Nejaky popis. ','119','80'),
-    ('Harry Potter a Tajomná komnata','dobrodružný','film', 'https://image.tmdb.org/t/p//w780//ygsu82q2YSrIdePnM2GLGjsFFjr.jpg','Harry Potter se po prázdninách vrací do Bradavic a nastupuje do druhého ročníku. A to i přes varování domácího skřítka Dobbyho, podle kterého mu v čarodějné škole hrozí smrt. Harry nedbá nářků skřítka působícího víc škody než užitku, ale potom se skutečně začnou dít podivné věci, na stěnách se objevují neznámé nápisy a několik studentů je přepadeno tajemným přízrakem. Co s tím má společného Tajemná komnata? ','161','77'),
+    ('Deadpool','komédia','film', 'https://images-na.ssl-images-amazon.com/images/I/51Gh9OaWVcL.jpg', 'https://www.sideshow.com/storage/product-images/904741/deadpool_marvel_gallery_5cdc863862742.jpg', 'https://thebottomline.as.ucsb.edu/wp-content/uploads/2018/05/Icaro-Deadpool-696x696.jpg', 'https://fsmedia.imgix.net/02/17/69/03/6436/457e/a1d0/57c7e58c4dc1/deadpool-3-release-date-canceled-cast-characters-plot-spoilers-trailer-teaser-pg-13-rating-mcu-marve.jpeg?rect=0%2C0%2C1920%2C960&auto=format%2Ccompress&dpr=2&w=650', 'Než se stal Deadpoolem, byl Wadem Wilsonem (Ryan Reynolds), bývalým členem speciálních jednotek. Když mu lékaři diagnostikovali pokročilé stadium rakoviny, podrobil se experimentální léčbě v rámci programu Weapon X, známého a populárního především mezi x-menovskými mutanty. Díky tomu se Wade zbavil rakoviny, a nejenže zůstal naživu, ale také jako bonus získal schopnost rychlého samouzdravování. Bohužel však – například oproti Wolverinovi, který po podobné léčbě zůstal celkem sexy – z tohoto pokusu vyšel trvale znetvořený. ','108','81'),
+    ('Deadpool 2','komédia','film', 'https://m.media-amazon.com/images/M/MV5BYzQ3MWEzMDMtYTczMi00MWI0LWE0MTAtMzU5MzAxY2NmNTllXkEyXkFqcGdeQXVyNDIzMTQwODY@._V1_UY268_CR43,0,182,268_AL_.jpg', 'https://d1hwmph06ue357.cloudfront.net/new_test/wp-content/uploads/2018/07/Deadpoolcoxsite1.jpg', 'https://lh3.googleusercontent.com/RuMkDToz8JoK-XpLQQ3QEVOETEKt1-cExrxjAgL3maIxG226eBi5v6e9NIEtvRIwE8ZA', 'https://www.slashfilm.com/wp/wp-content/images/tim-millers-deadpool-2.jpg', 'Nejaky popis. ','119','80');
+    
+INSERT INTO `cultural_piece_of_work` (`name`, `genre`, `type`, `picture`, `picture2`, `picture3`, `picture4`, `picture5`, `picture6`, `description`, `duration`, `rating`)
+VALUES
+    ('Harry Potter a Tajomná komnata','dobrodružný','film', 'https://image.tmdb.org/t/p//w780//ygsu82q2YSrIdePnM2GLGjsFFjr.jpg', 'https://www.sky4tv.com/wp-content/uploads/2018/04/HarryPotter2_Showpage-fc83adb819-700x321.jpg', 'https://cdn.shopify.com/s/files/1/0185/4636/products/KWChamberOfSecrets_Reg_800x.png?v=1506400183', 'https://i5.walmartimages.com/asr/203139ba-55d5-45b8-9c12-aeb556789b03_1.1b121f6ff85a19cb9800daf9bce8c6b6.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF', 'https://i.ytimg.com/vi/uU-ET1FAv3Y/maxresdefault.jpg', 'https://images.justwatch.com/backdrop/146803133/s1440/harry-potter-and-the-chamber-of-secrets', 'Harry Potter se po prázdninách vrací do Bradavic a nastupuje do druhého ročníku. A to i přes varování domácího skřítka Dobbyho, podle kterého mu v čarodějné škole hrozí smrt. Harry nedbá nářků skřítka působícího víc škody než užitku, ale potom se skutečně začnou dít podivné věci, na stěnách se objevují neznámé nápisy a několik studentů je přepadeno tajemným přízrakem. Co s tím má společného Tajemná komnata? ','161','77');
+
+
+INSERT INTO `cultural_piece_of_work` (`name`, `genre`, `type`, `picture`, `description`, `duration`, `rating`)
+VALUES
     ('Rýchlo a zbesilo','akčný','film', 'https://i.pinimg.com/564x/9f/8d/5a/9f8d5a00f1f8885dd6d4b8282e9273d5.jpg','Brianovi se konečně podaří stát se členem party vedené Dominicem, který je doslova blázen do nelegálních závodů, pořádaných většinou v noci na periférii Los Angeles. Je to obrovské divadlo pro obecenstvo zběsilých jízd, ale především posedlost pro piloty speciálně upravených superauťáků. S ohlušujícím řevem motorů, řítící se městem několikanásobkem povolené rychlosti, pění všem adrenalin v krvi. Ve hře jsou peníze, prestiž, obdiv dívek.','106','72'),
     ('Star Wars: The Force Awakens','dráma','film', 'https://m.media-amazon.com/images/M/MV5BOTAzODEzNDAzMl5BMl5BanBnXkFtZTgwMDU1MTgzNzE@._V1_.jpg','Luke Skywalker zmizel a galaxie zažívá temné časy. Postupně ji totiž začíná ovládat zločinecký První řád, který vzniknul na troskách Impéria. Proti Prvnímu řádu se vytvořil Odpor, do jehož čela se postavila princezna Leia. Oběma stranám je jasné, že pokud se jim podaří najít Luka Skywalkera dříve než jejich nepřátelům, vítězství bude jejich. Na planetě Jakku se právě vylodili vojáci Prvního řádu, takzvaní stormtroopeři, kteří zde hledají mapu cesty, jež má být klíčem k nalezení Luka.','136','76');
 

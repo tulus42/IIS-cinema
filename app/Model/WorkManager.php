@@ -95,4 +95,40 @@ class WorkManager
     {
         return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->select('*')->fetch();
     }
+
+
+    
+
+    public function getGallery($work){
+        $gallery = [];
+        array_push($gallery, $work->picture);
+        if ($work->picture2 != null) {array_push($gallery, $work->picture2);}
+        if ($work->picture3 != null) {array_push($gallery, $work->picture3);}
+        if ($work->picture4 != null) {array_push($gallery, $work->picture4);}
+        if ($work->picture5 != null) {array_push($gallery, $work->picture5);}
+        if ($work->picture6 != null) {array_push($gallery, $work->picture6);}
+
+        return $gallery;
+
+    }
+
+    public function getActualPicture($gallery, $num){
+        return $gallery[$num];
+    }
+
+    public function getNextPic($gallery, $num) {
+        if ($num < count($gallery) - 1) {
+            return ($num + 1);
+        } else {
+            return 0;
+        }
+    }
+
+    public function getPrevPic($gallery, $num) {
+        if ($num > 0) {
+            return ($num - 1);
+        } else {
+            return (count($gallery) - 1);
+        }
+    }
 }
