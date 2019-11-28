@@ -212,10 +212,10 @@ ON DELETE CASCADE;
 INSERT INTO `user` 
 VALUES 
     ('admin','Jožko', 'Mrkvicka', '1989-01-11','0903456789','admin@admin.com','admin', '$2y$10$4YH5Pyou8dsyCIHT0zbcEuReuZ86WAPSTUS0OvJB1Mc0.zNXA481q'), -- HESLO: admin
-    ('red','Robert', 'Mrkvicka', '1979-05-10','0903456987','red@gmail.com','redactor', '$2y$10$rdwJ8T1z7.GB2p3AOFlc4eR1qAHqTkeY4fwB6Z2xT/s262lguovL6'), -- HESLO: ahoj
-    ('dolar','Ján', 'Mečiar', '1999-03-27','0903456789','admin@admin.com','cashier', '$2y$10$8Z/97BmOjIIel9yTqUW/kO/MeHxeKtU8gxdQEuiQqRfuejCadYG2K'),   -- HESLO: fiko
-    ('Maniac42','Adela', 'Ostrolúcka', '1889-08-03','0903456789','admin@admin.com','viewer', '$2y$10$MRn3.qFHltGEasjknt0XeOYTGlniT4OVVqWdHr5T5tgi4REe.WVmy'), -- HESLO: ahoj
-    ('user','Jozko', 'Mrkvicka', '1989-11-01','0903456789','admin@admin.com','viewer', '$2y$10$hpN46XsemmBP35MoapSMZu4rC38Q8WUqgfytiWnZcsLi1AuqNGKHy'); -- HESL: ahoj
+    ('redactor','Robert', 'Mrkvicka', '1979-05-10','0903456987','redactor@gmail.com','redactor', '$2y$10$XkLT2nen6jIL3CWhoijQY.lSgc.x4j.9Dq7RwiTbaqawivIPf6dWq'), -- HESLO: redactor
+    ('cashier','Ján', 'Mečiar', '1999-03-27','0903456789','cashier@gmail.com','cashier', '$2y$10$i4h7hN1/MZbBCejPeFju8O67jOPaFgm7kl7BmioK/16DQWJ0dHXP6'),   -- HESLO: cashier
+    ('Maniac42','Adela', 'Ostrolúcka', '1889-08-03','0903456789','maniac@gmail.com','viewer', '$2y$10$MRn3.qFHltGEasjknt0XeOYTGlniT4OVVqWdHr5T5tgi4REe.WVmy'), -- HESLO: ahoj
+    ('viewer','Jozko', 'Mrkvicka', '1989-11-01','0903456789','viewer@gmail.com','viewer', '$2y$10$6ljwU9zlHHuzqsaCoBrWr.hBPSNrE8WwxKM9eUAktvdB2k/h.wC06'); -- HESLO: viewer
 
 -- INSERT TO cultural_piece_of_work
 INSERT INTO `cultural_piece_of_work` (`name`, `genre`, `type`, `picture`, `picture2`, `picture3`, `picture4`, `description`, `duration`, `rating`)

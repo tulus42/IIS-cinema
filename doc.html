@@ -1,0 +1,69 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset="UTF-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>Kino: rezervace vstupenek na kulturní události</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autori</dt>
+	<dd>Sabína Gregušová<!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xgregu02@stud.fit.vutbr.cz">xgregu02@stud.fit.vutbr.cz</a> -
+		popis činnosti v týmu
+	</dd>
+	<dd>Adam Hostin <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xhosti02@stud.fit.vutbr.cz">xhosti02@stud.fit.vutbr.cz</a> - 
+		popis činnosti v týmu
+	</dd>
+  	<dd>Adrián Tulušák <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xtulus00@stud.fit.vutbr.cz">xtulus00@stud.fit.vutbr.cz</a> - 
+		popis činnosti v týmu
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
+	<dd>(pokud má aplikace více vstupních stránek, napište obdobně další URL)</dd>
+</dl>
+
+<h2>Užívatelia systému pre testovanie</h2>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>redactor</td><td>redactor</td><td>Redaktor</td></tr>
+<tr><td>cashier</td><td>cashier</td><td>Pokladník</td></tr>
+<tr><td>viewer</td><td>viewer</td><td>Registrovaný divák</td></tr>
+</table>
+
+<h2>Implementácia</h2>
+<p>Využili sme český FrameWork Nette, ktorý využíva návrhový vzor MVC, ktorého sme sa držali.</p>
+
+<h3>Databáza</h3>
+
+Zde vložte grafické schéma relační databáze (tabulek v databázi).
+
+<h2>Inštalácia</h2>
+
+Stručně popište: 
+<ul>
+<li>postup instalace na server,</li>
+<li>softwarové požadavky (verze PHP apod.),</li>
+<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+</ul>
+
+<h2>Známe problémy</h2>
+<p>Nahrávanie obrázkov k filmu alebo samotný plagát filmu je implementovaný iba pomocou nahrávania cez URL, pretože sa nám nepodarilo rozbehnúť technológiu, ktorá by obrázky ukladala na server a v databáze iba metadata k nim.</p>
+
+</body>
+</html>

@@ -45,7 +45,7 @@ final class SignInFormFactory
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
 			try {
-				$this->user->setExpiration($values->remember ? '14 days' : '2 minutes');
+				$this->user->setExpiration($values->remember ? '14 days' : '30 minutes');
 				$this->user->login($values->username, $values->password);
 			} catch (Nette\Security\AuthenticationException $e) {
 				$form->addError('The username or password you entered is incorrect.');

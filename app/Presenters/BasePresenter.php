@@ -16,12 +16,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::startup();
 
-        /*
         if (!$this->user->isLoggedIn()) {
             if($this->user->getLogoutReason() === IUserStorage::INACTIVITY) {
-                $this->redirect('Sign:timeout');
+                
             }
         }
-        */
+        
     }
 }
