@@ -38,7 +38,7 @@ final class NewHallFormFactory{
             
         $form->addInteger('column', '*Počet stĺpcov:')
             ->setHtmlAttribute('class', 'form-text')
-            ->addRule(Form::MIN, 'Počet stĺpcov musí byť aspoň 1', 1)
+            ->addRule(Form::RANGE, 'Počet stĺpcov musí byť v rozmedzí 1 až 20', [1,20])
             ->setRequired();
 
         $form->addText('address', '*Adresa:')

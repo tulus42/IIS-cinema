@@ -43,7 +43,7 @@ class EventManager
     /**
      * Adds new event
      */
-    public function addEvent(string $date, string $time, int $price, int $piece_of_work, string $hall_num)
+    public function addEvent(string $date, string $time, float $price, int $piece_of_work, string $hall_num)
     {
         $date = date('Y-m-d', strtotime($date));
         //$time = date('H:M', strtotime($time));
@@ -61,7 +61,7 @@ class EventManager
     /**
      * Edits existing event
      */
-    public function editEvent(int $event_id, string $date, string $time, int $price)
+    public function editEvent(int $event_id, string $date, string $time, float $price)
     {
         $date = date('Y-m-d', strtotime($date));
         //$time = date('H:M', strtotime($time));

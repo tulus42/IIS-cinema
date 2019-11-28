@@ -74,7 +74,7 @@ class EditEventFormFactory
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($eventId, $onSuccess): void {
             try{
-                $this->eventManager->editEvent($eventId, $values->dateOfEvent, $values->timeOfEvent, (int) $values->price);
+                $this->eventManager->editEvent($eventId, $values->dateOfEvent, $values->timeOfEvent, round($values->price, 2));
                 $onSuccess();
             } catch(Model\DuplicateNameException $e) {
                 // TODO DUPLICATE ERROR

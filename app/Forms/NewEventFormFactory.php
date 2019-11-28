@@ -73,18 +73,17 @@ class NewEventFormFactory
                     return;
                 }
             }
-            try{
-                $count = $this->eventManager->findDuplicateEvent($values->dateOfEvent, $values->timeOfEvent, $values->hall);
-                if($count == 0){
-                    $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, (int) $values->price, $workId, $values->hall);
-                    $onSuccess();
-                }
-                else{
-                    $form['dateOfEvent']->addError('Udalosť v tento čas a deň vo zvolenej sále už existuje');
-                }
-            } catch(Model\DuplicateNameException $e) {
 
+            $count = $this->eventManager->findDuplicateEvent($values->dateOfEvent, $values->timeOfEvent, $values->hall);
+            if($count == 0){
+                $this->eventManager->addEvent($values->dateOfEvent, $values->timeOfEvent, round($values->price, 2), $workId, $values->hall);
+                
             }
+            else{
+                $form['dateOfEvent']->addError('Udalosť v tento čas a deň vo zvolenej sále už existuje');
+                return;
+            }
+            $onSuccess();
         };
 
         return $form;
