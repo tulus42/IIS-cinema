@@ -18,6 +18,7 @@ DONE: 18. zabrániť prístupu každého prihláseného užívateľa ku všetký
 DONE: 20. Kontrola dátumu narodenia
 DONE: 21. add movie - upraviť formulár - * pri povinných 
 DONE: 22. Event v tom istom čase a dátume - vypíše error
+23. desatinné čísla ceny
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu
