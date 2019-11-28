@@ -34,7 +34,7 @@ class UserManagmentPresenter extends BasePresenter
         parent::startup();
 
         if (!$this->user->isLoggedIn() or !$this->user->isInRole('admin')){
-            throw new \Nette\Application\BadRequestException(403);
+            throw new \Nette\Application\BadRequestException(404);
         }
     }
 

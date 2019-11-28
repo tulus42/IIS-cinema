@@ -46,13 +46,21 @@ class MoviePresenter extends BasePresenter
 
     public function renderDelete(int $id_piece_of_work): void
     {
+        $this->checkPrivileges();
         $piece_of_work = $this->database->table('cultural_piece_of_work')->get($id_piece_of_work);
         $this->template->piece_of_work = $piece_of_work;
     }
 
+    public function checkPrivileges()
+    {
+        if (!$this->user->isLoggedIn() or !($this->user->isInRole('admin') or $this->user->isInRole('redactor'))){
+            throw new \Nette\Application\BadRequestException(404);
+        }
+    }
+
     public function renderEdit(int $id_piece_of_work): void
     {
-        ;
+        $this->checkPrivileges();
     }
 
     /**
@@ -90,6 +98,11 @@ class MoviePresenter extends BasePresenter
 		return $form;
     }
 
+    public function renderAdd()
+    {
+        $this->checkPrivileges();
+    }
+
     public function deleteFormSucceeded(): void
 	{
         $workId = (int) $this->getParameter('id_piece_of_work');
@@ -105,6 +118,8 @@ class MoviePresenter extends BasePresenter
     
     public function renderAddPerformer(int $id_piece_of_work)
     {
+        $this->checkPrivileges();
+
         $this->template->already_stars_in = $this->database->query('SELECT performer.performer_id, performer.name, performer.surname
         FROM performer
         JOIN stars_in ON stars_in.performer_id=performer.performer_id where stars_in.id_piece_of_work=' . $id_piece_of_work . ' ORDER BY surname ASC, name ASC;;');
@@ -162,12 +177,12 @@ class MoviePresenter extends BasePresenter
 
     public function renderRemovePerf($work_id, $perf_id)
     {
-        ;
+        $this->checkPrivileges();
     }
 
     public function renderAddPerf($work_id, $perf_id)
     {
-        ;
+        $this->checkPrivileges();
     }
 
     public function goBack()
@@ -186,14 +201,10 @@ class MoviePresenter extends BasePresenter
     
     public function RemoveP()
     {
-        //dump($work_id);
-        //dump($perf_id);
         $work_id = $this->getParameter('work_id');
         $perf_id = $this->getParameter('perf_id');
         $this->starsInManager->removePerformer((int) $perf_id, (int) $work_id);
         $this->goBack();
-        //$this->redirect('AddPerformer', $work_id);
-        //$this->redirect($this);
     }
 
 

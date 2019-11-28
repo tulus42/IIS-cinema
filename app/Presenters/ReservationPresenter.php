@@ -27,6 +27,15 @@ class ReservationPresenter extends BasePresenter
         $this->reservationManager = $reservationManager;
     }
 
+    public function startup(): void
+    {
+        parent::startup();
+
+        if (!$this->user->isLoggedIn() or !($this->user->isInRole('admin') or $this->user->isInRole('cashier'))){
+            throw new \Nette\Application\BadRequestException(404);
+        }
+    }
+
     public function renderMovieEventList()
     {
         $events = $this->eventManager->allEvents();
@@ -37,8 +46,6 @@ class ReservationPresenter extends BasePresenter
     public function renderEventList(int $id_work)
     {
         $events = $this->eventManager->getEventByWork($id_work);
-        //$this->template->event_count = $events->getRowCount();
-        //dump($this->template->event_count);
         $this->template->events = $events;
     }
 
