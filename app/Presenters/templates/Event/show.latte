@@ -80,7 +80,7 @@
                         reservationArray.sort();
                     }
                     document.getElementById("reservedSeats").innerHTML = reservationArray;
-                    document.getElementById("suma").innerHTML = (reservationArray.length * {$event->price}) + "€"
+                    document.getElementById("suma").innerHTML = (reservationArray.length * {$event->price}).toFixed(2) + "€"
 
                    
                     

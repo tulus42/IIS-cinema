@@ -152,7 +152,12 @@ class EventPresenter extends BasePresenter
             $userID = '';
         }
         
-        return $this->newReservationFormFactory->createReservationForm($work, $event, $seats, $userID, $this, function (): void{
+        $logged = false;
+        if ($this->user->isLoggedIn()) {
+            $logged = true;
+        }
+
+        return $this->newReservationFormFactory->createReservationForm($work, $eventID, $seats, $userID, $logged, $this, function (): void{
             $this->redirect('Event:reserveSuccess');
         });
     }
@@ -205,8 +210,13 @@ class EventPresenter extends BasePresenter
         $this->template->seats = $seats;
     }
 
-    public function renderReserveUnSuccess(): void
+    public function renderReserveUnSuccess($event): void
     {
+        $this->template->event = $event;
+    }
 
+    public function renderPayByCard($reservation): void
+    {
+        $this->template->reservation = $reservation;
     }
 }

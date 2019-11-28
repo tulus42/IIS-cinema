@@ -32,9 +32,16 @@ final class NewReservationFormFactory{
     }
 
 
-    public function createReservationForm($work, $event, $seats, $userID, $presenter, callable $onSuccess): Form
+    public function createReservationForm($work, $event, $seats, $userID, $logged, $presenter, callable $onSuccess): Form
     {
         $form = $this->factory->create();
+
+        if (!$logged) {
+            $form->addEmail('email', 'E-mail')
+            ->setHtmlAttribute('class', 'form-text')
+            ->setOption('description', '(na tento e-mail Vám budú zasnlané informácie o rezervácií)')
+            ->setRequired();
+        } 
 
         $form->addRadioList ('paymentMethod', 'Zvoľte spôsob platby:', [
             'card' => 'Platba kartou',
@@ -51,7 +58,7 @@ final class NewReservationFormFactory{
                 array_push($seatsID, $seat->seat_id);
 
                 if ($seat->state != "available") {
-                    $presenter->redirect('Event:reserveUnSuccess');
+                    $presenter->redirect('Event:reserveUnSuccess', $event);
                 }
             }
 
@@ -79,8 +86,12 @@ final class NewReservationFormFactory{
                 if ($userID != '') {
                     $this->userReservesManager->createUserReserves($userID, $reservation->reservation_id); 
                 }
-                
-                $presenter->redirect('Event:reserveSuccess', $reservation->reservation_id);
+
+                if ($values->paymentMethod == 'card') {
+                    $presenter->redirect('Event:payByCard', $reservation->reservation_id);
+                } else {
+                    $presenter->redirect('Event:reserveSuccess', $reservation->reservation_id);
+                }
 
                 $onSuccess();
             } catch(Model\DuplicateNameException $e) {
