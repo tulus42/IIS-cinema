@@ -212,12 +212,6 @@ class MoviePresenter extends BasePresenter
         $this->template->nextPic = $nextPic;
         $this->template->prevPic = $prevPic;
         $this->template->workID = $workID;
-
-
-
-        
-
-
     }
 
 }

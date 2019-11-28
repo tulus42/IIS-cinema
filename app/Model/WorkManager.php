@@ -21,9 +21,15 @@ class WorkManager
         COLUMN_GENRE = 'genre',
         COLUMN_TYPE = 'type',
         COLUMN_IMAGE = 'picture',
+        COLUMN_IMAGE2 = 'picture2',
+        COLUMN_IMAGE3 = 'picture3',
+        COLUMN_IMAGE4 = 'picture4',
+        COLUMN_IMAGE5 = 'picture5',
+        COLUMN_IMAGE6 = 'picture6',
         COLUMN_DESCRIPTION = 'description',
         COLUMN_DURATION = 'duration',
-        COLUMN_RATING = 'rating';
+        COLUMN_RATING = 'rating',
+        COLUMN_POSTER = 'poster';
 
     /** @var Nette\Database\Context */
     private $database;
@@ -44,17 +50,22 @@ class WorkManager
     /**
      * Adds new work
      */
-    public function addWork(string $name, string $genre, string $type, $poster, string $image, string $description, int $duration, $rating)
+    public function addWork(string $name, string $genre, string $type, string $image1, string $image2, string $image3, string $image4, string $image5, string $image6, string $description, int $duration, $rating)
     {
         try{
             $this->database->table(self::TABLE_NAME)->insert([
                 self::COLUMN_NAME => $name,
                 self::COLUMN_GENRE => $genre,
                 self::COLUMN_TYPE => $type,
-                self::COLUMN_IMAGE => $image,
+                self::COLUMN_IMAGE => $image1,
+                self::COLUMN_IMAGE2 => $image2,
+                self::COLUMN_IMAGE3 => $image3,
+                self::COLUMN_IMAGE4 => $image4,
+                self::COLUMN_IMAGE5 => $image5,
+                self::COLUMN_IMAGE6 => $image6,
                 self::COLUMN_DESCRIPTION => $description,
                 self::COLUMN_DURATION => $duration,
-                self::COLUMN_RATING => $rating
+                self::COLUMN_RATING => $rating,
             ]);
         } catch (Nette\Database\UniqueConstraintViolationException $e){
             throw new DuplicateNameException;
