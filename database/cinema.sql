@@ -45,7 +45,7 @@ CREATE TABLE `reservation`(
 CREATE TABLE `user_reserves`(
     `user_reserve_id` int(8) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     `reservation_id` int(8),
-    `username` VARCHAR(8)
+    `username` VARCHAR(255)
 ) ENGINE=InnoDB CHARSET=utf8;
 
 -- Table structure for performance
@@ -215,7 +215,7 @@ VALUES
 -- INSERT TO cultural_piece_of_work
 INSERT INTO `cultural_piece_of_work` (`name`, `genre`, `type`, `poster`, `picture`, `description`, `duration`, `rating`)
 VALUES 
-    ('Deadpool','komédia','film', '/home/adrian/Plocha/Snímka obrazovky z 2019-11-23 18-25-18.png', 'https://images-na.ssl-images-amazon.com/images/I/51Gh9OaWVcL.jpg','Než se stal Deadpoolem, byl Wadem Wilsonem (Ryan Reynolds), bývalým členem speciálních jednotek. Když mu lékaři diagnostikovali pokročilé stadium rakoviny, podrobil se experimentální léčbě v rámci programu Weapon X, známého a populárního především mezi x-menovskými mutanty. Díky tomu se Wade zbavil rakoviny, a nejenže zůstal naživu, ale také jako bonus získal schopnost rychlého samouzdravování. Bohužel však – například oproti Wolverinovi, který po podobné léčbě zůstal celkem sexy – z tohoto pokusu vyšel trvale znetvořený. ','108','81'),
+    ('Deadpool','komédia','film', '/home/adrian/Plocha/001.png', 'https://images-na.ssl-images-amazon.com/images/I/51Gh9OaWVcL.jpg','Než se stal Deadpoolem, byl Wadem Wilsonem (Ryan Reynolds), bývalým členem speciálních jednotek. Když mu lékaři diagnostikovali pokročilé stadium rakoviny, podrobil se experimentální léčbě v rámci programu Weapon X, známého a populárního především mezi x-menovskými mutanty. Díky tomu se Wade zbavil rakoviny, a nejenže zůstal naživu, ale také jako bonus získal schopnost rychlého samouzdravování. Bohužel však – například oproti Wolverinovi, který po podobné léčbě zůstal celkem sexy – z tohoto pokusu vyšel trvale znetvořený. ','108','81'),
     ('Deadpool 2','komédia','film', '/home/adrian/Plocha/Snímka obrazovky z 2019-11-23 18-25-18.png', 'https://m.media-amazon.com/images/M/MV5BYzQ3MWEzMDMtYTczMi00MWI0LWE0MTAtMzU5MzAxY2NmNTllXkEyXkFqcGdeQXVyNDIzMTQwODY@._V1_UY268_CR43,0,182,268_AL_.jpg','Nejaky popis. ','119','80'),
     ('Harry Potter a Tajomná komnata','dobrodružný','film', '/home/adrian/Plocha/Snímka obrazovky z 2019-11-23 18-25-18.png', 'https://image.tmdb.org/t/p//w780//ygsu82q2YSrIdePnM2GLGjsFFjr.jpg','Harry Potter se po prázdninách vrací do Bradavic a nastupuje do druhého ročníku. A to i přes varování domácího skřítka Dobbyho, podle kterého mu v čarodějné škole hrozí smrt. Harry nedbá nářků skřítka působícího víc škody než užitku, ale potom se skutečně začnou dít podivné věci, na stěnách se objevují neznámé nápisy a několik studentů je přepadeno tajemným přízrakem. Co s tím má společného Tajemná komnata? ','161','77'),
     ('Rýchlo a zbesilo','akčný','film', '/home/adrian/Plocha/Snímka obrazovky z 2019-11-23 18-25-18.png', 'https://i.pinimg.com/564x/9f/8d/5a/9f8d5a00f1f8885dd6d4b8282e9273d5.jpg','Brianovi se konečně podaří stát se členem party vedené Dominicem, který je doslova blázen do nelegálních závodů, pořádaných většinou v noci na periférii Los Angeles. Je to obrovské divadlo pro obecenstvo zběsilých jízd, ale především posedlost pro piloty speciálně upravených superauťáků. S ohlušujícím řevem motorů, řítící se městem několikanásobkem povolené rychlosti, pění všem adrenalin v krvi. Ve hře jsou peníze, prestiž, obdiv dívek.','106','72'),
@@ -225,14 +225,14 @@ VALUES
 INSERT INTO `hall`
 VALUES
     ('A','10','10','P.Sherman 42, Malaby bay, Sydney'),
-    ('B','10','9','P.Sherman 43, Malaby bay, Sydney');
+    ('B','10','9','P.Sherman 43, Malaby bay, Sydney'),
+    ('C', '3', '3', 'Bozetechova 1, Brno');
 
 -- INSERT TO cultural_event
 INSERT INTO `cultural_event` (`date`, `time`, `price`, `id_piece_of_work`, `hall_num`)
 VALUES 
-    ('2019-11-01','10:00:00','4.99', '1', 'A'),
-    ('2019-11-01','13:00:00','4.99', '2', 'B'),
-    ('2019-09-01','10:00:00','4.99', '2', 'B');
+    ('2020-05-01','10:00:00','4.99', '1', 'C'),
+    ('2020-05-02','13:00:00','4.99', '2', 'C');
 
 -- INSERT TO performer
 INSERT INTO `performer` (`name`, `surname`)
@@ -246,7 +246,24 @@ VALUES
 INSERT INTO `seat` (`cultural_event_id`, `row`, `column`, `state`)
 VALUES
     ('1', '1','1','available'),
-    ('1', '1','2','available');
+    ('1', '1','2','available'),
+    ('1', '1','3','available'),
+    ('1', '2','1','available'),
+    ('1', '2','2','available'),
+    ('1', '2','3','available'),
+    ('1', '3','1','available'),
+    ('1', '3','2','available'),
+    ('1', '3','3','available'),
+
+    ('2', '1','1','available'),
+    ('2', '1','2','available'),
+    ('2', '1','3','available'),
+    ('2', '2','1','available'),
+    ('2', '2','2','available'),
+    ('2', '2','3','available'),
+    ('2', '3','1','available'),
+    ('2', '3','2','available'),
+    ('2', '3','3','available');
 
 -- relationship tables
 -- INSERT TO reservation
