@@ -45,4 +45,9 @@ final class ErrorPresenter implements Nette\Application\IPresenter
 			}
 		});
 	}
+
+	public function render404()
+	{
+		;
+	}
 }

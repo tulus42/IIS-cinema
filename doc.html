@@ -22,19 +22,18 @@
 	<dt>Autori</dt>
 	<dd>Sabína Gregušová<!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
 	    <a href="mailto:xgregu02@stud.fit.vutbr.cz">xgregu02@stud.fit.vutbr.cz</a> -
-		popis činnosti v týmu
+		implementácia modelov, presenterov, views a formulárov
 	</dd>
 	<dd>Adam Hostin <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
 	    <a href="mailto:xhosti02@stud.fit.vutbr.cz">xhosti02@stud.fit.vutbr.cz</a> - 
-		popis činnosti v týmu
+		návrh a úprava databáze, testovanie, implementácia formulárov
 	</dd>
   	<dd>Adrián Tulušák <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
 	    <a href="mailto:xtulus00@stud.fit.vutbr.cz">xtulus00@stud.fit.vutbr.cz</a> - 
-		popis činnosti v týmu
+		návrh a úprava databáze, implementácia modelov, views a presenterov
 	</dd>
 	<dt>URL aplikace</dt>
 	<dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
-	<dd>(pokud má aplikace více vstupních stránek, napište obdobně další URL)</dd>
 </dl>
 
 <h2>Užívatelia systému pre testovanie</h2>
@@ -47,11 +46,12 @@
 </table>
 
 <h2>Implementácia</h2>
-<p>Využili sme český FrameWork Nette, ktorý využíva návrhový vzor MVC, ktorého sme sa držali.</p>
+<p>Využili sme český FrameWork Nette, ktorý využíva návrhový vzor <strong>Model-View-Controller (MVC)</strong>, ktorého sme sa držali. Podstatou tohto vzoru je logicky rozdeliť aplikáciu na 3 podsystémy, ktoré sú ľahko modifikovateľné a udržiavané. <strong>Model</strong> komunikuje s databázou, formátuje dáta a obsahuje business logiku. V tomto projekte je model implementovaný ako rôzny manažéri, ktorí komunikujú s jednotlivými tabuľkami. Každý manažér pracuje prioritne so svojou tabuľkou, ale môže volať aj funkcie z iných manažérov, avšak manažéri nemôžu byť na sebe cyklicky závislí. <strong>View</strong> zobrazujú výstup v prijateľnej podobe užívateľovi. My sme na implementáciu views použili latte šablóny (súbory s príponou .latte). Všetky šablóny sú v priečinku, ktoré ich rovnako charakterizujú (napríklad User má vo svojom priečinku latte šablóny ako add, edit, delete, profile a pod.). <strong>Controller</strong> prepája Model a View, rozhoduje, aké dáta sa budú zobrazovať a následne ich posúva do View. Controllery sú implementované v Nette Frameworku ako presentery, každý presenter spravuje potom určitý priečinok Views (napríklad UserPresenter spravuje všetky View v priečinku User).</p>
 
 <h3>Databáza</h3>
 
-Zde vložte grafické schéma relační databáze (tabulek v databázi).
+<img src="cinema_scheme.svg" alt="Schéma databázy" caption="Schéma databázy">
+
 
 <h2>Inštalácia</h2>
 

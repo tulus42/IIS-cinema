@@ -73,13 +73,29 @@ class EditEventFormFactory
 
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($eventId, $onSuccess): void {
-            try{
-                $this->eventManager->editEvent($eventId, $values->dateOfEvent, $values->timeOfEvent, round($values->price, 2));
-                $onSuccess();
-            } catch(Model\DuplicateNameException $e) {
-                // TODO DUPLICATE ERROR
-                //$form['hall_num']->addError('Sála s týmto názvom už existuje');
+            $today = date("Y-m-d");
+            if($today > $values->dateOfEvent){
+                $form['dateOfEvent']->addError('Nie je možné vytvoriť udalosť v minulosti');
+                return;
             }
+            else if($today == $values->dateOfEvent){
+                $now = date("H:I");
+                if($now > $values->timeOfEvent){
+                    $form['timeOfEvent']->addError('Nie je možné vytvoriť udalosť v minulosti');
+                    return;
+                }
+            }
+
+            $count = $this->eventManager->findDuplicateEvent($values->dateOfEvent, $values->timeOfEvent, $values->hall);
+            if($count == 0){
+                $this->eventManager->editEvent($eventId, $values->dateOfEvent, $values->timeOfEvent, round($values->price, 2));
+                
+            }
+            else{
+                $form['dateOfEvent']->addError('Udalosť v tento čas a deň vo zvolenej sále už existuje');
+                return;
+            }
+            $onSuccess();
         };
 
         return $form;

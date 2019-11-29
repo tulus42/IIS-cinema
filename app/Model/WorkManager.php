@@ -20,7 +20,12 @@ class WorkManager
         COLUMN_NAME = 'name',
         COLUMN_GENRE = 'genre',
         COLUMN_TYPE = 'type',
-        COLUMN_IMAGE = 'picture',
+        COLUMN_POSTER = 'picture',
+        COLUMN_PICTURE1 = 'picture2',
+        COLUMN_PICTURE2 = 'picture3',
+        COLUMN_PICTURE3 = 'picture4',
+        COLUMN_PICTURE4 = 'picture5',
+        COLUMN_PICTURE5 = 'picture6',
         COLUMN_DESCRIPTION = 'description',
         COLUMN_DURATION = 'duration',
         COLUMN_RATING = 'rating';
@@ -44,14 +49,19 @@ class WorkManager
     /**
      * Adds new work
      */
-    public function addWork(string $name, string $genre, string $type, $poster, string $image, string $description, int $duration, $rating)
+    public function addWork(string $name, string $genre, string $type, string $image, string $image2, string $image3, string $image4, string $image5, string $image6, string $description, int $duration, $rating)
     {
         try{
             $this->database->table(self::TABLE_NAME)->insert([
                 self::COLUMN_NAME => $name,
                 self::COLUMN_GENRE => $genre,
                 self::COLUMN_TYPE => $type,
-                self::COLUMN_IMAGE => $image,
+                self::COLUMN_POSTER => $image,
+                self::COLUMN_PICTURE1 => $image2,
+                self::COLUMN_PICTURE2 => $image3,
+                self::COLUMN_PICTURE3 => $image4,
+                self::COLUMN_PICTURE4 => $image5,
+                self::COLUMN_PICTURE5 => $image6,
                 self::COLUMN_DESCRIPTION => $description,
                 self::COLUMN_DURATION => $duration,
                 self::COLUMN_RATING => $rating
@@ -64,13 +74,18 @@ class WorkManager
     /**
      * Edits existing work
      */
-    public function editWork(int $id, string $name, string $genre, string $type, string $image, string $description, int $duration, $rating)
+    public function editWork(int $id, string $name, string $genre, string $type, string $image, string $image2, string $image3, string $image4, string $image5, string $image6, string $description, int $duration, $rating)
     {
         $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $id)->update([
             self::COLUMN_NAME => $name,
             self::COLUMN_GENRE => $genre,
             self::COLUMN_TYPE => $type,
-            self::COLUMN_IMAGE => $image,
+            self::COLUMN_POSTER => $image,
+            self::COLUMN_PICTURE1 => $image2,
+            self::COLUMN_PICTURE2 => $image3,
+            self::COLUMN_PICTURE3 => $image4,
+            self::COLUMN_PICTURE4 => $image5,
+            self::COLUMN_PICTURE5 => $image6,
             self::COLUMN_DESCRIPTION => $description,
             self::COLUMN_DURATION => $duration,
             self::COLUMN_RATING => $rating
