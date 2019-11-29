@@ -66,21 +66,19 @@ final class NewWorkFormFactory{
         ])
             ->setHtmlAttribute('class', 'form-text');
 
-        $form->addText('picture', '*URL obrázka')
+
+        $sub1 = $form->addContainer('url');
+        $sub1->addText('picture', '*URL obrázka')
             ->setHtmlAttribute('class', 'form-text');
+        
             // ->setRequired();
-        $form->addSubmit('pridatURL', 'Potvrdiť URL obrázka')
+        $form->addSubmit('pridatURL', 'Pridať ďalší obrázok')
             ->setHtmlAttribute('class', 'form-button')
             ->setValidationScope([])
             ;
     
 
-        $form->addHidden('hidden1', null);
-        $form->addHidden('hidden2', null);
-        $form->addHidden('hidden3', null);
-        $form->addHidden('hidden4', null);
-        $form->addHidden('hidden5', null);
-        $form->addHidden('hidden6', null);
+        
             
         $form->addTextArea('description', 'Popis:')
             ->setHtmlAttribute('class', 'form-text-description');
@@ -99,6 +97,39 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+            if ($form['url']['picture']->getValue() != null) {
+                $form['url']->addText('picture2', '*URL obrázka 2')
+                ->setHtmlAttribute('class', 'form-text');
+
+                if ($form['url']['picture2']->getValue() != null) {
+                    $form['url']->addText('picture3', '*URL obrázka 3')
+                    ->setHtmlAttribute('class', 'form-text');
+
+                    if ($form['url']['picture3']->getValue() != null) {
+                        $form['url']->addText('picture4', '*URL obrázka 4')
+                        ->setHtmlAttribute('class', 'form-text');
+
+                        if ($form['url']['picture4']->getValue() != null) {
+                            $form['url']->addText('picture5', '*URL obrázka 5')
+                            ->setHtmlAttribute('class', 'form-text');
+
+                            if ($form['url']['picture5']->getValue() != null) {
+                                $form['url']->addText('picture6', '*URL obrázka 6')
+                                ->setHtmlAttribute('class', 'form-text');
+
+                                if ($form['url']['picture6']->getValue() != null) {
+                                    $form['url']['picture6']->addError('ninfioesofjosj');
+                                } else {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+            
             if ($form['send']->isSubmittedBy()) {
                 $allGenres = array(
                     'akčný',
@@ -118,37 +149,42 @@ final class NewWorkFormFactory{
                     'western'
                 );
 
-                $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->hidden1, $values->hidden2, $values->hidden3, $values->hidden4, $values->hidden5, $values->hidden6, $values->description, $values->duration, $values->rating);
-                $onSuccess();
-            } else {
+                $pictureArr = [];
+                array_push($pictureArr, $values->url->picture);
+  
+    
+                if ($form['url']['picture2']->getValue() != null) {
+                    array_push($pictureArr, $form['url']['picture2']->getValue());
 
-                if ($form['hidden1']->getValue() == null) {
-                    $form['hidden1']->setValue($form['picture']->getValue());
-                } elseif ($form['hidden2']->getValue() == null) {
-                    $form['hidden2']->setValue($form['picture']->getValue());
-                } elseif ($form['hidden3']->getValue() == null) {
-                    $form['hidden3']->setValue($form['picture']->getValue());
-                } elseif ($form['hidden4']->getValue() == null) {
-                    $form['hidden4']->setValue($form['picture']->getValue());
-                } elseif ($form['hidden5']->getValue() == null) {
-                    $form['hidden5']->setValue($form['picture']->getValue());
-                } elseif ($form['hidden6']->getValue() == null) {
-                    $form['hidden6']->setValue($form['picture']->getValue());
-                } else {
+                    if ($form['url']['picture3']->getValue() != null) {
+                        array_push($pictureArr, $form['url']['picture3']->getValue());
 
+                        if ($form['url']['picture4']->getValue() != null) {
+                            array_push($pictureArr, $form['url']['picture4']->getValue());
+
+                            if ($form['url']['picture5']->getValue() != null) {
+                                array_push($pictureArr, $form['url']['picture5']->getValue());
+
+                                if ($form['url']['picture6']->getValue() != null) {
+                                    array_push($pictureArr, $form['url']['picture6']->getValue());
+                                } else {
+
+                                }
+                            }
+                        }
+                    }
+                }
+        
+                while(count($pictureArr) < 6) {
+                    array_push($pictureArr, null);
                 }
 
 
+                $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $pictureArr[0], $pictureArr[1], $pictureArr[2], $pictureArr[3], $pictureArr[4], $pictureArr[5], $values->description, $values->duration, $values->rating);
+                $onSuccess();
+            } else {
 
-                $form['picture']->setValue('');
                 
-                
-                dump($form['hidden1']->getValue());
-                dump($form['hidden2']->getValue());
-                dump($form['hidden3']->getValue());
-                dump($form['hidden4']->getValue());
-                dump($form['hidden5']->getValue());
-                dump($form['hidden6']->getValue());
             }
         };
 

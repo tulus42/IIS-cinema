@@ -1,14 +1,23 @@
 {block content}
-    <img class="one-movie-image" src={$actualPic}>
-    <a class="gallery" href="{link Movie:gallery $workID, $nextPic}">
-        Next
-    </a>
-    <a class="gallery" href="{link Movie:gallery $workID, $prevPic}">
-        Previous
-    </a>
-    <a class="gallery" href="{link Movie:show $workID}">
-        Späť na film
-    </a>
+    <div class="row">
+        <div class="gallery-container">
+            <img class="gallery-image" src={$actualPic}>
+        </div>
+    </div>
+
+    <div class="row" align="center">
+        <a class="gallery-button" href="{link Movie:gallery $workID, $prevPic}">
+            << Predchádzajúci <<
+        </a>
+        <a class="gallery-button" href="{link Movie:show $workID}">
+            Späť na film
+        </a>
+        <a class="gallery-button" href="{link Movie:gallery $workID, $nextPic}">
+            >> Nasledujúci >>
+        </a>
+        
+        
+    </div>
 
 
 
