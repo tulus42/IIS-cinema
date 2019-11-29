@@ -114,6 +114,46 @@ final class EditWorkFormFactory{
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($workId, $onSuccess): void {
+            $can_return = false;
+            if(strlen($values->description) > 2048){
+                $form['description']->addError('Dĺžka popisu môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+
+            if(strlen($values->poster) > 2048){
+                $form['poster']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+
+            if(strlen($values->picture_1) > 2048){
+                $form['picture_1']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+
+            if(strlen($values->picture_2) > 2048){
+                $form['picture_2']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+
+            if(strlen($values->picture_3) > 2048){
+                $form['picture_3']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+
+            if(strlen($values->picture_4) > 2048){
+                $form['picture_4']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+            
+            if(strlen($values->picture_5) > 2048){
+                $form['picture_5']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                $can_return = true;
+            }
+            
+            if($can_return){
+                return;
+            }
+
             $this->workManager->editWork($workId, $values->name, $values->genre, $values->type, $values->poster, $values->picture_1, $values->picture_2, $values->picture_3, $values->picture_4, $values->picture_5, $values->description, $values->duration, $values->rating);
             $onSuccess();
         };

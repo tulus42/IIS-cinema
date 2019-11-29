@@ -69,15 +69,13 @@ final class NewWorkFormFactory{
 
         $sub1 = $form->addContainer('url');
         $sub1->addText('picture', '*URL plagátu')
+            ->setRequired()
             ->setHtmlAttribute('class', 'form-text');
+
         
-            // ->setRequired();
         $form->addSubmit('pridatURL', 'Pridať ďalší obrázok')
             ->setHtmlAttribute('class', 'form-button')
-            ->setValidationScope([])
-            ;
-    
-
+            ->setValidationScope([]);
         
             
         $form->addTextArea('description', 'Popis:')
@@ -179,12 +177,90 @@ final class NewWorkFormFactory{
                     array_push($pictureArr, null);
                 }
 
+                $can_return = false;
+
+                if(strlen($values->description) > 2048){
+                    $form['description']->addError('Dĺžka popisu môže byť maximálne 2048 znakov');
+                    $can_return = true;
+                }
+
+                if(strlen($values->url->picture) > 2048){
+                    $form['url']['picture']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                    $can_return = true;
+                }
+
+                if ($form['url']['picture2']->getValue() != null) {
+                    $current_pic = $form['url']['picture2']->getValue();
+                    if(strlen($current_pic) > 2048){
+                        $form['url']['picture2']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                        $can_return = true;
+                    }
+
+                    if ($form['url']['picture3']->getValue() != null) {
+                        $current_pic = $form['url']['picture3']->getValue();
+                        if(strlen($current_pic) > 2048){
+                            $form['url']['picture3']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                            $can_return = true;
+                        }
+
+                        if ($form['url']['picture4']->getValue() != null) {
+                            $current_pic = $form['url']['picture4']->getValue();
+                            if(strlen($current_pic) > 2048){
+                                $form['url']['picture4']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                                $can_return = true;
+                            }
+
+                            if ($form['url']['picture5']->getValue() != null) {
+                                $current_pic = $form['url']['picture5']->getValue();
+                                if(strlen($current_pic) > 2048){
+                                    $form['url']['picture5']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                                    $can_return = true;
+                                }
+
+                                if ($form['url']['picture5']->getValue() != null) {
+                                    $current_pic = $form['url']['picture5']->getValue();
+                                    if(strlen($current_pic) > 2048){
+                                        $form['url']['picture5']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                                        $can_return = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                /*
+                $current_pic = $form['url']['picture']->getValue();
+                if($current_pic != null){
+                    if(strlen($current_pic) > 2048){
+                        $form['url']['picture']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                        return;
+                    }
+                }
+
+                $current_pic = $form['url']['picture2']->getValue();
+                if($current_pic != null){
+                    if(strlen($current_pic) > 2048){
+                        $form['url']['picture2']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                        return;
+                    }
+                }
+
+
+                $current_pic = $form['url']['picture6']->getValue();
+                if($current_pic != null){
+                    if(strlen($current_pic) > 2048){
+                        $form['url']['picture6']->addError('Dĺžka URL môže byť maximálne 2048 znakov');
+                        return;
+                    }
+                }
+                */
+
+                if($can_return){
+                    return;
+                }
 
                 $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $pictureArr[0], $pictureArr[1], $pictureArr[2], $pictureArr[3], $pictureArr[4], $pictureArr[5], $values->description, $values->duration, $values->rating);
                 $onSuccess();
-            } else {
-
-                
             }
         };
 
