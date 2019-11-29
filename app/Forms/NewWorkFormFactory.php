@@ -26,7 +26,7 @@ final class NewWorkFormFactory{
         $this->array = [];
     }
 
-    public function createWorkForm(callable $onSuccess): Form
+    public function createWorkForm($presenter, callable $onSuccess): Form
     {
         
 
@@ -94,7 +94,7 @@ final class NewWorkFormFactory{
         $form->addSubmit('send', 'Pridať')
             ->setHtmlAttribute('class', 'form-button');
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($presenter, $onSuccess): void {
             if ($form['url']['picture']->getValue() != null) {
                 $form['url']->addText('picture2', 'URL obrázka č. 1')
                 ->setHtmlAttribute('class', 'form-text');
@@ -259,7 +259,10 @@ final class NewWorkFormFactory{
                     return;
                 }
 
-                $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $pictureArr[0], $pictureArr[1], $pictureArr[2], $pictureArr[3], $pictureArr[4], $pictureArr[5], $values->description, $values->duration, $values->rating);
+                $newWork = $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $pictureArr[0], $pictureArr[1], $pictureArr[2], $pictureArr[3], $pictureArr[4], $pictureArr[5], $values->description, $values->duration, $values->rating);
+
+                $presenter->redirect('Movie:show', $newWork->id_piece_of_work);
+
                 $onSuccess();
             }
         };

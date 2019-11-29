@@ -32,7 +32,7 @@ final class NewReservationFormFactory{
     }
 
 
-    public function createReservationForm($work, $event, $seats, $userID, $logged, $presenter, callable $onSuccess): Form
+    public function createReservationForm($work, $event, $seats, $userID, $logged, $cashier, $presenter, callable $onSuccess): Form
     {
         $form = $this->factory->create();
 
@@ -43,10 +43,19 @@ final class NewReservationFormFactory{
             ->setRequired();
         } 
 
-        $form->addRadioList ('paymentMethod', 'Zvoľte spôsob platby:', [
-            'card' => 'Platba kartou',
-            'cash' => 'V hotovosti pri prevzatí',
-        ])->setRequired();
+        if ($logged && $cashier) {
+            $form->addRadioList ('paymentMethod', 'Zvoľte spôsob platby:', [
+                'card' => 'Platba kartou',
+                'cash' => 'V hotovosti pri prevzatí',
+                'cashier' => 'Predaj na pokladni',
+            ])->setRequired();
+        } else {
+            $form->addRadioList ('paymentMethod', 'Zvoľte spôsob platby:', [
+                'card' => 'Platba kartou',
+                'cash' => 'V hotovosti pri prevzatí',
+            ])->setRequired();
+        }
+        
         
         $form->addSubmit('pay', 'Potvrdiť rezerváciu')
             ->setHtmlAttribute('class', 'form-button');
@@ -72,6 +81,10 @@ final class NewReservationFormFactory{
                     $paid = 'unpaid';
                     $this->seatManager->reserveSeats($seats);
                     break;
+                case 'cashier':
+                    $paid = 'paid';
+                    $this->seatManager->takeSeats($seats);
+                    break;
             }
 
             
@@ -87,11 +100,18 @@ final class NewReservationFormFactory{
                     $this->userReservesManager->createUserReserves($userID, $reservation->reservation_id); 
                 }
 
-                if ($values->paymentMethod == 'card') {
-                    $presenter->redirect('Event:payByCard', $reservation->reservation_id);
-                } else {
-                    $presenter->redirect('Event:reserveSuccess', $reservation->reservation_id);
+                switch($values->paymentMethod){
+                    case 'card':
+                        $presenter->redirect('Event:payByCard', $reservation->reservation_id);
+                        break;
+                    case 'cash':
+                        $presenter->redirect('Event:reserveSuccess', $reservation->reservation_id);
+                        break;
+                    case 'cashier':
+                        $presenter->redirect('Event:reserveSuccessByCashier', $reservation->reservation_id);
+                        break;
                 }
+               
 
                 $onSuccess();
             } catch(Model\DuplicateNameException $e) {
