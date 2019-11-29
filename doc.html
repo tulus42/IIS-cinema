@@ -48,6 +48,19 @@
 <h2>Implementácia</h2>
 <p>Využili sme český FrameWork Nette, ktorý využíva návrhový vzor <strong>Model-View-Controller (MVC)</strong>, ktorého sme sa držali. Podstatou tohto vzoru je logicky rozdeliť aplikáciu na 3 podsystémy, ktoré sú ľahko modifikovateľné a udržiavané. <strong>Model</strong> komunikuje s databázou, formátuje dáta a obsahuje business logiku. V tomto projekte je model implementovaný ako rôzny manažéri, ktorí komunikujú s jednotlivými tabuľkami. Každý manažér pracuje prioritne so svojou tabuľkou, ale môže volať aj funkcie z iných manažérov, avšak manažéri nemôžu byť na sebe cyklicky závislí. <strong>View</strong> zobrazujú výstup v prijateľnej podobe užívateľovi. My sme na implementáciu views použili latte šablóny (súbory s príponou .latte). Všetky šablóny sú v priečinku, ktoré ich rovnako charakterizujú (napríklad User má vo svojom priečinku latte šablóny ako add, edit, delete, profile a pod.). <strong>Controller</strong> prepája Model a View, rozhoduje, aké dáta sa budú zobrazovať a následne ich posúva do View. Controllery sú implementované v Nette Frameworku ako presentery, každý presenter spravuje potom určitý priečinok Views (napríklad UserPresenter spravuje všetky View v priečinku User).</p>
 
+<p>Zoznam presenterov a ich účel:</p>
+<ul>
+	<li>EventPresenter: správa udalostí</li>
+	<li>HallListPresenter</li>
+	<li>HomepagePresenter</li>
+	<li>MoviePresenter</li>
+	<li>PerformerPresenter</li>
+	<li>ReservationPresenter</li>
+	<li>SignPresenter</li>
+	<li>UserManagmentPresenter</li>
+	<li>UserPresenter</li>
+</ul>
+
 <h3>Databáza</h3>
 
 <img src="cinema_scheme.svg" alt="Schéma databázy" caption="Schéma databázy">
