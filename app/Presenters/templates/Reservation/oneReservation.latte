@@ -2,20 +2,25 @@
     <div class="main-block-register">
         <h2 align="center">Číslo rezervácie: {$one_res->reservation_id}</h2>
 
+        <h2>Stav: 
+            {if $one_res->paid=='unpaid'}
+                nezaplatené
+            {else}
+                zaplatené
+            {/if}
+        </h2>
         <h2>Vaše sedadlá sú:</h2>
             {foreach $seats as $seat}
                 Rad: {$seat->row}, Miesto: {$seat->column}<br>
             {/foreach}
 
-        <table>
-            <tbody>
-                <tr>
-                    <td align="center"><a class="admin-button" href="{link Reservation:DeleteReservation $one_res->reservation_id,$id_event}">Zmazať<a></td>
-                    {if $one_res->paid=='unpaid'}
-                        <td><a class="admin-button" href="{link Reservation:PayReservation $one_res->reservation_id,$id_event}">Zaplatiť</a></td>
-                    {/if}
-                </tr>
-            </tbody>
-        </table>
+        <div class="row" align="center">
+
+            <a class="admin-button" href="{link Reservation:DeleteReservation $one_res->reservation_id,$id_event}">Zmazať<a>
+            {if $one_res->paid=='unpaid'}
+                <a class="admin-button" href="{link Reservation:PayReservation $one_res->reservation_id,$id_event}">Zaplatiť</a>
+            {/if}
+
+        </div>
     </div>
 {/block}
