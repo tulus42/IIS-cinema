@@ -65,25 +65,19 @@ final class EditWorkFormFactory{
             ->setRequired();
 
         $form->addText('picture_1', 'URL obrázka č. 1')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setHtmlAttribute('class', 'form-text');
 
         $form->addText('picture_2', 'URL obrázka č. 2')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setHtmlAttribute('class', 'form-text');
 
         $form->addText('picture_3', 'URL obrázka č. 3')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setHtmlAttribute('class', 'form-text');
 
         $form->addText('picture_4', 'URL obrázka č. 4')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
+            ->setHtmlAttribute('class', 'form-text');
 
         $form->addText('picture_5', 'URL obrázka č. 5')
-            ->setHtmlAttribute('class', 'form-text')
-            ->setRequired();
-        
+            ->setHtmlAttribute('class', 'form-text');
         
 
         $form->addTextArea('description', 'Popis:')

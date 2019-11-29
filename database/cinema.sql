@@ -54,14 +54,14 @@ CREATE TABLE `cultural_piece_of_work`(
     `name` VARCHAR(255) NOT NULL,
     `genre` VARCHAR(255) NOT NULL,
     `type` VARCHAR(255) NOT NULL, -- should it be enum or just varchar?
-    `picture` VARCHAR(255) NOT NULL, -- what about this one?
-    `picture2` VARCHAR(255),
-    `picture3` VARCHAR(255),
-    `picture4` VARCHAR(255),
-    `picture5` VARCHAR(255),
-    `picture6` VARCHAR(255),
+    `picture` VARCHAR(2048) NOT NULL, -- what about this one?
+    `picture2` VARCHAR(2048),
+    `picture3` VARCHAR(2048),
+    `picture4` VARCHAR(2048),
+    `picture5` VARCHAR(2048),
+    `picture6` VARCHAR(2048),
     `poster` LONGBLOB,
-    `description` VARCHAR(1024) NOT NULL,
+    `description` VARCHAR(2048) NOT NULL,
     `duration` INT NOT NULL,
     `rating` FLOAT(4, 2)
 ) ENGINE=InnoDB CHARSET=utf8;
