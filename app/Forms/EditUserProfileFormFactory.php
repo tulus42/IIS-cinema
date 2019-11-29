@@ -75,11 +75,20 @@ final class EditUserProfileFormFactory
         ]);
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($username, $onSuccess): void {
-            $today = date("Y-m-d");
+            // check for birth in the future
+			$today = date("Y-m-d");
 			if($values->dateOfBirth > $today){
 				$form['dateOfBirth']->addError('Dátum narodenia musí byť v minulosti');
 				return;
 			}
+			// check for invalid phone number format (only numbers are accepted)
+			if(strlen($values->phoneNumber) != 0){
+				if(!Nette\Utils\Validators::isNumericInt($values->phoneNumber)){
+					$form['phoneNumber']->addError('Telefónne číslo môže obsahovať iba číslice bez medzier');
+					return;
+				}
+			}
+            
             $this->userManager->editUserAdmin($username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber, $values->role);
             $onSuccess();
         };
