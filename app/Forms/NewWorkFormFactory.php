@@ -17,14 +17,19 @@ final class NewWorkFormFactory{
     
     /** @var Model\WorkManager */
     private $workManager;
+
+    public $array;
     
     public function __construct(FormFactory $factory, Model\WorkManager $workManager){
         $this->factory = $factory;
         $this->workManager = $workManager;
+        $this->array = [];
     }
 
     public function createWorkForm(callable $onSuccess): Form
     {
+        
+
         $form = $this->factory->create();
 
         $form->addText('name', '*Názov:')
@@ -64,7 +69,19 @@ final class NewWorkFormFactory{
         $form->addText('picture', '*URL obrázka')
             ->setHtmlAttribute('class', 'form-text');
             // ->setRequired();
+        $form->addSubmit('pridatURL', 'Potvrdiť URL obrázka')
+            ->setHtmlAttribute('class', 'form-button')
+            ->setValidationScope([])
+            ;
+    
 
+        $form->addHidden('hidden1', null);
+        $form->addHidden('hidden2', null);
+        $form->addHidden('hidden3', null);
+        $form->addHidden('hidden4', null);
+        $form->addHidden('hidden5', null);
+        $form->addHidden('hidden6', null);
+            
         $form->addTextArea('description', 'Popis:')
             ->setHtmlAttribute('class', 'form-text-description');
 
@@ -82,29 +99,63 @@ final class NewWorkFormFactory{
             ->setHtmlAttribute('class', 'form-button');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+            if ($form['send']->isSubmittedBy()) {
+                $allGenres = array(
+                    'akčný',
+                    'dobrodružný',
+                    'dráma',
+                    'fantasy',
+                    'filozofický',
+                    'historický',
+                    'horor',
+                    'komédia',
+                    'krimi',
+                    'mysteriózny',
+                    'politický',
+                    'romantický',
+                    'triller',
+                    'vedecký',
+                    'western'
+                );
 
-            $allGenres = array(
-                'akčný',
-                'dobrodružný',
-                'dráma',
-                'fantasy',
-                'filozofický',
-                'historický',
-                'horor',
-                'komédia',
-                'krimi',
-                'mysteriózny',
-                'politický',
-                'romantický',
-                'triller',
-                'vedecký',
-                'western'
-            );
+                $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->hidden1, $values->hidden2, $values->hidden3, $values->hidden4, $values->hidden5, $values->hidden6, $values->description, $values->duration, $values->rating);
+                $onSuccess();
+            } else {
 
-            $this->workManager->addWork($values->name, $allGenres[$values->genre], $values->type, $values->poster, $values->picture, $values->description, $values->duration, $values->rating);
-            $onSuccess();
+                if ($form['hidden1']->getValue() == null) {
+                    $form['hidden1']->setValue($form['picture']->getValue());
+                } elseif ($form['hidden2']->getValue() == null) {
+                    $form['hidden2']->setValue($form['picture']->getValue());
+                } elseif ($form['hidden3']->getValue() == null) {
+                    $form['hidden3']->setValue($form['picture']->getValue());
+                } elseif ($form['hidden4']->getValue() == null) {
+                    $form['hidden4']->setValue($form['picture']->getValue());
+                } elseif ($form['hidden5']->getValue() == null) {
+                    $form['hidden5']->setValue($form['picture']->getValue());
+                } elseif ($form['hidden6']->getValue() == null) {
+                    $form['hidden6']->setValue($form['picture']->getValue());
+                } else {
+
+                }
+
+
+
+                $form['picture']->setValue('');
+                
+                
+                dump($form['hidden1']->getValue());
+                dump($form['hidden2']->getValue());
+                dump($form['hidden3']->getValue());
+                dump($form['hidden4']->getValue());
+                dump($form['hidden5']->getValue());
+                dump($form['hidden6']->getValue());
+            }
         };
+
+        
 
         return $form;
     }
+
+
 }
