@@ -68,7 +68,7 @@ final class NewWorkFormFactory{
 
 
         $sub1 = $form->addContainer('url');
-        $sub1->addText('picture', '*URL obrázka')
+        $sub1->addText('picture', '*URL plagátu')
             ->setHtmlAttribute('class', 'form-text');
         
             // ->setRequired();
@@ -98,27 +98,27 @@ final class NewWorkFormFactory{
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
             if ($form['url']['picture']->getValue() != null) {
-                $form['url']->addText('picture2', '*URL obrázka 2')
+                $form['url']->addText('picture2', 'URL obrázka č. 1')
                 ->setHtmlAttribute('class', 'form-text');
 
                 if ($form['url']['picture2']->getValue() != null) {
-                    $form['url']->addText('picture3', '*URL obrázka 3')
+                    $form['url']->addText('picture3', 'URL obrázka č. 2')
                     ->setHtmlAttribute('class', 'form-text');
 
                     if ($form['url']['picture3']->getValue() != null) {
-                        $form['url']->addText('picture4', '*URL obrázka 4')
+                        $form['url']->addText('picture4', 'URL obrázka č. 3')
                         ->setHtmlAttribute('class', 'form-text');
 
                         if ($form['url']['picture4']->getValue() != null) {
-                            $form['url']->addText('picture5', '*URL obrázka 5')
+                            $form['url']->addText('picture5', 'URL obrázka č. 4')
                             ->setHtmlAttribute('class', 'form-text');
 
                             if ($form['url']['picture5']->getValue() != null) {
-                                $form['url']->addText('picture6', '*URL obrázka 6')
+                                $form['url']->addText('picture6', 'URL obrázka č. 5')
                                 ->setHtmlAttribute('class', 'form-text');
 
                                 if ($form['url']['picture6']->getValue() != null) {
-                                    $form['url']['picture6']->addError('ninfioesofjosj');
+                                    $form['url']['picture6']->addError('Môžete pridať maximálne 5 obrázkov');
                                 } else {
 
                                 }
