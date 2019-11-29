@@ -165,4 +165,33 @@ class SeatManager
             self::COLUMN_STATE => "taken"
         ]);
     }
+
+    public function getSeatsFromReservation($reservation)
+    {
+        $seats = [];
+        array_push($seats, $this->database->table(self::TABLE_NAME)->get($reservation->seat1));
+
+        if ($reservation->seat2 != NULL) {
+            array_push($seats, $this->database->table(self::TABLE_NAME)->get($reservation->seat2));
+        }
+
+        if ($reservation->seat3 != NULL) {
+            array_push($seats, $this->database->table(self::TABLE_NAME)->get($reservation->seat3));
+        }
+
+        if ($reservation->seat4 != NULL) {
+            array_push($seats, $this->database->table(self::TABLE_NAME)->get($reservation->seat4));
+        }
+
+        if ($reservation->seat5 != NULL) {
+            array_push($seats, $this->database->table(self::TABLE_NAME)->get($reservation->seat5));
+        }
+
+        if ($reservation->seat6 != NULL) {
+            array_push($seats, $this->database->table(self::TABLE_NAME)->get($reservation->seat6));
+        }
+
+        return $seats;
+
+    }
 }

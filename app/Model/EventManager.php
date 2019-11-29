@@ -135,4 +135,10 @@ class EventManager
         $events = $this->database->table(self::TABLE_NAME)->select('*')->where(self::COLUMN_DATE, $date)->where(self::COLUMN_TIME, $time)->where(self::COLUMN_HALL, $hall_num)->fetchAll();
         return count($events);
     }
+
+    public function getReservationEvent($reservationID) 
+    {
+        $eventID = $this->database->table(self::TABLE_NAME)->where('id_cultural_event', $this->database->table('seat')->where('seat_id', $this->database->table('reservation')->where('reservation_id = ?', $reservationID)->select('seat1'))->select('cultural_event_id'))->fetch();
+        return $this->database->table(self::TABLE_NAME)->get($eventID);
+    }
 }

@@ -1,0 +1,25 @@
+{block content}
+    <div class='eventHeaderContainer'>
+        <div>
+            <h1>Rezervácia bola úspešne vytvorená<br></h1>
+            <h3>Číslo rezervácie je: {$reservation}</h3><br>
+            
+            <h2>{$work->name}</h2><br>
+            <h2>Dátum: {$event->date|date: '%d. %m. %Y'}</h2>
+            <h2>Čas: {$event->time|date: '%h:%I'}</h2><br>
+            <h2>Sála {$event->hall_num}</h2><br>
+
+            <h2>Sedadlá:</h2>
+            {foreach $seats as $seat}
+                Rad: {$seat->row}, Miesto: {$seat->column}<br>
+            {/foreach}
+
+        </div>
+
+        <a href='{link Homepage:default}'>
+            <button class='form-button'>
+                Späť na hlavnú stránku
+            </button>
+        </a>
+    </div>
+{/block}

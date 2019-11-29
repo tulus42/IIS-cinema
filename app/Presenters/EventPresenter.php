@@ -162,11 +162,16 @@ class EventPresenter extends BasePresenter
         }
         
         $logged = false;
+        $cashier = false;
         if ($this->user->isLoggedIn()) {
             $logged = true;
+            if ($this->user->isInRole('cashier') or $this->user->isInRole('admin')) {
+                $cashier = true;
+            }
+            
         }
 
-        return $this->newReservationFormFactory->createReservationForm($work, $eventID, $seats, $userID, $logged, $this, function (): void{
+        return $this->newReservationFormFactory->createReservationForm($work, $eventID, $seats, $userID, $logged, $cashier, $this, function (): void{
             $this->redirect('Event:reserveSuccess');
         });
     }
@@ -193,28 +198,7 @@ class EventPresenter extends BasePresenter
         $reservation = $this->database->table('reservation')->get($reservation);
         $this->template->reservation = $reservation;
         
-        $seats = [];
-        array_push($seats, $this->database->table('seat')->get($reservation->seat1));
-
-        if ($reservation->seat2 != NULL) {
-            array_push($seats, $this->database->table('seat')->get($reservation->seat2));
-        }
-
-        if ($reservation->seat3 != NULL) {
-            array_push($seats, $this->database->table('seat')->get($reservation->seat3));
-        }
-
-        if ($reservation->seat4 != NULL) {
-            array_push($seats, $this->database->table('seat')->get($reservation->seat4));
-        }
-
-        if ($reservation->seat5 != NULL) {
-            array_push($seats, $this->database->table('seat')->get($reservation->seat5));
-        }
-
-        if ($reservation->seat6 != NULL) {
-            array_push($seats, $this->database->table('seat')->get($reservation->seat6));
-        }
+        $seats = $this->seatManager->getSeatsFromReservation($reservation);
 
         $this->template->seats = $seats;
     }
@@ -227,5 +211,16 @@ class EventPresenter extends BasePresenter
     public function renderPayByCard($reservation): void
     {
         $this->template->reservation = $reservation;
+    }
+
+    public function renderReserveSuccessByCashier($reservationID): void
+    {
+        $reservation = $this->database->table('reservation')->get($reservationID);
+
+        $this->template->reservation = $reservationID;
+        $this->template->event = $this->eventManager->getReservationEvent($reservationID);
+        $this->template->work = $this->database->table('cultural_piece_of_work')->get($reservation->id_piece_of_work);
+        
+        $this->template->seats = $this->seatManager->getSeatsFromReservation($reservation);
     }
 }
