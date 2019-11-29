@@ -1,18 +1,34 @@
 {block content}
     
     {if $res_count!=0}
-        <div class="main-block-register">
-            {foreach $reservations as $one}
-                <p class="role-par"><a class="role-button" href="{link Reservation:oneReservation $one->reservation_id, $id_event}">
+        <div class="res-legend-container">
+            <div class="res-num">
+                <h2>Číslo rezervácie</h2><br>
+            </div>
+
+            <div class="res-next">
+                <h2>Stav</h2>
+            </div>
+        </div>
+
+        {foreach $reservations as $one}
+            <a class="res-container" href="{link Reservation:oneReservation $one->reservation_id, $id_event}">
+
+            <div class="res-num">
                 {$one->reservation_id}
+            </div>
+            
+            <div class="res-next">
                 {if $one->paid=='paid'}
                     zaplatené
                 {else}
                     nezaplatené
                 {/if}
-                </a></p>
-            {/foreach}
-        </div>
+            </div>
+            
+            </a>
+        {/foreach}
+        
     {else}
         <h1 align="center">Momentálne neexistujú žiadne rezervácie k tejto udalosti</h1>
     {/if}

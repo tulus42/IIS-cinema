@@ -8,6 +8,7 @@ use App\Model;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\DateTime;
+use Nette\Utils\Validators;
 
 final class EditOwnProfileFormFactory
 {
@@ -68,7 +69,21 @@ final class EditOwnProfileFormFactory
 			->setHtmlAttribute('class', 'form-button');
 
 		$form->onSuccess[] = function (Form $form, \stdClass $values) use ($username, $onSuccess): void {
-            $this->userManager->editUser($username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber);
+			// check for birth in the future
+			$today = date("Y-m-d");
+			if($values->dateOfBirth > $today){
+				$form['dateOfBirth']->addError('Dátum narodenia musí byť v minulosti');
+				return;
+			}
+			// check for invalid phone number format (only numbers are accepted)
+			if(strlen($values->phoneNumber) != 0){
+				if(!Nette\Utils\Validators::isNumericInt($values->phoneNumber)){
+					$form['phoneNumber']->addError('Telefónne číslo môže obsahovať iba číslice bez medzier');
+					return;
+				}
+			}
+			
+			$this->userManager->editUser($username, $values->name, $values->surname, $values->email, $values->dateOfBirth, $values->phoneNumber);
             $onSuccess();	
         };
         

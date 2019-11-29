@@ -14,7 +14,7 @@ DONE: 15. bolo zmazané delete z eventu omylom, dodať + formátovanie
 DONE: 16. Pri edit event sa nenačítava čas
 DONE: 17. Opraviť hall.css -> hala vyzerá škaredo
 DONE: 18. zabrániť prístupu každého prihláseného užívateľa ku všetkých rezerváciam cez url
-19. Relatívne pozicovanie hornej lišty
+NEVER DONE: 19. Relatívne pozicovanie hornej lišty
 DONE: 20. Kontrola dátumu narodenia
 DONE: 21. add movie - upraviť formulár - * pri povinných 
 DONE: 22. Event v tom istom čase a dátume - vypíše error
@@ -25,7 +25,8 @@ DONE: 23. desatinné čísla ceny
 DONE: 26. Maximálne 20 stĺpcov v hale - potom bolo zobrazenie dosť mimo
 27. Pokladník keď rezervuje lístky priamo na mieste, mal by mať separátnu možnosť a username by bolo vtedy null
 28. Upravit formuláre na obrázky k work
-29. Kontrola formátu telefónneho čísla
+DONE: 29. Kontrola formátu telefónneho čísla
+DONE: 30. Úprava CSS-ka pri rezerváciach
 
 EXTRA IDEAS:
 Pri pridaní filmu sa opýtať rovno aj na pridanie eventu
