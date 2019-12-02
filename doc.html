@@ -33,7 +33,7 @@
 		návrh a úprava databáze, implementácia modelov, views a presenterov
 	</dd>
 	<dt>URL aplikace</dt>
-	<dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
+	<dd><a href="http://yourcinema.studenthosting.sk/">http://yourcinema.studenthosting.sk/</a></dd>
 </dl>
 
 <h2>Užívatelia systému pre testovanie</h2>
@@ -68,15 +68,13 @@
 
 <h2>Inštalácia</h2>
 
-Stručně popište: 
-<ul>
-<li>postup instalace na server,</li>
-<li>softwarové požadavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
-</ul>
+Pre spustenie na lokálnom serveri je potrebné mať program, ktorý vytvorí lokálny server. Počas vývoja sme používali program XAMPP, ktorý sa nám osvedčil. Súbory je potrebné uložiť do priečinku htdocs v samostatnom priečinku.
+
+Pre spustenie na vzdialenom serveri je potrebné zabezpečiť hosting, ktorý podporuje databázu typu MySQL a PHP 7.2. Ak server podporuje iba nižšiu verziu PHP, nie je možné hosťovať aplikáciu na tomto serveri. Pri umistnení na server je potrebné umiestniť obsah súboru www do priečinku, ktorý je viditeľný a nadstaviť mu vhodné práva. Zvyšné súbory je možné umiestniť kdekoľvek, ak však nie sú umiestnené v priečinku www, je potrebné upraviť cestu k súborom v súbore index.php, bootstrap.php a autoload.php. Pre korektné pripojenie databáze je potreba upraviť súbor common.neon, kde je potrebné vložiť názov databázy, kde je hosťovaná a užívateľské meno a heslo. Databáza sa nachádza v priečinku database s názvom cinema.sql.
+
 
 <h2>Známé problémy</h2>
-<p>Nahrávanie obrázkov k filmu alebo samotný plagát filmu je implementovaný iba pomocou nahrávania cez URL, pretože sa nám nepodarilo rozbehnúť technológiu, ktorá by obrázky ukladala na server a v databáze iba metadata k nim.</p>
+<p>Nahrávanie obrázkov k filmu alebo samotný plagát filmu je implementovaný iba pomocou nahrávania cez URL, pretože sa nám nepodarilo rozbehnúť technológiu, ktorá by obrázky ukladala na server a v databáze iba metadata k nim. Webová aplikácia je prispôsobená zobrazovaniu na počítači a nepodporuje zobrazenie na mobilných zariadeniach.</p>
 
 </body>
 </html>
