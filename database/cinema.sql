@@ -60,7 +60,6 @@ CREATE TABLE `cultural_piece_of_work`(
     `picture4` VARCHAR(2048),
     `picture5` VARCHAR(2048),
     `picture6` VARCHAR(2048),
-    `poster` LONGBLOB,
     `description` VARCHAR(2048) NOT NULL,
     `duration` INT NOT NULL,
     `rating` FLOAT(4, 2)
@@ -276,13 +275,6 @@ VALUES
     ('2', '3','1','available'),
     ('2', '3','2','available'),
     ('2', '3','3','available');
-
--- relationship tables
--- INSERT TO reservation
-INSERT INTO `reservation` (`id_piece_of_work`, `paid`, `seat1`) 
-VALUES
-    ('1', 'unpaid', '1'),
-    ('2', 'paid', '2');
 
 
 -- kto kde hrá

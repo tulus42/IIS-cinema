@@ -1,1 +1,9 @@
 parameters:
+
+database:
+dsn: ‚mysql:host=stud.fit.vutbr.cz;port=3311;dbname=xtulus00‘
+user: 'xtulus00'
+password: 'n7ajojta'
+
+options:
+lazy: yes

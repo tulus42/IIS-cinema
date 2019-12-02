@@ -16,9 +16,9 @@ session:
 
 
 database:
-	dsn: 'mysql:host=127.0.0.1;dbname=cinema'
-	user: root
-	password:
+	dsn: 'mysql:host=127.0.0.1:3307;dbname=cinema'
+	user: xtulus00
+	password: n7ajojta
 	options:
 		lazy: yes
 
